@@ -9,24 +9,31 @@ def main(page: ft.Page):
     # page.vertical_alignment = "center"
 
     def user_chose(e):
-        print(e.control.data)
+        e.control.border = ft.border.all(10, ft.colors.BLACK)
+        user_choice_index = int(e.control.data)
+        print(f"User choice is {user_choice_index}")
         computer_choice_text.visible = True
-        choice = 0
-        for i in range(0, 20):
+        computer_choice_index = 0
+        for i in range(0, 10):
             # pr.value = i * 0.1
             # choice = random.randint(0, 2)
-            computer_choices.controls[choice].visible = True
+            computer_choices.controls[computer_choice_index].visible = True
             page.update()
             sleep(0.5)
-            computer_choices.controls[choice].visible = False
-            if choice < 2:
-                choice += 1
+            computer_choices.controls[computer_choice_index].visible = False
+            if computer_choice_index < 2:
+                computer_choice_index += 1
             else:
-                choice = 0
+                computer_choice_index = 0
             page.update()
 
-        choice = random.randint(0, 2)
-        computer_choices.controls[choice].visible = True
+        computer_choice_index = random.randint(0, 2)
+        print(f"Computer choice is {computer_choice_index}")
+        computer_choice_text.value = "The computer has chosen:"
+        computer_choices.controls[computer_choice_index].border = ft.border.all(
+            10, ft.colors.BLACK
+        )
+        computer_choices.controls[computer_choice_index].visible = True
 
         page.update()
 
@@ -46,7 +53,7 @@ def main(page: ft.Page):
         border_radius=10,
         border=ft.border.all(3, ft.colors.BLACK),
         ink=True,
-        data="rock",
+        data="0",
         on_click=user_chose,
     )
     paper_user = ft.Container(
@@ -59,7 +66,7 @@ def main(page: ft.Page):
         border_radius=10,
         border=ft.border.all(3, ft.colors.BLACK),
         ink=True,
-        data="paper",
+        data="1",
         on_click=user_chose,
     )
     scissors_user = ft.Container(
@@ -73,7 +80,7 @@ def main(page: ft.Page):
         border_radius=10,
         border=ft.border.all(3, ft.colors.BLACK),
         ink=True,
-        data="scissors",
+        data="2",
         on_click=user_chose,
     )
 
@@ -88,7 +95,7 @@ def main(page: ft.Page):
         border_radius=10,
         border=ft.border.all(3, ft.colors.BLACK),
         ink=True,
-        data="rock",
+        data="0",
         on_click=user_chose,
     )
     paper_computer = ft.Container(
@@ -102,7 +109,7 @@ def main(page: ft.Page):
         border_radius=10,
         border=ft.border.all(3, ft.colors.BLACK),
         ink=True,
-        data="paper",
+        data="1",
         on_click=user_chose,
     )
     scissors_computer = ft.Container(
@@ -117,7 +124,7 @@ def main(page: ft.Page):
         border_radius=10,
         border=ft.border.all(3, ft.colors.BLACK),
         ink=True,
-        data="scissors",
+        data="2",
         on_click=user_chose,
     )
 
@@ -128,7 +135,7 @@ def main(page: ft.Page):
     )
 
     computer_choice_text = ft.Text(
-        visible=False, value="Wait for computer to choose...", style="titleLarge"
+        visible=False, value="Wait for the computer to choose...", style="titleLarge"
     )
 
     end_message = ft.Text("", visible=False)
