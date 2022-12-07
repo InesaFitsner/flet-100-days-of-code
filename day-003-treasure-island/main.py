@@ -17,7 +17,7 @@ def main(page: ft.Page):
         page.update()
 
     def button_clicked(e):
-        if e.data == "left":
+        if e.control.data == "left":
             end_message.visible = True
 
         page.update()
