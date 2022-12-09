@@ -11,6 +11,10 @@ class Card:
         self.top = space.top
         self.left = space.left
 
+class GameData:
+    def __init__(self):
+        self.start_top = 0
+        self.start_left = 0
 
 class Space:
     def __init__(self, space):
@@ -22,8 +26,6 @@ def main(page: ft.Page):
         """Brings draggable card to the top of the stack"""
         list.remove(item)
         list.append(item)
-        for i in list:
-            print(i)
         page.update()
 
     def find_close_space(item, spaces):
@@ -47,14 +49,14 @@ def main(page: ft.Page):
         e.control.data.left = e.control.left
         page.update()
 
-    def on_pan_update2(e: ft.DragUpdateEvent):
+    def move(e: ft.DragUpdateEvent):
         e.control.top = max(0, e.control.top + e.delta_y)
         e.control.left = max(0, e.control.left + e.delta_x)
         e.control.update()
 
     spaces = []
 
-    # top spaces (final piles)
+    # top spaces (foundation piles)
     x = 0
     for i in range(3):
         spaces.append(
@@ -62,7 +64,7 @@ def main(page: ft.Page):
         )
         x += 100
 
-    # bottom spaces (piles)
+    # bottom spaces (plateau)
     y = 0
     for i in range(3):
         spaces.append(
@@ -79,7 +81,7 @@ def main(page: ft.Page):
     card1 = ft.GestureDetector(
         mouse_cursor=ft.MouseCursor.MOVE,
         drag_interval=10,
-        on_pan_update=on_pan_update2,
+        on_pan_update=move,
         on_pan_start=start_drag,
         on_pan_end=drop,
         content=ft.Container(bgcolor=ft.colors.GREEN, width=65, height=100),
@@ -88,7 +90,7 @@ def main(page: ft.Page):
     card2 = ft.GestureDetector(
         mouse_cursor=ft.MouseCursor.MOVE,
         drag_interval=10,
-        on_pan_update=on_pan_update2,
+        on_pan_update=move,
         on_pan_start=start_drag,
         on_pan_end=drop,
         content=ft.Container(bgcolor=ft.colors.AMBER, width=65, height=100),
