@@ -1,7 +1,7 @@
 import flet as ft
 
 # This prototype is to move card to any space with or without cards
-# If there is card(s) and if close enough to the top card, drop it some 20-40px lower
+# If there is card(s) and if close enough to the top card, drop it 20px lower
 # if not close to any top card/space, return to original position
 
 
@@ -10,12 +10,13 @@ class Card:
         self.control = control
         self.top = space.top
         self.left = space.left
+        self.space = space
 
 
 class Space:
     def __init__(self, space):
         self.space = space
-        cards = []
+        self.cards = []
 
 
 def main(page: ft.Page):
@@ -23,16 +24,19 @@ def main(page: ft.Page):
         """Brings draggable card to the top of the stack"""
         list.remove(item)
         list.append(item)
-        for i in list:
-            print(i)
-        page.update()
+        # page.update()
 
-    def find_close_space(item, spaces, cards):
-        """Returns closest top space or card top and left; if no close spaces returns original top and left"""
-        # coordinates = (item.data.top, item.data.left)
+    def find_close_space(item, spaces):
+        """Returns closest top space or top card top and left; if no close spaces returns original top and left"""
         for space in spaces:
             if abs(item.top - space.top) < 20 and abs(item.left - space.left) < 20:
-                return (space.top, space.left)
+                item.space = None
+                if space.data.cards == []:
+                    space.data.cards.append(item)
+                    return (space.top, space.left)
+                else:
+                    space.data.cards.append(item)
+                    return (space.top + 20, space.left)
 
         return item.data.top, item.data.left
 
@@ -41,7 +45,7 @@ def main(page: ft.Page):
         page.update()
 
     def drop(e: ft.DragEndEvent):
-        coordinates = find_close_space(e.control, top_spaces, top_cards)
+        coordinates = find_close_space(e.control, spaces)
         e.control.top = coordinates[0]
         e.control.left = coordinates[1]
         e.control.data.top = e.control.top
@@ -94,22 +98,23 @@ def main(page: ft.Page):
         on_pan_end=drop,
         content=ft.Container(bgcolor=ft.colors.AMBER, width=65, height=100),
     )
+
+    # place card1 in spaces[4]
     c1 = Card(card1, spaces[4])
     card1.data = c1
     card1.top = c1.top
     card1.left = c1.left
+    spaces[4].data.cards.append(c1)
 
+    # place card2 in spaces[5]
     c2 = Card(card2, spaces[5])
     card2.data = c2
     card2.top = c2.top
     card2.left = c2.left
+    spaces[5].data.cards.append(c2)
 
     cards = [card1, card2]
     controls = spaces + cards
-    top_cards = [card1, card2]
-    top_spaces = spaces
-    top_spaces.remove(spaces[4])
-    top_spaces.remove(spaces[5])
 
     page.add(ft.Stack(controls, width=1000, height=500))
 
