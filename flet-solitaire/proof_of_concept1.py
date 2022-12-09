@@ -1,8 +1,14 @@
 import flet as ft
 
+# This prototype is to move card to a space and if close enough drop it there;
+# if not return to original position
+
 
 class Card:
-    control = None
+    def __init__(self, control):
+        self.control = control
+        self.top = control.top
+        self.left = control.left
 
 
 def main(page: ft.Page):
@@ -19,13 +25,11 @@ def main(page: ft.Page):
             abs(e.control.top - space.top) < 20
             and abs(e.control.left - space.left) < 20
         ):
-            print("Close enough")
             e.control.top = space.top
             e.control.left = space.left
         else:
-            print(e.control.data.previous_left)
-            e.control.top = e.control.data.previous_top
-            e.control.left = e.control.data.previous_left
+            e.control.top = e.control.data.top
+            e.control.left = e.control.data.left
 
         page.update()
 
@@ -38,8 +42,6 @@ def main(page: ft.Page):
         width=50, height=50, left=200, top=200, border=ft.border.all(5)
     )
 
-    c1 = Card()
-
     card1 = ft.GestureDetector(
         mouse_cursor=ft.MouseCursor.MOVE,
         drag_interval=10,
@@ -48,17 +50,10 @@ def main(page: ft.Page):
         on_pan_end=check_proximity,
         left=0,
         top=0,
-        # animate_position=1000,
-        # content=ft.Container(bgcolor=ft.colors.BLUE, width=50, height=50),
         content=ft.Container(bgcolor=ft.colors.GREEN, width=50, height=50),
-        data=c1,
     )
-
-    c1.control = card1
-    c1.previous_top = card1.top
-    c1.previous_left = card1.left
-
-    c2 = Card()
+    c1 = Card(card1)
+    card1.data = c1
 
     card2 = ft.GestureDetector(
         mouse_cursor=ft.MouseCursor.MOVE,
@@ -68,14 +63,11 @@ def main(page: ft.Page):
         on_pan_end=check_proximity,
         left=100,
         top=100,
-        # animate_position=1000,
         content=ft.Container(bgcolor=ft.colors.AMBER, width=50, height=50),
-        data=c2,
     )
 
-    c2.control = card2
-    c2.previous_top = card2.top
-    c2.previous_left = card2.left
+    c2 = Card(card2)
+    card2.data = c2
 
     cards = [card1, card2, space]
 
