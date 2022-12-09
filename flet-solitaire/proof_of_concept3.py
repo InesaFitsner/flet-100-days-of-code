@@ -1,9 +1,8 @@
 import flet as ft
 
-# This prototype is to move card to any space or card and if close enough drop it there;
-# For spaces, drop on the space. For cards, place it some 20-40px lower
-# Once card is dropped to a new place, change top and left for Card object (make it original position)
-# if not close to any card/space, return to original position
+# This prototype is to move card to any space with or without cards
+# If there is card(s) and if close enough to the top card, drop it some 20-40px lower
+# if not close to any top card/space, return to original position
 
 
 class Card:
@@ -16,6 +15,7 @@ class Card:
 class Space:
     def __init__(self, space):
         self.space = space
+        cards = []
 
 
 def main(page: ft.Page):
@@ -27,8 +27,8 @@ def main(page: ft.Page):
             print(i)
         page.update()
 
-    def find_close_space(item, spaces):
-        """Returns closest space's top and left; if no close spaces returns original top and left"""
+    def find_close_space(item, spaces, cards):
+        """Returns closest top space or card top and left; if no close spaces returns original top and left"""
         # coordinates = (item.data.top, item.data.left)
         for space in spaces:
             if abs(item.top - space.top) < 20 and abs(item.left - space.left) < 20:
@@ -41,7 +41,7 @@ def main(page: ft.Page):
         page.update()
 
     def drop(e: ft.DragEndEvent):
-        coordinates = find_close_space(e.control, spaces)
+        coordinates = find_close_space(e.control, top_spaces, top_cards)
         e.control.top = coordinates[0]
         e.control.left = coordinates[1]
         e.control.data.top = e.control.top
@@ -106,6 +106,10 @@ def main(page: ft.Page):
 
     cards = [card1, card2]
     controls = spaces + cards
+    top_cards = [card1, card2]
+    top_spaces = spaces
+    top_spaces.remove(spaces[4])
+    top_spaces.remove(spaces[5])
 
     page.add(ft.Stack(controls, width=1000, height=500))
 

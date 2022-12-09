@@ -1,7 +1,6 @@
 import flet as ft
 
-# This prototype is to move card to any space or card and if close enough drop it there;
-# For spaces, drop on the space. For cards, place it some 20-40px lower
+# This prototype is to move card to any space and if close enough drop it there;
 # Once card is dropped to a new place, change top and left for Card object (make it original position)
 # if not close to any card/space, return to original position
 
