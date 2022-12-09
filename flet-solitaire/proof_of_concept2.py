@@ -43,11 +43,28 @@ def main(page: ft.Page):
         e.control.left = max(0, e.control.left + e.delta_x)
         e.control.update()
 
-    space = ft.Container(
-        width=50, height=50, left=200, top=200, border=ft.border.all(5)
+    # top spaces
+    space1 = ft.Container(width=65, height=100, left=0, top=0, border=ft.border.all(1))
+
+    space2 = ft.Container(
+        width=65, height=100, left=100, top=0, border=ft.border.all(1)
     )
 
-    # c1 = Card()
+    space3 = ft.Container(
+        width=65, height=100, left=200, top=0, border=ft.border.all(1)
+    )
+    # bottom spaces
+    space4 = ft.Container(
+        width=65, height=100, left=0, top=150, border=ft.border.all(1)
+    )
+
+    space5 = ft.Container(
+        width=65, height=100, left=100, top=150, border=ft.border.all(1)
+    )
+
+    space6 = ft.Container(
+        width=65, height=100, left=200, top=150, border=ft.border.all(1)
+    )
 
     card1 = ft.GestureDetector(
         mouse_cursor=ft.MouseCursor.MOVE,
@@ -55,8 +72,8 @@ def main(page: ft.Page):
         on_pan_update=on_pan_update2,
         on_pan_start=start_drag,
         on_pan_end=check_proximity,
-        left=0,
-        top=0,
+        # left=0,
+        # top=0,
         content=ft.Container(bgcolor=ft.colors.GREEN, width=50, height=50),
     )
 
@@ -66,18 +83,21 @@ def main(page: ft.Page):
         on_pan_update=on_pan_update2,
         on_pan_start=start_drag,
         on_pan_end=check_proximity,
-        left=100,
-        top=100,
+        # left=100,
+        # top=100,
         content=ft.Container(bgcolor=ft.colors.AMBER, width=50, height=50),
     )
+    c1 = Card(card1)
+    card1.data = c1
 
     c2 = Card(card2)
     card2.data = c2
 
-    cards = [card1, card2, space]
-    top_spaces = [card1, card2, space]
+    spaces = [space1, space2, space3, space4, space5, space6]
+    cards = [card1, card2]
 
-    page.add(ft.Stack(cards, width=1000, height=500))
+    # page.add(ft.Stack(cards, width=1000, height=500))
+    page.add(ft.Stack(spaces, width=1000, height=500))
 
 
 ft.app(target=main)
