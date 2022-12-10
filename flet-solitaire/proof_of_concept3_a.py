@@ -1,8 +1,7 @@
 import flet as ft
 
-# This prototype is to move card to any space and if close enough drop it there;
-# Once card is dropped to a new place, change top and left for Card control
-# if not close to any space, return to original position
+# This prototype is to move card to any space with or without card
+# If there is a card, drop it 20px lower
 
 
 class GameData:
@@ -13,6 +12,36 @@ class GameData:
     def place_card(self, card, space):
         card.top = space.top
         card.left = space.left
+
+        # remove the card form the old space's pile if exists
+        if card.data.space is not None:
+            card.data.space.data.cards.remove(card)
+
+        # set card's space as new space
+        card.data.space = space
+
+        # add the card to the new space's pile
+        space.data.pile.append(card)
+
+    def bounce_back(self, card):
+        card.top = self.start_top
+        card.left = self.start_left
+
+
+class Card:
+    def __init__(self, control):
+        self.control = control
+        self.space = None
+        self.set_control_data()
+
+    def set_control_data(self):
+        self.control.data = self
+
+
+class Space:
+    def __init__(self, space):
+        self.space = space
+        self.pile = []
 
 
 def main(page: ft.Page):
@@ -41,8 +70,7 @@ def main(page: ft.Page):
                 return
 
         # return card to original position
-        e.control.top = game_data.start_top
-        e.control.left = game_data.start_left
+        game_data.bounce_back(e.control)
         page.update()
 
     def move(e: ft.DragUpdateEvent):
@@ -54,7 +82,7 @@ def main(page: ft.Page):
 
     # top spaces (foundation piles)
     x = 0
-    for i in range(3):
+    for i in range(4):
         spaces.append(
             ft.Container(width=65, height=100, left=x, top=0, border=ft.border.all(1))
         )
@@ -62,7 +90,7 @@ def main(page: ft.Page):
 
     # bottom spaces (plateau piles)
     y = 0
-    for i in range(3):
+    for i in range(4):
         spaces.append(
             ft.Container(width=65, height=100, left=y, top=150, border=ft.border.all(1))
         )
