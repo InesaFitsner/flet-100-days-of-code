@@ -23,7 +23,7 @@ class Card:
     def set_control_data(self):
         self.control.data = self
 
-    def place_card(self, space):
+    def place(self, space):
 
         self.control.top = space.top + 20 * len(space.data.pile)
         self.control.left = space.left
@@ -70,13 +70,14 @@ def main(page: ft.Page):
     def drop(e: ft.DragEndEvent):
         # check if card is close to any of the spaces
         for space in spaces:
+            # top position of the upper card in the pile
             new_top = space.data.upper_card_top()
             if (
                 abs(e.control.top - new_top) < 20
                 and abs(e.control.left - space.left) < 20
             ):
-
-                e.control.data.place_card(space)
+                # place card to the space in proximity
+                e.control.data.place(space)
                 page.update()
                 return
 
@@ -84,7 +85,7 @@ def main(page: ft.Page):
         game_data.bounce_back(e.control)
         page.update()
 
-    def move(e: ft.DragUpdateEvent):
+    def drag(e: ft.DragUpdateEvent):
         e.control.top = max(0, e.control.top + e.delta_y)
         e.control.left = max(0, e.control.left + e.delta_x)
         e.control.update()
@@ -121,7 +122,7 @@ def main(page: ft.Page):
             ft.GestureDetector(
                 mouse_cursor=ft.MouseCursor.MOVE,
                 drag_interval=10,
-                on_pan_update=move,
+                on_pan_update=drag,
                 on_pan_start=start_drag,
                 on_pan_end=drop,
                 content=ft.Container(width=65, height=100),
@@ -133,7 +134,7 @@ def main(page: ft.Page):
     game_data = GameData()
 
     for i in range(4):
-        card_objects[i].place_card(spaces[4 + i])
+        card_objects[i].place(spaces[4 + i])
 
     controls = spaces + cards
 
