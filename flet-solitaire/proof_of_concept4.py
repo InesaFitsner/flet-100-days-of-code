@@ -38,6 +38,19 @@ class Card:
         # add the card to the new space's pile
         space.pile.append(self.control)
 
+    def cards_on_top(self):
+        # number if cards in the space
+        if self.space is not None:
+            cards_in_pile = len(self.space.pile)
+            card_index = self.space.pile.index(self.control)
+            top_pile = []
+            for card in self.space.pile:
+                if self.space.pile.index(card) > card_index:
+                    top_pile.append(card)
+            print(f"cards in pile: {len(self.space.pile)}")
+            print(f"card index in pile: {self.space.pile.index(self.control)}")
+            print(f"length of top pile: {len(top_pile)}")
+
 
 class Space:
     def __init__(self, space):
@@ -60,6 +73,10 @@ def main(page: ft.Page):
         page.update()
 
     def start_drag(e: ft.DragStartEvent):
+        # check if the card is the last in the pile
+
+        e.control.data.cards_on_top()
+
         move_on_top(e.control, controls)
         # remember card original position to return it back if needed
         game_data.start_top = e.control.top
