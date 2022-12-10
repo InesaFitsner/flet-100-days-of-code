@@ -11,6 +11,10 @@ class Card:
         self.top = space.top
         self.left = space.left
         self.space = space
+        self.set_control_data()
+
+    def set_control_data(self):
+        self.control.data = self
 
 
 class Space:

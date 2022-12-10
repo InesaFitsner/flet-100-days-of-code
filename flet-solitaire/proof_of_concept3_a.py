@@ -14,10 +14,6 @@ class GameData:
         card.top = space.top
         card.left = space.left
 
-    def bounce_back(self, card):
-        card.top = self.start_top
-        card.left = self.start_left
-
 
 def main(page: ft.Page):
     def move_on_top(item, list):
@@ -45,7 +41,8 @@ def main(page: ft.Page):
                 return
 
         # return card to original position
-        game_data.bounce_back(e.control)
+        e.control.top = game_data.start_top
+        e.control.left = game_data.start_left
         page.update()
 
     def move(e: ft.DragUpdateEvent):
