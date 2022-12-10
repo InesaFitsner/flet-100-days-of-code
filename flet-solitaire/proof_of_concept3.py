@@ -41,15 +41,15 @@ class Card:
 
 class Space:
     def __init__(self, space):
-        self.space = space
+        self.control = space
         self.pile = []
         self.set_control_data()
 
     def set_control_data(self):
-        self.space.data = self
+        self.control.data = self
 
     def upper_card_top(self):
-        return self.space.top + 20 * len(self.pile)
+        return self.control.top + 20 * len(self.pile)
 
 
 def main(page: ft.Page):
