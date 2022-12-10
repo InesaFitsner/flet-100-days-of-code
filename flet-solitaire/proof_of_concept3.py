@@ -45,8 +45,6 @@ class Space:
         self.pile = []
         self.set_control_data()
 
-        print(len(self.pile))
-
     def set_control_data(self):
         self.space.data = self
 
@@ -62,6 +60,7 @@ def main(page: ft.Page):
         page.update()
 
     def start_drag(e: ft.DragStartEvent):
+        print(e.control.data.space.data.pile.index(e.control))
         move_on_top(e.control, controls)
         # remember card original position to return it back if needed
         game_data.start_top = e.control.top
@@ -96,23 +95,19 @@ def main(page: ft.Page):
     # top spaces (foundation piles)
     x = 0
     for i in range(4):
-        space_control = ft.Container(
-            width=65, height=100, left=x, top=0, border=ft.border.all(1)
+        spaces.append(
+            ft.Container(width=65, height=100, left=x, top=0, border=ft.border.all(1))
         )
-        spaces.append(space_control)
-        space_object = Space(space_control)
-        space_objects.append(space_object)
+        space_objects.append(Space(spaces[-1]))
         x += 100
 
     # bottom spaces (plateau piles)
     y = 0
     for i in range(4):
-        space_control = ft.Container(
-            width=65, height=100, left=y, top=150, border=ft.border.all(1)
+        spaces.append(
+            ft.Container(width=65, height=100, left=y, top=150, border=ft.border.all(1))
         )
-        spaces.append(space_control)
-        space_object = Space(space_control)
-        space_objects.append(space_object)
+        space_objects.append(Space(spaces[-1]))
         y += 100
 
     colors = ["BLUE", "YELLOW", "GREEN", "RED"]
@@ -129,27 +124,16 @@ def main(page: ft.Page):
                 on_pan_update=move,
                 on_pan_start=start_drag,
                 on_pan_end=drop,
-                content=ft.Container(bgcolor=ft.colors.AMBER, width=65, height=100),
+                content=ft.Container(width=65, height=100),
             )
         )
         cards[-1].content.bgcolor = color
         card_objects.append(Card(cards[-1]))
 
-    card2 = ft.GestureDetector(
-        mouse_cursor=ft.MouseCursor.MOVE,
-        drag_interval=10,
-        on_pan_update=move,
-        on_pan_start=start_drag,
-        on_pan_end=drop,
-        content=ft.Container(bgcolor=ft.colors.AMBER, width=65, height=100),
-    )
-
     game_data = GameData()
 
-    card_objects[0].place_card(spaces[4])
-    card_objects[1].place_card(spaces[5])
-    card_objects[2].place_card(spaces[6])
-    card_objects[3].place_card(spaces[7])
+    for i in range(4):
+        card_objects[i].place_card(spaces[4 + i])
 
     controls = spaces + cards
 

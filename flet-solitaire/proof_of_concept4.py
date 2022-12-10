@@ -2,21 +2,54 @@ import flet as ft
 
 # This prototype is to move card to any space with or without card
 # If there is a card, drop it 20px lower
-# if not close to any space, return to original position
+
+
+class GameData:
+    def __init__(self):
+        self.start_top = 0
+        self.start_left = 0
+
+    def bounce_back(self, card):
+        card.top = self.start_top
+        card.left = self.start_left
 
 
 class Card:
-    def __init__(self, control, space):
+    def __init__(self, control):
         self.control = control
-        self.top = space.top
-        self.left = space.left
+        self.space = None
+        self.set_control_data()
+
+    def set_control_data(self):
+        self.control.data = self
+
+    def place_card(self, space):
+
+        self.control.top = space.top + 20 * len(space.data.pile)
+        self.control.left = space.left
+
+        # remove the card form the old space's pile if exists
+        if self.space is not None:
+            self.space.data.pile.remove(self.control)
+
+        # set card's space as new space
         self.space = space
+
+        # add the card to the new space's pile
+        space.data.pile.append(self.control)
 
 
 class Space:
     def __init__(self, space):
         self.space = space
-        self.cards = []
+        self.pile = []
+        self.set_control_data()
+
+    def set_control_data(self):
+        self.space.data = self
+
+    def upper_card_top(self):
+        return self.space.top + 20 * len(self.pile)
 
 
 def main(page: ft.Page):
@@ -24,101 +57,84 @@ def main(page: ft.Page):
         """Brings draggable card to the top of the stack"""
         list.remove(item)
         list.append(item)
-        # page.update()
-
-    def find_close_space(item, spaces):
-        """Returns closest top space or top card top and left; if no close spaces returns original top and left"""
-        for space in spaces:
-            if abs(item.top - space.top) < 20 and abs(item.left - space.left) < 20:
-                # remove the card from the original space object pile
-                item.data.space.data.cards.remove(item)
-                # change space for the card object to the new one
-                item.data.space = space
-                if space.data.cards == []:
-                    # add card to the new space pile
-                    space.data.cards.append(item)
-                    return (space.top, space.left)
-                else:
-                    # add card to the new space pile
-                    space.data.cards.append(item)
-                    return (space.top + 20, space.left)
-
-        return item.data.top, item.data.left
+        page.update()
 
     def start_drag(e: ft.DragStartEvent):
+        # print(e.control.data.space.data.pile.index(e.control))
         move_on_top(e.control, controls)
+        # remember card original position to return it back if needed
+        game_data.start_top = e.control.top
+        game_data.start_left = e.control.left
         page.update()
 
     def drop(e: ft.DragEndEvent):
-        coordinates = find_close_space(e.control, spaces)
-        e.control.top = coordinates[0]
-        e.control.left = coordinates[1]
-        e.control.data.top = e.control.top
-        e.control.data.left = e.control.left
+        # check if card is close to any of the spaces
+        for space in spaces:
+            new_top = space.data.upper_card_top()
+            if (
+                abs(e.control.top - new_top) < 20
+                and abs(e.control.left - space.left) < 20
+            ):
+
+                e.control.data.place_card(space)
+                page.update()
+                return
+
+        # return card to original position
+        game_data.bounce_back(e.control)
         page.update()
 
-    def on_pan_update2(e: ft.DragUpdateEvent):
+    def move(e: ft.DragUpdateEvent):
         e.control.top = max(0, e.control.top + e.delta_y)
         e.control.left = max(0, e.control.left + e.delta_x)
         e.control.update()
 
     spaces = []
+    space_objects = []
 
-    # top spaces (final piles)
+    # top spaces (foundation piles)
     x = 0
-    for i in range(3):
+    for i in range(4):
         spaces.append(
             ft.Container(width=65, height=100, left=x, top=0, border=ft.border.all(1))
         )
+        space_objects.append(Space(spaces[-1]))
         x += 100
 
-    # bottom spaces (piles)
+    # bottom spaces (plateau piles)
     y = 0
-    for i in range(3):
+    for i in range(4):
         spaces.append(
             ft.Container(width=65, height=100, left=y, top=150, border=ft.border.all(1))
         )
+        space_objects.append(Space(spaces[-1]))
         y += 100
 
-    s = []
-    for i in range(len(spaces)):
-        space_object = Space(spaces[i])
-        spaces[i].data = space_object
-        s.append(space_object)
+    colors = ["BLUE", "YELLOW", "GREEN", "RED"]
 
-    card1 = ft.GestureDetector(
-        mouse_cursor=ft.MouseCursor.MOVE,
-        drag_interval=10,
-        on_pan_update=on_pan_update2,
-        on_pan_start=start_drag,
-        on_pan_end=drop,
-        content=ft.Container(bgcolor=ft.colors.GREEN, width=65, height=100),
-    )
+    cards = []
+    card_objects = []
 
-    card2 = ft.GestureDetector(
-        mouse_cursor=ft.MouseCursor.MOVE,
-        drag_interval=10,
-        on_pan_update=on_pan_update2,
-        on_pan_start=start_drag,
-        on_pan_end=drop,
-        content=ft.Container(bgcolor=ft.colors.AMBER, width=65, height=100),
-    )
+    for color in colors:
 
-    # place card1 in spaces[4]
-    c1 = Card(card1, spaces[4])
-    card1.data = c1
-    card1.top = c1.top
-    card1.left = c1.left
-    spaces[4].data.cards.append(card1)
+        cards.append(
+            ft.GestureDetector(
+                mouse_cursor=ft.MouseCursor.MOVE,
+                drag_interval=10,
+                on_pan_update=move,
+                on_pan_start=start_drag,
+                on_pan_end=drop,
+                content=ft.Container(width=65, height=100),
+            )
+        )
+        cards[-1].content.bgcolor = color
+        card_objects.append(Card(cards[-1]))
 
-    # place card2 in spaces[5]
-    c2 = Card(card2, spaces[5])
-    card2.data = c2
-    card2.top = c2.top
-    card2.left = c2.left
-    spaces[5].data.cards.append(card2)
+    game_data = GameData()
 
-    cards = [card1, card2]
+    for i in range(4):
+        card_objects[i].place_card(spaces[4 + i])
+
     controls = spaces + cards
 
     page.add(ft.Stack(controls, width=1000, height=500))
