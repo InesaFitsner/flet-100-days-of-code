@@ -90,25 +90,25 @@ def main(page: ft.Page):
         e.control.left = max(0, e.control.left + e.delta_x)
         e.control.update()
 
-    spaces = []
+    space_controls = []
     space_objects = []
 
     # top spaces (foundation piles)
     x = 0
     for i in range(4):
-        spaces.append(
+        space_controls.append(
             ft.Container(width=65, height=100, left=x, top=0, border=ft.border.all(1))
         )
-        space_objects.append(Space(spaces[-1]))
+        space_objects.append(Space(space_controls[-1]))
         x += 100
 
     # bottom spaces (plateau piles)
     y = 0
     for i in range(4):
-        spaces.append(
+        space_controls.append(
             ft.Container(width=65, height=100, left=y, top=150, border=ft.border.all(1))
         )
-        space_objects.append(Space(spaces[-1]))
+        space_objects.append(Space(space_controls[-1]))
         y += 100
 
     colors = ["BLUE", "YELLOW", "GREEN", "RED"]
@@ -136,7 +136,7 @@ def main(page: ft.Page):
     for i in range(4):
         card_objects[i].place(space_objects[4 + i])
 
-    controls = spaces + cards
+    controls = space_controls + cards
 
     page.add(ft.Stack(controls, width=1000, height=500))
 
