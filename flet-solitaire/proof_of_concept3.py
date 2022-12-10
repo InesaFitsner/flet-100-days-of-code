@@ -60,7 +60,6 @@ def main(page: ft.Page):
         page.update()
 
     def start_drag(e: ft.DragStartEvent):
-        # print(e.control.data.space.data.pile.index(e.control))
         move_on_top(e.control, controls)
         # remember card original position to return it back if needed
         game_data.start_top = e.control.top
@@ -69,7 +68,7 @@ def main(page: ft.Page):
 
     def drop(e: ft.DragEndEvent):
         # check if card is close to any of the spaces
-        for space in space_objects:
+        for space in spaces:
             # top position of the upper card in the pile
             new_top = space.upper_card_top()
             if (
@@ -91,7 +90,7 @@ def main(page: ft.Page):
         e.control.update()
 
     space_controls = []
-    space_objects = []
+    spaces = []
 
     # top spaces (foundation piles)
     x = 0
@@ -99,7 +98,7 @@ def main(page: ft.Page):
         space_controls.append(
             ft.Container(width=65, height=100, left=x, top=0, border=ft.border.all(1))
         )
-        space_objects.append(Space(space_controls[-1]))
+        spaces.append(Space(space_controls[-1]))
         x += 100
 
     # bottom spaces (plateau piles)
@@ -108,17 +107,17 @@ def main(page: ft.Page):
         space_controls.append(
             ft.Container(width=65, height=100, left=y, top=150, border=ft.border.all(1))
         )
-        space_objects.append(Space(space_controls[-1]))
+        spaces.append(Space(space_controls[-1]))
         y += 100
 
     colors = ["BLUE", "YELLOW", "GREEN", "RED"]
 
-    cards = []
+    card_controls = []
     card_objects = []
 
     for color in colors:
 
-        cards.append(
+        card_controls.append(
             ft.GestureDetector(
                 mouse_cursor=ft.MouseCursor.MOVE,
                 drag_interval=10,
@@ -128,15 +127,15 @@ def main(page: ft.Page):
                 content=ft.Container(width=65, height=100),
             )
         )
-        cards[-1].content.bgcolor = color
-        card_objects.append(Card(cards[-1]))
+        card_controls[-1].content.bgcolor = color
+        card_objects.append(Card(card_controls[-1]))
 
     game_data = GameData()
 
     for i in range(4):
-        card_objects[i].place(space_objects[4 + i])
+        card_objects[i].place(spaces[4 + i])
 
-    controls = space_controls + cards
+    controls = space_controls + card_controls
 
     page.add(ft.Stack(controls, width=1000, height=500))
 
