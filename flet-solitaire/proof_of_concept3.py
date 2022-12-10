@@ -113,7 +113,7 @@ def main(page: ft.Page):
     colors = ["BLUE", "YELLOW", "GREEN", "RED"]
 
     card_controls = []
-    card_objects = []
+    cards = []
 
     for color in colors:
 
@@ -128,12 +128,12 @@ def main(page: ft.Page):
             )
         )
         card_controls[-1].content.bgcolor = color
-        card_objects.append(Card(card_controls[-1]))
+        cards.append(Card(card_controls[-1]))
 
     game_data = GameData()
 
     for i in range(4):
-        card_objects[i].place(spaces[4 + i])
+        cards[i].place(spaces[4 + i])
 
     controls = space_controls + card_controls
 
