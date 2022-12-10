@@ -25,18 +25,18 @@ class Card:
 
     def place(self, space):
 
-        self.control.top = space.top + 20 * len(space.data.pile)
-        self.control.left = space.left
+        self.control.top = space.control.top + 20 * len(space.pile)
+        self.control.left = space.control.left
 
         # remove the card form the old space's pile if exists
         if self.space is not None:
-            self.space.data.pile.remove(self.control)
+            self.space.pile.remove(self.control)
 
         # set card's space as new space
         self.space = space
 
         # add the card to the new space's pile
-        space.data.pile.append(self.control)
+        space.pile.append(self.control)
 
 
 class Space:
@@ -60,7 +60,7 @@ def main(page: ft.Page):
         page.update()
 
     def start_drag(e: ft.DragStartEvent):
-        print(e.control.data.space.data.pile.index(e.control))
+        # print(e.control.data.space.data.pile.index(e.control))
         move_on_top(e.control, controls)
         # remember card original position to return it back if needed
         game_data.start_top = e.control.top
@@ -69,12 +69,12 @@ def main(page: ft.Page):
 
     def drop(e: ft.DragEndEvent):
         # check if card is close to any of the spaces
-        for space in spaces:
+        for space in space_objects:
             # top position of the upper card in the pile
-            new_top = space.data.upper_card_top()
+            new_top = space.upper_card_top()
             if (
                 abs(e.control.top - new_top) < 20
-                and abs(e.control.left - space.left) < 20
+                and abs(e.control.left - space.control.left) < 20
             ):
                 # place card to the space in proximity
                 e.control.data.place(space)
@@ -134,7 +134,7 @@ def main(page: ft.Page):
     game_data = GameData()
 
     for i in range(4):
-        card_objects[i].place(spaces[4 + i])
+        card_objects[i].place(space_objects[4 + i])
 
     controls = spaces + cards
 
