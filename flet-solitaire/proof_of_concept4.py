@@ -47,9 +47,6 @@ class Card:
             for card in self.space.pile:
                 if self.space.pile.index(card) >= card_index:
                     top_pile.append(card)
-            # print(f"cards in pile: {len(self.space.pile)}")
-            # print(f"card index in pile: {self.space.pile.index(self.control)}")
-            # print(f"length of top pile: {len(top_pile)}")
 
         return top_pile
 
@@ -68,22 +65,20 @@ class Space:
 
 
 def main(page: ft.Page):
-    def move_on_top(item, list, cards_to_drag):
-        """Brings draggable card to the top of the stack"""
-        # list.remove(item)
-        # list.append(item)
+    def move_on_top(list, cards_to_drag):
+        """Brings draggable card pile to the top of the stack"""
+
         for card in cards_to_drag:
             list.remove(card)
             list.append(card)
         page.update()
 
     def start_drag(e: ft.DragStartEvent):
-        # check if the card is the last in the pile
 
         cards_to_drag = e.control.data.cards_to_drag()
-        if cards_to_drag == []:
-            print("just one card")
-        move_on_top(e.control, controls, cards_to_drag)
+        # if cards_to_drag == []:
+        #    print("just one card")
+        move_on_top(controls, cards_to_drag)
 
         # remember card original position to return it back if needed
         game_data.start_top = e.control.top
