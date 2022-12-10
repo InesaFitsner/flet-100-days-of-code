@@ -1,7 +1,7 @@
 import flet as ft
 
 # This prototype is to move card to any space with or without card
-# If there is a card, drop it 20px lower
+# If there is a card, drop it 20px lower than the top (upper) card
 
 
 class GameData:
