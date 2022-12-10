@@ -38,18 +38,18 @@ class Card:
         # add the card to the new space's pile
         space.pile.append(self.control)
 
-    def cards_on_top(self):
+    def cards_to_drag(self):
         # number if cards in the space
         top_pile = []
         if self.space is not None:
             card_index = self.space.pile.index(self.control)
 
             for card in self.space.pile:
-                if self.space.pile.index(card) > card_index:
+                if self.space.pile.index(card) >= card_index:
                     top_pile.append(card)
-            print(f"cards in pile: {len(self.space.pile)}")
-            print(f"card index in pile: {self.space.pile.index(self.control)}")
-            print(f"length of top pile: {len(top_pile)}")
+            # print(f"cards in pile: {len(self.space.pile)}")
+            # print(f"card index in pile: {self.space.pile.index(self.control)}")
+            # print(f"length of top pile: {len(top_pile)}")
 
         return top_pile
 
@@ -70,8 +70,8 @@ class Space:
 def main(page: ft.Page):
     def move_on_top(item, list, cards_to_drag):
         """Brings draggable card to the top of the stack"""
-        list.remove(item)
-        list.append(item)
+        # list.remove(item)
+        # list.append(item)
         for card in cards_to_drag:
             list.remove(card)
             list.append(card)
@@ -80,7 +80,7 @@ def main(page: ft.Page):
     def start_drag(e: ft.DragStartEvent):
         # check if the card is the last in the pile
 
-        cards_to_drag = e.control.data.cards_on_top()
+        cards_to_drag = e.control.data.cards_to_drag()
         if cards_to_drag == []:
             print("just one card")
         move_on_top(e.control, controls, cards_to_drag)
@@ -89,6 +89,17 @@ def main(page: ft.Page):
         game_data.start_top = e.control.top
         game_data.start_left = e.control.left
         page.update()
+
+    def drag(e: ft.DragUpdateEvent):
+        # e.control.top = max(0, e.control.top + e.delta_y)
+        # e.control.left = max(0, e.control.left + e.delta_x)
+        i = 0
+        for card in e.control.data.cards_to_drag():
+            card.top = max(0, e.control.top + e.delta_y) + i * 20
+            card.left = max(0, e.control.left + e.delta_x)
+            i += 1
+            card.update()
+        # e.control.update()
 
     def drop(e: ft.DragEndEvent):
         # check if card is close to any of the spaces
@@ -100,18 +111,17 @@ def main(page: ft.Page):
                 and abs(e.control.left - space.control.left) < 20
             ):
                 # place card to the space in proximity
-                e.control.data.place(space)
+                # e.control.data.place(space)
+
+                # place cards_to_drag to the space in proximity
+                for card in e.control.data.cards_to_drag():
+                    card.data.place(space)
                 page.update()
                 return
 
         # return card to original position
         game_data.bounce_back(e.control)
         page.update()
-
-    def drag(e: ft.DragUpdateEvent):
-        e.control.top = max(0, e.control.top + e.delta_y)
-        e.control.left = max(0, e.control.left + e.delta_x)
-        e.control.update()
 
     space_controls = []
     spaces = []
