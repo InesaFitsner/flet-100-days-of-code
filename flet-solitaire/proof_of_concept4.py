@@ -68,10 +68,13 @@ class Space:
 
 
 def main(page: ft.Page):
-    def move_on_top(item, list):
+    def move_on_top(item, list, cards_to_drag):
         """Brings draggable card to the top of the stack"""
         list.remove(item)
         list.append(item)
+        for card in cards_to_drag:
+            list.remove(card)
+            list.append(card)
         page.update()
 
     def start_drag(e: ft.DragStartEvent):
@@ -80,7 +83,8 @@ def main(page: ft.Page):
         cards_to_drag = e.control.data.cards_on_top()
         if cards_to_drag == []:
             print("just one card")
-        move_on_top(e.control, controls)
+        move_on_top(e.control, controls, cards_to_drag)
+
         # remember card original position to return it back if needed
         game_data.start_top = e.control.top
         game_data.start_left = e.control.left
