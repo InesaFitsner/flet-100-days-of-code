@@ -3,20 +3,47 @@ import flet as ft
 # This prototype is move space and card creating and dealing to a class
 
 
-class GameData:
+class GameController:
     def __init__(self):
-        self.start_top = 0
-        self.start_left = 0
+        self.current_top = 0
+        self.current_left = 0
         self.offset = 20
+        self.space_layout()
+
+    def space_layout(self):
+        self.spaces = []
+        self.space_controls = []
+
+        # top spaces (foundation piles)
+        x = 0
+        for i in range(4):
+            self.space_controls.append(
+                ft.Container(
+                    width=65, height=100, left=x, top=0, border=ft.border.all(1)
+                )
+            )
+            self.spaces.append(Space(self.space_controls[-1], "foundation"))
+            x += 100
+
+        # bottom spaces (plateau piles)
+        y = 0
+        for i in range(4):
+            self.space_controls.append(
+                ft.Container(
+                    width=65, height=100, left=y, top=150, border=ft.border.all(1)
+                )
+            )
+            self.spaces.append(Space(self.space_controls[-1], "tableau"))
+            y += 100
 
     def bounce_back(self, cards):
         i = 0
         for card in cards:
             if card.data.space.type == "tableau":
-                card.top = self.start_top + i * self.offset
+                card.top = self.current_top + i * self.offset
             elif card.data.space.type == "foundation":
-                card.top = self.start_top
-            card.left = self.start_left
+                card.top = self.current_top
+            card.left = self.current_left
             i += 1
 
 
@@ -91,15 +118,15 @@ def main(page: ft.Page):
         move_on_top(controls, cards_to_drag)
 
         # remember card original position to return it back if needed
-        game_data.start_top = e.control.top
-        game_data.start_left = e.control.left
+        solitaire.current_top = e.control.top
+        solitaire.current_left = e.control.left
         page.update()
 
     def drag(e: ft.DragUpdateEvent):
         i = 0
         for card in e.control.data.cards_to_drag():
             if e.control.data.space.type == "tableau":
-                card.top = max(0, e.control.top + e.delta_y) + i * game_data.offset
+                card.top = max(0, e.control.top + e.delta_y) + i * solitaire.offset
             elif e.control.data.space.type == "foundation":
                 card.top = max(0, e.control.top + e.delta_y)
             card.left = max(0, e.control.left + e.delta_x)
@@ -109,7 +136,7 @@ def main(page: ft.Page):
     def drop(e: ft.DragEndEvent):
         # check if card is close to any of the spaces
         cards_to_drag = e.control.data.cards_to_drag()
-        for space in spaces:
+        for space in solitaire.spaces:
             # top position of the upper card in the pile
             if (
                 abs(e.control.top - space.upper_card_top()) < 20
@@ -122,30 +149,10 @@ def main(page: ft.Page):
                 return
 
         # return card to original position
-        game_data.bounce_back(cards_to_drag)
+        solitaire.bounce_back(cards_to_drag)
         page.update()
 
-    game_data = GameData()
-    space_controls = []
-    spaces = []
-
-    # top spaces (foundation piles)
-    x = 0
-    for i in range(4):
-        space_controls.append(
-            ft.Container(width=65, height=100, left=x, top=0, border=ft.border.all(1))
-        )
-        spaces.append(Space(space_controls[-1], "foundation"))
-        x += 100
-
-    # bottom spaces (plateau piles)
-    y = 0
-    for i in range(4):
-        space_controls.append(
-            ft.Container(width=65, height=100, left=y, top=150, border=ft.border.all(1))
-        )
-        spaces.append(Space(space_controls[-1], "tableau"))
-        y += 100
+    solitaire = GameController()
 
     colors = ["BLUE", "YELLOW", "GREEN", "RED"]
 
@@ -168,9 +175,9 @@ def main(page: ft.Page):
         cards.append(Card(card_controls[-1]))
 
     for i in range(4):
-        cards[i].place(spaces[4 + i])
+        cards[i].place(solitaire.spaces[4 + i])
 
-    controls = space_controls + card_controls
+    controls = solitaire.space_controls + card_controls
 
     page.add(ft.Stack(controls, width=1000, height=500))
 
