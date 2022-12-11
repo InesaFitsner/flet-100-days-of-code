@@ -19,13 +19,17 @@ class Solitaire:
         # top spaces (foundation piles)
         x = 0
         for i in range(4):
-            self.spaces.append(Space(space_type="foundation", top=0, left=x))
+            self.spaces.append(
+                Space(solitaire=self, space_type="foundation", top=0, left=x)
+            )
             x += 100
 
         # bottom spaces (plateau piles)
         x = 0
         for i in range(4):
-            self.spaces.append(Space(space_type="tableau", top=150, left=x))
+            self.spaces.append(
+                Space(solitaire=self, space_type="tableau", top=150, left=x)
+            )
             x += 100
         self.controls.extend(self.spaces)
 
@@ -89,10 +93,9 @@ class Card(ft.GestureDetector):
         i = 0
 
         for card in self.cards_to_drag():
+            card.top = max(0, self.top + e.delta_y)
             if card.space.type == "tableau":
-                card.top = max(0, self.top + e.delta_y) + i * self.solitaire.offset
-            elif card.space.type == "foundation":
-                card.top = max(0, self.top + e.delta_y)
+                card.top += i * self.solitaire.offset
             card.left = max(0, self.left + e.delta_x)
             i += 1
             card.update()
@@ -101,7 +104,7 @@ class Card(ft.GestureDetector):
         # check if card is close to any of the spaces
         cards_to_drag = self.cards_to_drag()
         for space in self.solitaire.spaces:
-            # top position of the upper card in the pile
+            # compare with top and left position of the upper card in the space pile
             if (
                 abs(self.top - space.upper_card_top()) < 20
                 and abs(self.left - space.left) < 20
@@ -117,10 +120,9 @@ class Card(ft.GestureDetector):
         self.page.update()
 
     def place(self, space):
+        self.top = space.top
         if space.type == "tableau":
-            self.top = space.top + self.solitaire.offset * len(space.pile)
-        elif space.type == "foundation":
-            self.top = space.top
+            self.top += self.solitaire.offset * len(space.pile)
         self.left = space.left
 
         # remove the card form the old space's pile if exists
@@ -148,8 +150,9 @@ class Card(ft.GestureDetector):
 
 
 class Space(ft.Container):
-    def __init__(self, space_type, top, left):
+    def __init__(self, solitaire, space_type, top, left):
         super().__init__()
+        self.solitaire = solitaire
         self.pile = []
         self.type = space_type
         self.width = 65
@@ -161,7 +164,7 @@ class Space(ft.Container):
     def upper_card_top(self):
         if self.type == "tableau":
             if len(self.pile) > 1:
-                return self.top + 20 * (len(self.pile) - 1)
+                return self.top + self.solitaire.offset * (len(self.pile) - 1)
         return self.top
 
 
