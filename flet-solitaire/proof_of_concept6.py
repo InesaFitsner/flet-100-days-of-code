@@ -8,8 +8,9 @@ class GameController:
         self.current_top = 0
         self.current_left = 0
         self.offset = 20
+        self.controls = controls
         self.space_layout()
-        self.card_deck(controls=controls)
+        self.card_deck()
         self.deal_cards()
 
     def space_layout(self):
@@ -27,14 +28,14 @@ class GameController:
             self.spaces.append(Space(space_type="tableau", top=150, left=x))
             x += 100
 
-    def card_deck(self, controls):
+    def card_deck(self):
         colors = ["BLUE", "YELLOW", "GREEN", "RED"]
 
         self.cards = []
         # controls = []
 
         for color in colors:
-            self.cards.append(Card(solitaire=self, controls=controls, bgcolor=color))
+            self.cards.append(Card(solitaire=self, bgcolor=color))
 
     def deal_cards(self):
         for i in range(4):
@@ -52,10 +53,10 @@ class GameController:
 
 
 class Card(ft.GestureDetector):
-    def __init__(self, solitaire, controls, bgcolor):
+    def __init__(self, solitaire, bgcolor):
         super().__init__()
         self.solitaire = solitaire
-        self.controls = controls
+        self.controls = solitaire.controls
         self.space = None
 
         self.mouse_cursor = ft.MouseCursor.MOVE
