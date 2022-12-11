@@ -12,29 +12,18 @@ class GameController:
 
     def space_layout(self):
         self.spaces = []
-        self.space_controls = []
 
         # top spaces (foundation piles)
         x = 0
         for i in range(4):
-            self.space_controls.append(
-                ft.Container(
-                    width=65, height=100, left=x, top=0, border=ft.border.all(1)
-                )
-            )
-            self.spaces.append(Space(self.space_controls[-1], "foundation"))
+            self.spaces.append(Space(space_type="foundation", top=0, left=x))
             x += 100
 
         # bottom spaces (plateau piles)
-        y = 0
+        x = 0
         for i in range(4):
-            self.space_controls.append(
-                ft.Container(
-                    width=65, height=100, left=y, top=150, border=ft.border.all(1)
-                )
-            )
-            self.spaces.append(Space(self.space_controls[-1], "tableau"))
-            y += 100
+            self.spaces.append(Space(space_type="tableau", top=150, left=x))
+            x += 100
 
     def bounce_back(self, cards):
         i = 0
@@ -58,10 +47,10 @@ class Card:
 
     def place(self, space):
         if space.type == "tableau":
-            self.control.top = space.control.top + 20 * len(space.pile)
+            self.control.top = space.top + 20 * len(space.pile)
         elif space.type == "foundation":
-            self.control.top = space.control.top
-        self.control.left = space.control.left
+            self.control.top = space.top
+        self.control.left = space.left
 
         # remove the card form the old space's pile if exists
         if self.space is not None:
@@ -86,30 +75,31 @@ class Card:
         return top_pile
 
 
-class Space:
-    def __init__(self, space, space_type):
-        self.control = space
+class Space(ft.Container):
+    def __init__(self, space_type, top, left):
+        super().__init__()
         self.pile = []
         self.type = space_type
-        self.set_control_data()
-
-    def set_control_data(self):
-        self.control.data = self
+        self.width = 65
+        self.height = 100
+        self.left = left
+        self.top = top
+        self.border = ft.border.all(1)
 
     def upper_card_top(self):
         if self.type == "tableau":
             if len(self.pile) > 1:
-                return self.control.top + 20 * (len(self.pile) - 1)
-        return self.control.top
+                return self.top + 20 * (len(self.pile) - 1)
+        return self.top
 
 
 def main(page: ft.Page):
-    def move_on_top(list, cards_to_drag):
+    def move_on_top(controls, cards_to_drag):
         """Brings draggable card pile to the top of the stack"""
 
         for card in cards_to_drag:
-            list.remove(card)
-            list.append(card)
+            controls.remove(card)
+            controls.append(card)
         page.update()
 
     def start_drag(e: ft.DragStartEvent):
@@ -140,7 +130,7 @@ def main(page: ft.Page):
             # top position of the upper card in the pile
             if (
                 abs(e.control.top - space.upper_card_top()) < 20
-                and abs(e.control.left - space.control.left) < 20
+                and abs(e.control.left - space.left) < 20
             ):
                 # place cards_to_drag to the space in proximity
                 for card in cards_to_drag:
@@ -177,7 +167,7 @@ def main(page: ft.Page):
     for i in range(4):
         cards[i].place(solitaire.spaces[4 + i])
 
-    controls = solitaire.space_controls + card_controls
+    controls = solitaire.spaces + card_controls
 
     page.add(ft.Stack(controls, width=1000, height=500))
 
