@@ -2,16 +2,22 @@ import flet as ft
 
 # This prototype is to move card that is not upper card. The card shouldn't be moved on top,
 # and the rest of the pile should move together with it
+# if not close to any space the pile should bounce back
+# if close, all the cards in pile should be placed to this space
 
 
 class GameData:
     def __init__(self):
         self.start_top = 0
         self.start_left = 0
+        self.offset = 20
 
-    def bounce_back(self, card):
-        card.top = self.start_top
-        card.left = self.start_left
+    def bounce_back(self, cards):
+        i = 0
+        for card in cards:
+            card.top = self.start_top + i * self.offset
+            card.left = self.start_left
+            i += 1
 
 
 class Card:
@@ -98,6 +104,7 @@ def main(page: ft.Page):
 
     def drop(e: ft.DragEndEvent):
         # check if card is close to any of the spaces
+        cards_to_drag = e.control.data.cards_to_drag()
         for space in spaces:
             # top position of the upper card in the pile
             new_top = space.upper_card_top()
@@ -109,13 +116,13 @@ def main(page: ft.Page):
                 # e.control.data.place(space)
 
                 # place cards_to_drag to the space in proximity
-                for card in e.control.data.cards_to_drag():
+                for card in cards_to_drag:
                     card.data.place(space)
                 page.update()
                 return
 
         # return card to original position
-        game_data.bounce_back(e.control)
+        game_data.bounce_back(cards_to_drag)
         page.update()
 
     space_controls = []
