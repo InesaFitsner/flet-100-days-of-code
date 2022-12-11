@@ -34,7 +34,8 @@ class Solitaire:
         self.controls.extend(self.spaces)
 
     def create_card_deck(self):
-        colors = ["BLUE", "YELLOW", "GREEN", "RED"]
+        suites = ["Hearts", "Diamonds", "Hearts", "Spades"]
+        # colors = ["BLUE", "YELLOW", "GREEN", "RED"]
         values = [
             "Ace",
             "2",
@@ -53,11 +54,9 @@ class Solitaire:
 
         self.cards = []
 
-        for color in colors:
+        for suite in suites:
             for value in values:
-                self.cards.append(
-                    Card(solitaire=self, bgcolor=color, suite=color, value=value)
-                )
+                self.cards.append(Card(solitaire=self, suite=suite, value=value))
         self.stock = self.cards
         self.controls.extend(self.cards)
 
@@ -80,7 +79,7 @@ class Solitaire:
 
 
 class Card(ft.GestureDetector):
-    def __init__(self, solitaire, bgcolor, suite, value):
+    def __init__(self, solitaire, suite, value):
         super().__init__()
         self.solitaire = solitaire
         self.controls = solitaire.controls
@@ -95,7 +94,12 @@ class Card(ft.GestureDetector):
         self.on_pan_end = self.drop
         self.on_double_tap = self.doubleclick
         self.content = ft.Container(
-            width=65, height=100, bgcolor=bgcolor, content=ft.Text(value)
+            width=65,
+            height=100,
+            border_radius=ft.border_radius.all(6),
+            border=ft.border.all(2),
+            bgcolor="WHITE",
+            content=ft.Text(f"{value} of {suite}", size=8),
         )
 
     def move_on_top(self, controls, cards_to_drag):
