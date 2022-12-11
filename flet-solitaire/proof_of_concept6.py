@@ -10,6 +10,7 @@ class GameController:
         self.offset = 20
         self.space_layout()
         self.card_deck(controls=controls)
+        self.deal_cards()
 
     def space_layout(self):
         self.spaces = []
@@ -34,6 +35,10 @@ class GameController:
 
         for color in colors:
             self.cards.append(Card(solitaire=self, controls=controls, bgcolor=color))
+
+    def deal_cards(self):
+        for i in range(4):
+            self.cards[i].place(self.spaces[4 + i])
 
     def bounce_back(self, cards):
         i = 0
@@ -160,15 +165,8 @@ def main(page: ft.Page):
     controls = []
     solitaire = GameController(controls)
 
-    # colors = ["BLUE", "YELLOW", "GREEN", "RED"]
-
-    # cards = []
-
-    # for color in colors:
-    #     cards.append(Card(solitaire=solitaire, controls=controls, bgcolor=color))
-
-    for i in range(4):
-        solitaire.cards[i].place(solitaire.spaces[4 + i])
+    # for i in range(4):
+    #     solitaire.cards[i].place(solitaire.spaces[4 + i])
 
     controls.extend(solitaire.spaces)
     controls.extend(solitaire.cards)
