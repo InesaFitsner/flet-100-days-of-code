@@ -15,7 +15,10 @@ class GameData:
     def bounce_back(self, cards):
         i = 0
         for card in cards:
-            card.top = self.start_top + i * self.offset
+            if card.data.space.type == "tableau":
+                card.top = self.start_top + i * self.offset
+            elif card.data.space.type == "foundation":
+                card.top = self.start_top
             card.left = self.start_left
             i += 1
 
@@ -30,8 +33,10 @@ class Card:
         self.control.data = self
 
     def place(self, space):
-
-        self.control.top = space.control.top + 20 * len(space.pile)
+        if space.type == "tableau":
+            self.control.top = space.control.top + 20 * len(space.pile)
+        elif space.type == "foundation":
+            self.control.top = space.control.top
         self.control.left = space.control.left
 
         # remove the card form the old space's pile if exists
@@ -68,7 +73,10 @@ class Space:
         self.control.data = self
 
     def upper_card_top(self):
-        return self.control.top + 20 * len(self.pile)
+        if self.type == "tableau":
+            if len(self.pile) > 1:
+                return self.control.top + 20 * (len(self.pile) - 1)
+        return self.control.top
 
 
 def main(page: ft.Page):
@@ -93,7 +101,10 @@ def main(page: ft.Page):
     def drag(e: ft.DragUpdateEvent):
         i = 0
         for card in e.control.data.cards_to_drag():
-            card.top = max(0, e.control.top + e.delta_y) + i * game_data.offset
+            if e.control.data.space.type == "tableau":
+                card.top = max(0, e.control.top + e.delta_y) + i * game_data.offset
+            elif e.control.data.space.type == "foundation":
+                card.top = max(0, e.control.top + e.delta_y)
             card.left = max(0, e.control.left + e.delta_x)
             i += 1
             card.update()
@@ -103,9 +114,8 @@ def main(page: ft.Page):
         cards_to_drag = e.control.data.cards_to_drag()
         for space in spaces:
             # top position of the upper card in the pile
-            new_top = space.upper_card_top()
             if (
-                abs(e.control.top - new_top) < 20
+                abs(e.control.top - space.upper_card_top()) < 20
                 and abs(e.control.left - space.control.left) < 20
             ):
                 # place cards_to_drag to the space in proximity
