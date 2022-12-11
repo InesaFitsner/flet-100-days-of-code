@@ -17,7 +17,7 @@ class Solitaire:
         self.spaces = []
 
         # top spaces (foundation piles)
-        x = 0
+        x = 300
         for i in range(4):
             self.spaces.append(
                 Space(solitaire=self, space_type="foundation", top=0, left=x)
@@ -26,7 +26,7 @@ class Solitaire:
 
         # bottom spaces (plateau piles)
         x = 0
-        for i in range(4):
+        for i in range(7):
             self.spaces.append(
                 Space(solitaire=self, space_type="tableau", top=150, left=x)
             )
@@ -40,12 +40,14 @@ class Solitaire:
 
         for color in colors:
             self.cards.append(Card(solitaire=self, bgcolor=color))
-
+        self.stock = self.cards
         self.controls.extend(self.cards)
 
     def deal_cards(self):
-        for i in range(4):
-            self.cards[i].place(self.spaces[4 + i])
+        i = 4
+        for card in self.cards:
+            card.place(self.spaces[i])
+            i += 1
 
     def bounce_back(self, cards):
         i = 0
