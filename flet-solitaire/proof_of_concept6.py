@@ -3,7 +3,7 @@ import flet as ft
 # This prototype is move space and card creating and dealing to a class
 
 
-class GameController:
+class Solitaire:
     def __init__(self):
         self.current_top = 0
         self.current_left = 0
@@ -167,7 +167,7 @@ class Space(ft.Container):
 
 def main(page: ft.Page):
 
-    solitaire = GameController()
+    solitaire = Solitaire()
 
     page.add(ft.Stack(solitaire.controls, width=1000, height=500))
 
