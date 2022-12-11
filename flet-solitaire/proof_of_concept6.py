@@ -4,11 +4,12 @@ import flet as ft
 
 
 class GameController:
-    def __init__(self):
+    def __init__(self, controls):
         self.current_top = 0
         self.current_left = 0
         self.offset = 20
         self.space_layout()
+        self.card_deck(controls=controls)
 
     def space_layout(self):
         self.spaces = []
@@ -24,6 +25,15 @@ class GameController:
         for i in range(4):
             self.spaces.append(Space(space_type="tableau", top=150, left=x))
             x += 100
+
+    def card_deck(self, controls):
+        colors = ["BLUE", "YELLOW", "GREEN", "RED"]
+
+        self.cards = []
+        # controls = []
+
+        for color in colors:
+            self.cards.append(Card(solitaire=self, controls=controls, bgcolor=color))
 
     def bounce_back(self, cards):
         i = 0
@@ -147,22 +157,21 @@ class Space(ft.Container):
 
 
 def main(page: ft.Page):
-
-    solitaire = GameController()
-
-    colors = ["BLUE", "YELLOW", "GREEN", "RED"]
-
-    cards = []
     controls = []
+    solitaire = GameController(controls)
 
-    for color in colors:
-        cards.append(Card(solitaire=solitaire, controls=controls, bgcolor=color))
+    # colors = ["BLUE", "YELLOW", "GREEN", "RED"]
+
+    # cards = []
+
+    # for color in colors:
+    #     cards.append(Card(solitaire=solitaire, controls=controls, bgcolor=color))
 
     for i in range(4):
-        cards[i].place(solitaire.spaces[4 + i])
+        solitaire.cards[i].place(solitaire.spaces[4 + i])
 
     controls.extend(solitaire.spaces)
-    controls.extend(cards)
+    controls.extend(solitaire.cards)
 
     page.add(ft.Stack(controls, width=1000, height=500))
 
