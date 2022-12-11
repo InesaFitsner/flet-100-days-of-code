@@ -44,7 +44,7 @@ class Card(ft.GestureDetector):
         self.space = None
 
         self.mouse_cursor = ft.MouseCursor.MOVE
-        self.drag_interval = 10
+        # self.drag_interval = 10
         self.on_pan_update = self.drag
         self.on_pan_start = self.start_drag
         self.on_pan_end = self.drop
