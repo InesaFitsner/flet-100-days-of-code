@@ -82,8 +82,6 @@ def main(page: ft.Page):
     def start_drag(e: ft.DragStartEvent):
 
         cards_to_drag = e.control.data.cards_to_drag()
-        # if cards_to_drag == []:
-        #    print("just one card")
         move_on_top(controls, cards_to_drag)
 
         # remember card original position to return it back if needed
@@ -92,11 +90,9 @@ def main(page: ft.Page):
         page.update()
 
     def drag(e: ft.DragUpdateEvent):
-        # e.control.top = max(0, e.control.top + e.delta_y)
-        # e.control.left = max(0, e.control.left + e.delta_x)
         i = 0
         for card in e.control.data.cards_to_drag():
-            card.top = max(0, e.control.top + e.delta_y) + i * 20
+            card.top = max(0, e.control.top + e.delta_y) + i * game_data.offset
             card.left = max(0, e.control.left + e.delta_x)
             i += 1
             card.update()
@@ -125,6 +121,7 @@ def main(page: ft.Page):
         game_data.bounce_back(cards_to_drag)
         page.update()
 
+    game_data = GameData()
     space_controls = []
     spaces = []
 
@@ -165,8 +162,6 @@ def main(page: ft.Page):
         )
         card_controls[-1].content.bgcolor = color
         cards.append(Card(card_controls[-1]))
-
-    game_data = GameData()
 
     for i in range(4):
         cards[i].place(spaces[4 + i])
