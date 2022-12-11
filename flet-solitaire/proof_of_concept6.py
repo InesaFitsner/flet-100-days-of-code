@@ -83,7 +83,6 @@ class Card(ft.GestureDetector):
 
         cards_to_drag = self.cards_to_drag()
         self.move_on_top(self.controls, cards_to_drag)
-
         # remember card original position to return it back if needed
         self.solitaire.current_top = e.control.top
         self.solitaire.current_left = e.control.left
@@ -91,7 +90,6 @@ class Card(ft.GestureDetector):
 
     def drag(self, e: ft.DragUpdateEvent):
         i = 0
-
         for card in self.cards_to_drag():
             card.top = max(0, self.top + e.delta_y)
             if card.space.type == "tableau":
