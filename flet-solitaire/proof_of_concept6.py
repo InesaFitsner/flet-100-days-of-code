@@ -33,7 +33,6 @@ class Solitaire:
         colors = ["BLUE", "YELLOW", "GREEN", "RED"]
 
         self.cards = []
-        # controls = []
 
         for color in colors:
             self.cards.append(Card(solitaire=self, bgcolor=color))
@@ -47,7 +46,6 @@ class Solitaire:
     def bounce_back(self, cards):
         i = 0
         for card in cards:
-            # card_space = card.find_card_space()
             if card.space.type == "tableau":
                 card.top = self.current_top + i * self.offset
             elif card.space.type == "foundation":
@@ -70,11 +68,6 @@ class Card(ft.GestureDetector):
         self.on_pan_end = self.drop
         self.content = ft.Container(width=65, height=100, bgcolor=bgcolor)
 
-    # def find_card_space(self):
-    #     for space in self.solitaire.spaces:
-    #         if space.pile.count(self) > 0:
-    #             self.space = space
-
     def move_on_top(self, controls, cards_to_drag):
         """Brings draggable card pile to the top of the stack"""
 
@@ -95,7 +88,6 @@ class Card(ft.GestureDetector):
 
     def drag(self, e: ft.DragUpdateEvent):
         i = 0
-        # card_space = self.find_card_space()
 
         for card in self.cards_to_drag():
             if card.space.type == "tableau":
@@ -119,7 +111,6 @@ class Card(ft.GestureDetector):
                 for card in cards_to_drag:
                     card.place(space)
                 self.page.update()
-                # self.find_card_space()
                 return
 
         # return card to original position
@@ -134,7 +125,6 @@ class Card(ft.GestureDetector):
         self.left = space.left
 
         # remove the card form the old space's pile if exists
-        # card_space = self.find_card_space()
         if self.space is not None:
             self.space.pile.remove(self)
 
@@ -145,9 +135,9 @@ class Card(ft.GestureDetector):
         space.pile.append(self)
 
     def cards_to_drag(self):
-        # number if cards in the space
+        """returns list of cards that will be dragged together, starting with current card"""
         top_pile = []
-        # card_space = self.find_card_space()
+
         if self.space is not None:
             card_index = self.space.pile.index(self)
 
