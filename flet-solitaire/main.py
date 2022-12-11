@@ -35,17 +35,37 @@ class Solitaire:
 
     def create_card_deck(self):
         colors = ["BLUE", "YELLOW", "GREEN", "RED"]
+        values = [
+            "Ace",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "10",
+            "Jack",
+            "Queen",
+            "King",
+        ]
 
         self.cards = []
 
         for color in colors:
-            self.cards.append(Card(solitaire=self, bgcolor=color))
+            for value in values:
+                self.cards.append(
+                    Card(solitaire=self, bgcolor=color, suite=color, value=value)
+                )
         self.stock = self.cards
         self.controls.extend(self.cards)
 
     def deal_cards(self):
         i = 4
         for card in self.cards:
+            if i > len(self.spaces) - 1:
+                i = 4
             card.place(self.spaces[i])
             i += 1
 
@@ -60,10 +80,12 @@ class Solitaire:
 
 
 class Card(ft.GestureDetector):
-    def __init__(self, solitaire, bgcolor):
+    def __init__(self, solitaire, bgcolor, suite, value):
         super().__init__()
         self.solitaire = solitaire
         self.controls = solitaire.controls
+        self.suite = suite
+        self.value = value
         self.space = None
 
         self.mouse_cursor = ft.MouseCursor.MOVE
@@ -72,7 +94,9 @@ class Card(ft.GestureDetector):
         self.on_pan_start = self.start_drag
         self.on_pan_end = self.drop
         self.on_double_tap = self.doubleclick
-        self.content = ft.Container(width=65, height=100, bgcolor=bgcolor)
+        self.content = ft.Container(
+            width=65, height=100, bgcolor=bgcolor, content=ft.Text(value)
+        )
 
     def move_on_top(self, controls, cards_to_drag):
         """Brings draggable card pile to the top of the stack"""
