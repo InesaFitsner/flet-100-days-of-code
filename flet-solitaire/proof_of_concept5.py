@@ -1,9 +1,8 @@
 import flet as ft
 
-# This prototype is to make to types of spaces:
+# This prototype is to make two types of spaces:
 # Foundation spaces - cards should be added without offset
 # Tableau spaces - cards should be added with offset.
-# Doubleclick on top card should place it to a foundation space
 
 
 class GameData:
