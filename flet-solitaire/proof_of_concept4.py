@@ -96,7 +96,6 @@ def main(page: ft.Page):
             card.left = max(0, e.control.left + e.delta_x)
             i += 1
             card.update()
-        # e.control.update()
 
     def drop(e: ft.DragEndEvent):
         # check if card is close to any of the spaces
@@ -108,9 +107,6 @@ def main(page: ft.Page):
                 abs(e.control.top - new_top) < 20
                 and abs(e.control.left - space.control.left) < 20
             ):
-                # place card to the space in proximity
-                # e.control.data.place(space)
-
                 # place cards_to_drag to the space in proximity
                 for card in cards_to_drag:
                     card.data.place(space)
