@@ -46,10 +46,9 @@ class Solitaire:
     def bounce_back(self, cards):
         i = 0
         for card in cards:
+            card.top = self.current_top
             if card.space.type == "tableau":
-                card.top = self.current_top + i * self.offset
-            elif card.space.type == "foundation":
-                card.top = self.current_top
+                card.top += i * self.offset
             card.left = self.current_left
             i += 1
 
@@ -119,7 +118,7 @@ class Card(ft.GestureDetector):
 
     def place(self, space):
         if space.type == "tableau":
-            self.top = space.top + 20 * len(space.pile)
+            self.top = space.top + self.solitaire.offset * len(space.pile)
         elif space.type == "foundation":
             self.top = space.top
         self.left = space.left
