@@ -28,45 +28,98 @@ class GameController:
     def bounce_back(self, cards):
         i = 0
         for card in cards:
-            if card.data.space.type == "tableau":
+            if card.space.type == "tableau":
                 card.top = self.current_top + i * self.offset
-            elif card.data.space.type == "foundation":
+            elif card.space.type == "foundation":
                 card.top = self.current_top
             card.left = self.current_left
             i += 1
 
 
-class Card:
-    def __init__(self, control):
-        self.control = control
+class Card(ft.GestureDetector):
+    def __init__(self, solitaire, controls, bgcolor):
+        super().__init__()
+        self.solitaire = solitaire
+        self.controls = controls
         self.space = None
-        self.set_control_data()
 
-    def set_control_data(self):
-        self.control.data = self
+        self.mouse_cursor = ft.MouseCursor.MOVE
+        self.drag_interval = 10
+        self.on_pan_update = self.drag
+        self.on_pan_start = self.start_drag
+        self.on_pan_end = self.drop
+        self.content = ft.Container(width=65, height=100, bgcolor=bgcolor)
+
+    def move_on_top(self, controls, cards_to_drag):
+        """Brings draggable card pile to the top of the stack"""
+
+        for card in cards_to_drag:
+            controls.remove(card)
+            controls.append(card)
+        self.page.update()
+
+    def start_drag(self, e: ft.DragStartEvent):
+
+        cards_to_drag = self.cards_to_drag()
+        self.move_on_top(self.controls, cards_to_drag)
+
+        # remember card original position to return it back if needed
+        self.solitaire.current_top = e.control.top
+        self.solitaire.current_left = e.control.left
+        self.page.update()
+
+    def drag(self, e: ft.DragUpdateEvent):
+        i = 0
+        for card in self.cards_to_drag():
+            if self.space.type == "tableau":
+                card.top = max(0, self.top + e.delta_y) + i * self.solitaire.offset
+            elif self.space.type == "foundation":
+                card.top = max(0, self.top + e.delta_y)
+            card.left = max(0, self.left + e.delta_x)
+            i += 1
+            card.update()
+
+    def drop(self, e: ft.DragEndEvent):
+        # check if card is close to any of the spaces
+        cards_to_drag = self.cards_to_drag()
+        for space in self.solitaire.spaces:
+            # top position of the upper card in the pile
+            if (
+                abs(self.top - space.upper_card_top()) < 20
+                and abs(self.left - space.left) < 20
+            ):
+                # place cards_to_drag to the space in proximity
+                for card in cards_to_drag:
+                    card.place(space)
+                self.page.update()
+                return
+
+        # return card to original position
+        self.solitaire.bounce_back(cards_to_drag)
+        self.page.update()
 
     def place(self, space):
         if space.type == "tableau":
-            self.control.top = space.top + 20 * len(space.pile)
+            self.top = space.top + 20 * len(space.pile)
         elif space.type == "foundation":
-            self.control.top = space.top
-        self.control.left = space.left
+            self.top = space.top
+        self.left = space.left
 
         # remove the card form the old space's pile if exists
         if self.space is not None:
-            self.space.pile.remove(self.control)
+            self.space.pile.remove(self)
 
         # set card's space as new space
         self.space = space
 
         # add the card to the new space's pile
-        space.pile.append(self.control)
+        space.pile.append(self)
 
     def cards_to_drag(self):
         # number if cards in the space
         top_pile = []
         if self.space is not None:
-            card_index = self.space.pile.index(self.control)
+            card_index = self.space.pile.index(self)
 
             for card in self.space.pile:
                 if self.space.pile.index(card) >= card_index:
@@ -94,80 +147,22 @@ class Space(ft.Container):
 
 
 def main(page: ft.Page):
-    def move_on_top(controls, cards_to_drag):
-        """Brings draggable card pile to the top of the stack"""
-
-        for card in cards_to_drag:
-            controls.remove(card)
-            controls.append(card)
-        page.update()
-
-    def start_drag(e: ft.DragStartEvent):
-
-        cards_to_drag = e.control.data.cards_to_drag()
-        move_on_top(controls, cards_to_drag)
-
-        # remember card original position to return it back if needed
-        solitaire.current_top = e.control.top
-        solitaire.current_left = e.control.left
-        page.update()
-
-    def drag(e: ft.DragUpdateEvent):
-        i = 0
-        for card in e.control.data.cards_to_drag():
-            if e.control.data.space.type == "tableau":
-                card.top = max(0, e.control.top + e.delta_y) + i * solitaire.offset
-            elif e.control.data.space.type == "foundation":
-                card.top = max(0, e.control.top + e.delta_y)
-            card.left = max(0, e.control.left + e.delta_x)
-            i += 1
-            card.update()
-
-    def drop(e: ft.DragEndEvent):
-        # check if card is close to any of the spaces
-        cards_to_drag = e.control.data.cards_to_drag()
-        for space in solitaire.spaces:
-            # top position of the upper card in the pile
-            if (
-                abs(e.control.top - space.upper_card_top()) < 20
-                and abs(e.control.left - space.left) < 20
-            ):
-                # place cards_to_drag to the space in proximity
-                for card in cards_to_drag:
-                    card.data.place(space)
-                page.update()
-                return
-
-        # return card to original position
-        solitaire.bounce_back(cards_to_drag)
-        page.update()
 
     solitaire = GameController()
 
     colors = ["BLUE", "YELLOW", "GREEN", "RED"]
 
-    card_controls = []
     cards = []
+    controls = []
 
     for color in colors:
-
-        card_controls.append(
-            ft.GestureDetector(
-                mouse_cursor=ft.MouseCursor.MOVE,
-                drag_interval=10,
-                on_pan_update=drag,
-                on_pan_start=start_drag,
-                on_pan_end=drop,
-                content=ft.Container(width=65, height=100),
-            )
-        )
-        card_controls[-1].content.bgcolor = color
-        cards.append(Card(card_controls[-1]))
+        cards.append(Card(solitaire=solitaire, controls=controls, bgcolor=color))
 
     for i in range(4):
         cards[i].place(solitaire.spaces[4 + i])
 
-    controls = solitaire.spaces + card_controls
+    controls.extend(solitaire.spaces)
+    controls.extend(cards)
 
     page.add(ft.Stack(controls, width=1000, height=500))
 
