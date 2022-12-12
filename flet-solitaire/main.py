@@ -1,3 +1,5 @@
+import random
+
 import flet as ft
 
 # This prototype is move space and card creating and dealing to a class
@@ -16,7 +18,16 @@ class Solitaire:
     def create_spaces(self):
         self.spaces = []
 
-        # top spaces (foundation piles)
+        # stock space index 0
+        self.spaces.append(Space(solitaire=self, space_type="stock", top=0, left=0))
+
+        # waste spaces index 1-3
+        x = 100
+        for i in range(3):
+            self.spaces.append(Space(solitaire=self, space_type="waste", top=0, left=x))
+            x += 20
+
+        # top spaces (foundation piles) index 4-7
         x = 300
         for i in range(4):
             self.spaces.append(
@@ -24,7 +35,7 @@ class Solitaire:
             )
             x += 100
 
-        # bottom spaces (plateau piles)
+        # bottom spaces (plateau piles) index 8-14
         x = 0
         for i in range(7):
             self.spaces.append(
@@ -34,7 +45,7 @@ class Solitaire:
         self.controls.extend(self.spaces)
 
     def create_card_deck(self):
-        suites = ["Hearts", "Diamonds", "Hearts", "Spades"]
+        suites = ["Hearts", "Diamonds", "Clubs", "Spades"]
         # colors = ["BLUE", "YELLOW", "GREEN", "RED"]
         values = [
             "Ace",
@@ -57,16 +68,32 @@ class Solitaire:
         for suite in suites:
             for value in values:
                 self.cards.append(Card(solitaire=self, suite=suite, value=value))
-        self.stock = self.cards
+        # self.stock = self.cards
         self.controls.extend(self.cards)
 
     def deal_cards(self):
-        i = 4
+        i = 8
         for card in self.cards:
             if i > len(self.spaces) - 1:
-                i = 4
+                i = 8
             card.place(self.spaces[i])
             i += 1
+        # card = random.choice(self.stock)
+        # print(len(self.spaces))
+        # print(len(self.cards))
+        # i = 4
+        # n = 0
+        # while i < 11:
+        #     for number in range(i, 11):
+        #         card = random.choice(self.stock)
+        #         print(self.stock.index(card))
+        #         # self.cards[n].place(self.spaces[number])
+        #         card.place(self.spaces[number])
+        #         self.stock.remove(card)
+        #         # n += 1
+        #         # print(n)
+        #     i += 1
+        #     # self.stock.remove(card)
 
     def bounce_back(self, cards):
         i = 0
@@ -193,6 +220,7 @@ class Space(ft.Container):
         self.height = 100
         self.left = left
         self.top = top
+        self.border_radius = ft.border_radius.all(6)
         self.border = ft.border.all(1)
 
     def upper_card_top(self):
