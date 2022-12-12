@@ -69,31 +69,28 @@ class Solitaire:
             for value in values:
                 self.cards.append(Card(solitaire=self, suite=suite, value=value))
         # self.stock = self.cards
+        random.shuffle(self.cards)
         self.controls.extend(self.cards)
 
     def deal_cards(self):
-        i = 8
-        for card in self.cards:
-            if i > len(self.spaces) - 1:
-                i = 8
-            card.place(self.spaces[i])
-            i += 1
-        # card = random.choice(self.stock)
-        # print(len(self.spaces))
-        # print(len(self.cards))
-        # i = 4
+        # i = 8
         # n = 0
-        # while i < 11:
-        #     for number in range(i, 11):
-        #         card = random.choice(self.stock)
-        #         print(self.stock.index(card))
-        #         # self.cards[n].place(self.spaces[number])
-        #         card.place(self.spaces[number])
-        #         self.stock.remove(card)
-        #         # n += 1
-        #         # print(n)
+        # for card in self.cards:
+        #     if i > len(self.spaces) - 1:
+        #         i = 8
+        #     card.place(self.spaces[i])
         #     i += 1
-        #     # self.stock.remove(card)
+
+        first_space_index = 8
+        last_space_index = len(self.spaces) - 1
+        for card in self.cards:
+            while first_space_index <= last_space_index:
+                for number in range(first_space_index, last_space_index):
+                    card.place(self.spaces[number])
+                    print(number)
+                first_space_index += 1
+        #         i += 1
+        # #     # self.stock.remove(card)
 
     def bounce_back(self, cards):
         i = 0
@@ -184,6 +181,7 @@ class Card(ft.GestureDetector):
         self.top = space.top
         if space.type == "tableau":
             self.top += self.solitaire.offset * len(space.pile)
+            # print(f"{len(space.pile)}")
         self.left = space.left
 
         # remove the card form the old space's pile if exists
@@ -195,6 +193,7 @@ class Card(ft.GestureDetector):
 
         # add the card to the new space's pile
         space.pile.append(self)
+        self.page.update()
 
     def cards_to_drag(self):
         """returns list of cards that will be dragged together, starting with current card"""
