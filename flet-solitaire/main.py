@@ -4,6 +4,8 @@ import flet as ft
 
 # This prototype is move space and card creating and dealing to a class
 
+import logging
+#logging.basicConfig(level=logging.DEBUG)
 
 class Solitaire(ft.Stack):
     def __init__(self):
@@ -80,24 +82,38 @@ class Solitaire(ft.Stack):
         self.update()
 
     def deal_cards(self):
-        i = 8
-        n = 0
-        for card in self.cards:
-            if i > len(self.spaces) - 1:
-                i = 8
-            card.place(self.spaces[i])
-            i += 1
-
-        # first_space_index = 8
-        # last_space_index = len(self.spaces) - 1
+        # i = 8
+        # n = 0
         # for card in self.cards:
-        #     while first_space_index <= last_space_index:
-        #         for number in range(first_space_index, last_space_index):
-        #             card.place(self.spaces[number])
-        #             print(number)
-        #         first_space_index += 1
+        #     if i > len(self.spaces) - 1:
+        #         i = 8
+        #     card.place(self.spaces[i])
+        #     i += 1
+        
+        
+        card_index = 0
+        first_space = 8
+        while card_index <= 27:
+            for space_index in range (first_space, 15):
+                self.cards[card_index].place(self.spaces[space_index])
+                card_index += 1
+            first_space += 1
+        
+        
+        # --- correct dealing ---- 
+        # first_space_index = 8
+        # i = 0
+        # while i <= 28:
+        #     for number in range(first_space_index, len(self.spaces)):
+        #         self.cards[i].place(self.spaces[number])
+        #         print(f"Card index: {i}, space index {number}")
         #         i += 1
-        # #     # self.stock.remove(card)
+        #     first_space_index += 1
+
+        for i in range(28, len(self.cards)):
+            self.cards[i].place(self.spaces[0])
+            print(f"Card index: {i}, space index 0")
+
 
     def bounce_back(self, cards):
         i = 0
@@ -119,7 +135,8 @@ class Card(ft.GestureDetector):
         self.space = None
 
         self.mouse_cursor = ft.MouseCursor.MOVE
-        # self.drag_interval = 10
+        #self.visible = False
+        self.drag_interval = 10
         self.on_pan_update = self.drag
         self.on_pan_start = self.start_drag
         self.on_pan_end = self.drop
@@ -152,6 +169,7 @@ class Card(ft.GestureDetector):
 
     def drag(self, e: ft.DragUpdateEvent):
         i = 0
+        #print(len(self.cards_to_drag()))
         for card in self.cards_to_drag():
             card.top = max(0, self.top + e.delta_y)
             if card.space.type == "tableau":
