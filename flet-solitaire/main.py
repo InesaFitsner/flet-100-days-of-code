@@ -31,19 +31,19 @@ class Solitaire(ft.Stack):
         self.spaces = []
 
         # stock space index 0
-        self.spaces.append(Space(solitaire=self, space_type="stock", top=0, left=0))
+        self.spaces.append(Space(solitaire=self, space_type="stock", top=0, left=0, border=None))
 
         # waste spaces index 1-3
         x = 100
         for i in range(3):
-            self.spaces.append(Space(solitaire=self, space_type="waste", top=0, left=x))
+            self.spaces.append(Space(solitaire=self, space_type="waste", top=0, left=x, border=None))
             x += 20
 
         # top spaces (foundation piles) index 4-7
         x = 300
         for i in range(4):
             self.spaces.append(
-                Space(solitaire=self, space_type="foundation", top=0, left=x)
+                Space(solitaire=self, space_type="foundation", top=0, left=x, border=ft.border.all(1))
             )
             x += 100
 
@@ -51,7 +51,7 @@ class Solitaire(ft.Stack):
         x = 0
         for i in range(7):
             self.spaces.append(
-                Space(solitaire=self, space_type="tableau", top=150, left=x)
+                Space(solitaire=self, space_type="tableau", top=150, left=x, border=ft.border.all(1))
             )
             x += 100
         self.controls.extend(self.spaces)
@@ -80,7 +80,7 @@ class Solitaire(ft.Stack):
 
         for suite in suites:
             for value in values:
-                self.cards.append(Card(solitaire=self, suite=suite.name, value=value, color=suite.color))
+                self.cards.append(Card(solitaire=self, suite=suite, value=value))
         # self.stock = self.cards
         random.shuffle(self.cards)
         self.controls.extend(self.cards)
@@ -126,7 +126,7 @@ class Solitaire(ft.Stack):
 
 
 class Card(ft.GestureDetector):
-    def __init__(self, solitaire, suite, value, color):
+    def __init__(self, solitaire, suite, value):
         super().__init__()
         self.solitaire = solitaire
         self.controls = solitaire.controls
@@ -148,7 +148,7 @@ class Card(ft.GestureDetector):
             border_radius=ft.border_radius.all(6),
             border=ft.border.all(2),
             bgcolor="GREEN",
-            content=ft.Text(f"{value} of {suite}", size=8, color=color),
+            content=ft.Text(f"{value} of {suite.name}", size=8, color=suite.color),
         )
 
     def reveal(self):
@@ -193,15 +193,17 @@ class Card(ft.GestureDetector):
                 abs(self.top - space.upper_card_top()) < 20
                 and abs(self.left - space.left) < 20
             ):
-                # place cards_to_drag to the space in proximity
-                old_space = self.space
-                for card in cards_to_drag:
-                    card.place(space)
-                # reveal top card in old space if exists
-                if len(old_space.pile) > 0:
-                    old_space.pile[-1].reveal()
-                self.page.update()
-                return
+                # place cards_to_drag to the space in proximity, if cards color is different or space is empty
+                if len(space.pile) == 0 or (len(space.pile) != 0 and self.suite.color != space.pile[-1].suite.color):
+                
+                    old_space = self.space
+                    for card in cards_to_drag:
+                        card.place(space)
+                    # reveal top card in old space if exists
+                    if len(old_space.pile) > 0:
+                        old_space.pile[-1].reveal()
+                    self.page.update()
+                    return
 
         # return card to original position
         self.solitaire.bounce_back(cards_to_drag)
@@ -245,7 +247,7 @@ class Card(ft.GestureDetector):
 
 
 class Space(ft.Container):
-    def __init__(self, solitaire, space_type, top, left):
+    def __init__(self, solitaire, space_type, top, left, border):
         super().__init__()
         self.solitaire = solitaire
         self.pile = []
@@ -255,7 +257,7 @@ class Space(ft.Container):
         self.left = left
         self.top = top
         self.border_radius = ft.border_radius.all(6)
-        self.border = ft.border.all(1)
+        self.border = border
 
     def upper_card_top(self):
         if self.type == "tableau":
