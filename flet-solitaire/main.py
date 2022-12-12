@@ -104,6 +104,10 @@ class Solitaire(ft.Stack):
                 self.cards[card_index].place(self.spaces[space_index])
                 card_index += 1
             first_space += 1
+
+        # Reveal top cards in space piles:
+        for number in range(8, 15):
+            self.spaces[number].pile[-1].reveal()
         
         # Stock pile
         for i in range(28, len(self.cards)):
@@ -128,6 +132,7 @@ class Card(ft.GestureDetector):
         self.controls = solitaire.controls
         self.suite = suite
         self.value = value
+        self.face_up = False
         self.space = None
 
         self.mouse_cursor = ft.MouseCursor.MOVE
@@ -142,9 +147,14 @@ class Card(ft.GestureDetector):
             height=100,
             border_radius=ft.border_radius.all(6),
             border=ft.border.all(2),
-            bgcolor="WHITE",
+            bgcolor="GREEN",
             content=ft.Text(f"{value} of {suite}", size=8, color=color),
         )
+
+    def reveal(self):
+        self.face_up = True
+        self.content.bgcolor = "WHITE"
+        self.update()
 
     def move_on_top(self, controls, cards_to_drag):
         """Brings draggable card pile to the top of the stack"""
