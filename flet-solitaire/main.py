@@ -7,6 +7,11 @@ import flet as ft
 import logging
 #logging.basicConfig(level=logging.DEBUG)
 
+class Suite():
+    def __init__(self, suite_name, suite_color):
+        self.name = suite_name
+        self.color = suite_color
+
 class Solitaire(ft.Stack):
     def __init__(self):
         super().__init__()
@@ -53,7 +58,7 @@ class Solitaire(ft.Stack):
         self.update()
 
     def create_card_deck(self):
-        suites = ["Hearts", "Diamonds", "Clubs", "Spades"]
+        suites = [Suite("Hearts", "RED"), Suite("Diamonds", "RED"), Suite("Clubs", "BLACK"), Suite("Spades", "BLACK")]
         # colors = ["BLUE", "YELLOW", "GREEN", "RED"]
         values = [
             "Ace",
@@ -75,7 +80,7 @@ class Solitaire(ft.Stack):
 
         for suite in suites:
             for value in values:
-                self.cards.append(Card(solitaire=self, suite=suite, value=value))
+                self.cards.append(Card(solitaire=self, suite=suite.name, value=value, color=suite.color))
         # self.stock = self.cards
         random.shuffle(self.cards)
         self.controls.extend(self.cards)
@@ -90,26 +95,17 @@ class Solitaire(ft.Stack):
         #     card.place(self.spaces[i])
         #     i += 1
         
-        
+        # --- correct dealing ----
+        # Tableau
         card_index = 0
         first_space = 8
         while card_index <= 27:
-            for space_index in range (first_space, 15):
+            for space_index in range (first_space, len(self.spaces)):
                 self.cards[card_index].place(self.spaces[space_index])
                 card_index += 1
             first_space += 1
         
-        
-        # --- correct dealing ---- 
-        # first_space_index = 8
-        # i = 0
-        # while i <= 28:
-        #     for number in range(first_space_index, len(self.spaces)):
-        #         self.cards[i].place(self.spaces[number])
-        #         print(f"Card index: {i}, space index {number}")
-        #         i += 1
-        #     first_space_index += 1
-
+        # Stock pile
         for i in range(28, len(self.cards)):
             self.cards[i].place(self.spaces[0])
             print(f"Card index: {i}, space index 0")
@@ -126,7 +122,7 @@ class Solitaire(ft.Stack):
 
 
 class Card(ft.GestureDetector):
-    def __init__(self, solitaire, suite, value):
+    def __init__(self, solitaire, suite, value, color):
         super().__init__()
         self.solitaire = solitaire
         self.controls = solitaire.controls
@@ -147,7 +143,7 @@ class Card(ft.GestureDetector):
             border_radius=ft.border_radius.all(6),
             border=ft.border.all(2),
             bgcolor="WHITE",
-            content=ft.Text(f"{value} of {suite}", size=8),
+            content=ft.Text(f"{value} of {suite}", size=8, color=color),
         )
 
     def move_on_top(self, controls, cards_to_drag):
