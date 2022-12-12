@@ -5,15 +5,20 @@ import flet as ft
 # This prototype is move space and card creating and dealing to a class
 
 
-class Solitaire:
+class Solitaire(ft.Stack):
     def __init__(self):
+        super().__init__()
+        self.width = 1000
+        self.height = 500
         self.current_top = 0
         self.current_left = 0
-        self.offset = 20
+        self.card_offset = 20
         self.controls = []
+
+    def did_mount(self):
         self.create_spaces()
         self.create_card_deck()
-        self.deal_cards()
+        self.deal_cards()     
 
     def create_spaces(self):
         self.spaces = []
@@ -43,6 +48,7 @@ class Solitaire:
             )
             x += 100
         self.controls.extend(self.spaces)
+        self.update()
 
     def create_card_deck(self):
         suites = ["Hearts", "Diamonds", "Clubs", "Spades"]
@@ -71,24 +77,25 @@ class Solitaire:
         # self.stock = self.cards
         random.shuffle(self.cards)
         self.controls.extend(self.cards)
+        self.update()
 
     def deal_cards(self):
-        # i = 8
-        # n = 0
-        # for card in self.cards:
-        #     if i > len(self.spaces) - 1:
-        #         i = 8
-        #     card.place(self.spaces[i])
-        #     i += 1
-
-        first_space_index = 8
-        last_space_index = len(self.spaces) - 1
+        i = 8
+        n = 0
         for card in self.cards:
-            while first_space_index <= last_space_index:
-                for number in range(first_space_index, last_space_index):
-                    card.place(self.spaces[number])
-                    print(number)
-                first_space_index += 1
+            if i > len(self.spaces) - 1:
+                i = 8
+            card.place(self.spaces[i])
+            i += 1
+
+        # first_space_index = 8
+        # last_space_index = len(self.spaces) - 1
+        # for card in self.cards:
+        #     while first_space_index <= last_space_index:
+        #         for number in range(first_space_index, last_space_index):
+        #             card.place(self.spaces[number])
+        #             print(number)
+        #         first_space_index += 1
         #         i += 1
         # #     # self.stock.remove(card)
 
@@ -97,7 +104,7 @@ class Solitaire:
         for card in cards:
             card.top = self.current_top
             if card.space.type == "tableau":
-                card.top += i * self.offset
+                card.top += i * self.card_offset
             card.left = self.current_left
             i += 1
 
@@ -148,7 +155,7 @@ class Card(ft.GestureDetector):
         for card in self.cards_to_drag():
             card.top = max(0, self.top + e.delta_y)
             if card.space.type == "tableau":
-                card.top += i * self.solitaire.offset
+                card.top += i * self.solitaire.card_offset
             card.left = max(0, self.left + e.delta_x)
             i += 1
             card.update()
@@ -180,7 +187,7 @@ class Card(ft.GestureDetector):
     def place(self, space):
         self.top = space.top
         if space.type == "tableau":
-            self.top += self.solitaire.offset * len(space.pile)
+            self.top += self.solitaire.card_offset * len(space.pile)
             # print(f"{len(space.pile)}")
         self.left = space.left
 
@@ -193,7 +200,7 @@ class Card(ft.GestureDetector):
 
         # add the card to the new space's pile
         space.pile.append(self)
-        self.page.update()
+        self.update()
 
     def cards_to_drag(self):
         """returns list of cards that will be dragged together, starting with current card"""
@@ -225,7 +232,7 @@ class Space(ft.Container):
     def upper_card_top(self):
         if self.type == "tableau":
             if len(self.pile) > 1:
-                return self.top + self.solitaire.offset * (len(self.pile) - 1)
+                return self.top + self.solitaire.card_offset * (len(self.pile) - 1)
         return self.top
 
 
@@ -233,7 +240,7 @@ def main(page: ft.Page):
 
     solitaire = Solitaire()
 
-    page.add(ft.Stack(solitaire.controls, width=1000, height=500))
+    page.add(solitaire)
 
 
 ft.app(target=main)
