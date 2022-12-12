@@ -194,8 +194,12 @@ class Card(ft.GestureDetector):
                 and abs(self.left - space.left) < 20
             ):
                 # place cards_to_drag to the space in proximity
+                old_space = self.space
                 for card in cards_to_drag:
                     card.place(space)
+                # reveal top card in old space if exists
+                if len(old_space.pile) > 0:
+                    old_space.pile[-1].reveal()
                 self.page.update()
                 return
 
