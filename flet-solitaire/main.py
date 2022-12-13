@@ -181,73 +181,73 @@ class Card(ft.GestureDetector):
         self.page.update()
 
     def start_drag(self, e: ft.DragStartEvent):
-        print("start_drag:", e.control)
-        cards_to_drag = self.cards_to_drag()
-        self.move_on_top(self.controls, cards_to_drag)
-        # remember card original position to return it back if needed
-        self.solitaire.current_top = e.control.top
-        self.solitaire.current_left = e.control.left
-        # self.page.update()
+        if e.control.face_up:
+            cards_to_drag = self.cards_to_drag()
+            self.move_on_top(self.controls, cards_to_drag)
+            # remember card original position to return it back if needed
+            self.solitaire.current_top = e.control.top
+            self.solitaire.current_left = e.control.left
+            # self.page.update()
 
     def drag(self, e: ft.DragUpdateEvent):
-        i = 0
-        # print(len(self.cards_to_drag()))
-        print("drag:", e.control)
-        for card in self.cards_to_drag():
-            card.top = max(0, self.top + e.delta_y)
-            if card.space.type == "tableau":
-                card.top += i * self.solitaire.card_offset
-            card.left = max(0, self.left + e.delta_x)
-            i += 1
-            card.update()
+        if e.control.face_up:
+            i = 0
+            for card in self.cards_to_drag():
+                card.top = max(0, self.top + e.delta_y)
+                if card.space.type == "tableau":
+                    card.top += i * self.solitaire.card_offset
+                card.left = max(0, self.left + e.delta_x)
+                i += 1
+                card.update()
 
     def drop(self, e: ft.DragEndEvent):
-        cards_to_drag = self.cards_to_drag()
-        spaces = self.solitaire.tableau + self.solitaire.foundation
-        # check if card is close to any of the tableau spaces
-        for space in spaces:
-            # compare with top and left position of the upper card in the space pile
-            if (
-                abs(self.top - space.upper_card_top()) < 20
-                and abs(self.left - space.left) < 20
-            ):
-                # tableau slot
-                # place cards_to_drag to the space in proximity, if
-                # *** For tableau slots: if cards' color is different or space is empty
-                # *** For foundation slots: [TBD]
+        if e.control.face_up:
+            cards_to_drag = self.cards_to_drag()
+            spaces = self.solitaire.tableau + self.solitaire.foundation
+            # check if card is close to any of the tableau spaces
+            for space in spaces:
+                # compare with top and left position of the upper card in the space pile
                 if (
-                    space.type == "tableau"
-                    and (
-                        len(space.pile) == 0
-                        or (
-                            len(space.pile) != 0
-                            and self.suite.color != space.pile[-1].suite.color
-                        )
-                    )
-                ) or (
-                    space.type == "foundation"
-                    and len(cards_to_drag) == 1
-                    and (
-                        len(space.pile) == 0
-                        or (
-                            len(space.pile) != 0
-                            and self.suite.color == space.pile[-1].suite.color
-                        )
-                    )
+                    abs(self.top - space.upper_card_top()) < 20
+                    and abs(self.left - space.left) < 20
                 ):
+                    # tableau slot
+                    # place cards_to_drag to the space in proximity, if:
+                    # *** For tableau slots: if cards' color is different or space is empty
+                    # *** For foundation slots: [TBD]
+                    if (
+                        space.type == "tableau"
+                        and (
+                            len(space.pile) == 0
+                            or (
+                                len(space.pile) != 0
+                                and self.suite.color != space.pile[-1].suite.color
+                            )
+                        )
+                    ) or (
+                        space.type == "foundation"
+                        and len(cards_to_drag) == 1
+                        and (
+                            len(space.pile) == 0
+                            or (
+                                len(space.pile) != 0
+                                and self.suite.color == space.pile[-1].suite.color
+                            )
+                        )
+                    ):
 
-                    old_space = self.space
-                    for card in cards_to_drag:
-                        card.place(space)
-                    # reveal top card in old space if exists
-                    if len(old_space.pile) > 0:
-                        old_space.pile[-1].reveal()
-                    self.page.update()
-                    return
+                        old_space = self.space
+                        for card in cards_to_drag:
+                            card.place(space)
+                        # reveal top card in old space if exists
+                        if len(old_space.pile) > 0:
+                            old_space.pile[-1].reveal()
+                        self.page.update()
+                        return
 
-        # return card to original position
-        self.solitaire.bounce_back(cards_to_drag)
-        self.page.update()
+            # return card to original position
+            self.solitaire.bounce_back(cards_to_drag)
+            self.page.update()
 
     def doubleclick(self, e):
         self.move_on_top(self.solitaire.controls, [self])
