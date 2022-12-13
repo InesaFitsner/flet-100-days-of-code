@@ -46,7 +46,6 @@ class Solitaire(ft.Stack):
         )
         #    x += 20
 
-        # top spaces (foundation piles) index 4-7
         x = 300
         for i in range(4):
             self.foundation.append(
@@ -60,7 +59,7 @@ class Solitaire(ft.Stack):
             )
             x += 100
 
-        # bottom spaces (plateau piles) index 8-14
+        # bottom spaces (plateau piles)
         x = 0
         for i in range(7):
             self.tableau.append(
@@ -114,15 +113,6 @@ class Solitaire(ft.Stack):
         self.update()
 
     def deal_cards(self):
-        # i = 8
-        # n = 0
-        # for card in self.cards:
-        #     if i > len(self.spaces) - 1:
-        #         i = 8
-        #     card.place(self.spaces[i])
-        #     i += 1
-
-        # --- correct dealing ----
         # Tableau
         card_index = 0
         first_space = 0
@@ -163,7 +153,7 @@ class Card(ft.GestureDetector):
 
         self.mouse_cursor = ft.MouseCursor.MOVE
         # self.visible = False
-        self.drag_interval = 10
+        self.drag_interval = 5
         self.on_pan_update = self.drag
         self.on_pan_start = self.start_drag
         self.on_pan_end = self.drop
@@ -191,17 +181,18 @@ class Card(ft.GestureDetector):
         self.page.update()
 
     def start_drag(self, e: ft.DragStartEvent):
-
+        print("start_drag:", e.control)
         cards_to_drag = self.cards_to_drag()
         self.move_on_top(self.controls, cards_to_drag)
         # remember card original position to return it back if needed
         self.solitaire.current_top = e.control.top
         self.solitaire.current_left = e.control.left
-        self.page.update()
+        # self.page.update()
 
     def drag(self, e: ft.DragUpdateEvent):
         i = 0
         # print(len(self.cards_to_drag()))
+        print("drag:", e.control)
         for card in self.cards_to_drag():
             card.top = max(0, self.top + e.delta_y)
             if card.space.type == "tableau":
@@ -214,16 +205,35 @@ class Card(ft.GestureDetector):
         cards_to_drag = self.cards_to_drag()
         spaces = self.solitaire.tableau + self.solitaire.foundation
         # check if card is close to any of the tableau spaces
-        for space in self.solitaire.tableau:
+        for space in spaces:
             # compare with top and left position of the upper card in the space pile
             if (
                 abs(self.top - space.upper_card_top()) < 20
                 and abs(self.left - space.left) < 20
             ):
-                # place cards_to_drag to the space in proximity, if cards color is different or space is empty
-                if len(space.pile) == 0 or (
-                    len(space.pile) != 0
-                    and self.suite.color != space.pile[-1].suite.color
+                # tableau slot
+                # place cards_to_drag to the space in proximity, if
+                # *** For tableau slots: if cards' color is different or space is empty
+                # *** For foundation slots: [TBD]
+                if (
+                    space.type == "tableau"
+                    and (
+                        len(space.pile) == 0
+                        or (
+                            len(space.pile) != 0
+                            and self.suite.color != space.pile[-1].suite.color
+                        )
+                    )
+                ) or (
+                    space.type == "foundation"
+                    and len(cards_to_drag) == 1
+                    and (
+                        len(space.pile) == 0
+                        or (
+                            len(space.pile) != 0
+                            and self.suite.color == space.pile[-1].suite.color
+                        )
+                    )
                 ):
 
                     old_space = self.space
@@ -234,26 +244,6 @@ class Card(ft.GestureDetector):
                         old_space.pile[-1].reveal()
                     self.page.update()
                     return
-
-        # check if card is close to any of the foundation spaces
-        if len(cards_to_drag) == 1:
-            for space in self.solitaire.foundation:
-                # compare with top and left position of foundation pile
-                if abs(self.top - space.top) < 20 and abs(self.left - space.left) < 20:
-                    # place the cards to the space in proximity, if cards color is the same or the slot is empty
-                    if len(space.pile) == 0 or (
-                        len(space.pile) != 0
-                        and self.suite.color == space.pile[-1].suite.color
-                    ):
-
-                        old_space = self.space
-                        for card in cards_to_drag:
-                            card.place(space)
-                        # reveal top card in old space if exists
-                        if len(old_space.pile) > 0:
-                            old_space.pile[-1].reveal()
-                        self.page.update()
-                        return
 
         # return card to original position
         self.solitaire.bounce_back(cards_to_drag)
