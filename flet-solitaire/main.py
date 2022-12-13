@@ -3,7 +3,7 @@ import random
 
 import flet as ft
 
-# This prototype is move space and card creating and dealing to a class
+# This prototype is move slot and card creating and dealing to a class
 
 # logging.basicConfig(level=logging.DEBUG)
 
@@ -25,33 +25,33 @@ class Solitaire(ft.Stack):
         self.controls = []
 
     def did_mount(self):
-        self.create_spaces()
+        self.create_slots()
         self.create_card_deck()
         self.deal_cards()
 
-    def create_spaces(self):
-        # self.spaces = []
+    def create_slots(self):
+        # self.slots = []
         self.foundation = []
         self.tableau = []
-        # stock space index 0
-        self.stock = Space(
-            solitaire=self, space_type="stock", top=0, left=0, border=None
+        # stock slot index 0
+        self.stock = slot(
+            solitaire=self, slot_type="stock", top=0, left=0, border=None
         )
 
-        # waste spaces index 1-3
+        # waste slots index 1-3
         # x = 100
         # for i in range(3):
-        self.waste = Space(
-            solitaire=self, space_type="waste", top=0, left=100, border=None
+        self.waste = slot(
+            solitaire=self, slot_type="waste", top=0, left=100, border=None
         )
         #    x += 20
 
         x = 300
         for i in range(4):
             self.foundation.append(
-                Space(
+                slot(
                     solitaire=self,
-                    space_type="foundation",
+                    slot_type="foundation",
                     top=0,
                     left=x,
                     border=ft.border.all(1),
@@ -59,13 +59,13 @@ class Solitaire(ft.Stack):
             )
             x += 100
 
-        # bottom spaces (plateau piles)
+        # bottom slots (plateau piles)
         x = 0
         for i in range(7):
             self.tableau.append(
-                Space(
+                slot(
                     solitaire=self,
-                    space_type="tableau",
+                    slot_type="tableau",
                     top=150,
                     left=x,
                     border=ft.border.all(1),
@@ -115,27 +115,27 @@ class Solitaire(ft.Stack):
     def deal_cards(self):
         # Tableau
         card_index = 0
-        first_space = 0
+        first_slot = 0
         while card_index <= 27:
-            for space_index in range(first_space, len(self.tableau)):
-                self.cards[card_index].place(self.tableau[space_index])
+            for slot_index in range(first_slot, len(self.tableau)):
+                self.cards[card_index].place(self.tableau[slot_index])
                 card_index += 1
-            first_space += 1
+            first_slot += 1
 
-        # Reveal top cards in space piles:
+        # Reveal top cards in slot piles:
         for number in range(len(self.tableau)):
             self.tableau[number].pile[-1].reveal()
 
         # Stock pile
         for i in range(28, len(self.cards)):
             self.cards[i].place(self.stock)
-            # print(f"Card index: {i}, space index 0")
+            # print(f"Card index: {i}, slot index 0")
 
     def bounce_back(self, cards):
         i = 0
         for card in cards:
             card.top = self.current_top
-            if card.space.type == "tableau":
+            if card.slot.type == "tableau":
                 card.top += i * self.card_offset
             card.left = self.current_left
             i += 1
@@ -149,7 +149,7 @@ class Card(ft.GestureDetector):
         self.suite = suite
         self.value = value
         self.face_up = False
-        self.space = None
+        self.slot = None
 
         self.mouse_cursor = ft.MouseCursor.MOVE
         # self.visible = False
@@ -194,7 +194,7 @@ class Card(ft.GestureDetector):
             i = 0
             for card in self.cards_to_drag():
                 card.top = max(0, self.top + e.delta_y)
-                if card.space.type == "tableau":
+                if card.slot.type == "tableau":
                     card.top += i * self.solitaire.card_offset
                 card.left = max(0, self.left + e.delta_x)
                 i += 1
@@ -203,45 +203,45 @@ class Card(ft.GestureDetector):
     def drop(self, e: ft.DragEndEvent):
         if e.control.face_up:
             cards_to_drag = self.cards_to_drag()
-            spaces = self.solitaire.tableau + self.solitaire.foundation
-            # check if card is close to any of the tableau spaces
-            for space in spaces:
-                # compare with top and left position of the upper card in the space pile
+            slots = self.solitaire.tableau + self.solitaire.foundation
+            # check if card is close to any of the tableau slots
+            for slot in slots:
+                # compare with top and left position of the upper card in the slot pile
                 if (
-                    abs(self.top - space.upper_card_top()) < 20
-                    and abs(self.left - space.left) < 20
+                    abs(self.top - slot.upper_card_top()) < 20
+                    and abs(self.left - slot.left) < 20
                 ):
                     # tableau slot
-                    # place cards_to_drag to the space in proximity, if:
-                    # *** For tableau slots: if cards' color is different or space is empty
+                    # place cards_to_drag to the slot in proximity, if:
+                    # *** For tableau slots: if cards' color is different or slot is empty
                     # *** For foundation slots: [TBD]
                     if (
-                        space.type == "tableau"
+                        slot.type == "tableau"
                         and (
-                            len(space.pile) == 0
+                            len(slot.pile) == 0
                             or (
-                                len(space.pile) != 0
-                                and self.suite.color != space.pile[-1].suite.color
+                                len(slot.pile) != 0
+                                and self.suite.color != slot.pile[-1].suite.color
                             )
                         )
                     ) or (
-                        space.type == "foundation"
+                        slot.type == "foundation"
                         and len(cards_to_drag) == 1
                         and (
-                            len(space.pile) == 0
+                            len(slot.pile) == 0
                             or (
-                                len(space.pile) != 0
-                                and self.suite.color == space.pile[-1].suite.color
+                                len(slot.pile) != 0
+                                and self.suite.color == slot.pile[-1].suite.color
                             )
                         )
                     ):
 
-                        old_space = self.space
+                        old_slot = self.slot
                         for card in cards_to_drag:
-                            card.place(space)
-                        # reveal top card in old space if exists
-                        if len(old_space.pile) > 0:
-                            old_space.pile[-1].reveal()
+                            card.place(slot)
+                        # reveal top card in old slot if exists
+                        if len(old_slot.pile) > 0:
+                            old_slot.pile[-1].reveal()
                         self.page.update()
                         return
 
@@ -254,45 +254,45 @@ class Card(ft.GestureDetector):
         self.place(self.solitaire.foundation[0])
         self.page.update()
 
-    def place(self, space):
-        self.top = space.top
-        self.left = space.left
-        if space.type == "tableau":
-            self.top += self.solitaire.card_offset * len(space.pile)
-        if space.type == "waste":
-            self.left += self.solitaire.card_offset * len(space.pile)
+    def place(self, slot):
+        self.top = slot.top
+        self.left = slot.left
+        if slot.type == "tableau":
+            self.top += self.solitaire.card_offset * len(slot.pile)
+        if slot.type == "waste":
+            self.left += self.solitaire.card_offset * len(slot.pile)
 
-        # remove the card form the old space's pile if exists
-        if self.space is not None:
-            self.space.pile.remove(self)
+        # remove the card form the old slot's pile if exists
+        if self.slot is not None:
+            self.slot.pile.remove(self)
 
-        # set card's space as new space
-        self.space = space
+        # set card's slot as new slot
+        self.slot = slot
 
-        # add the card to the new space's pile
-        space.pile.append(self)
+        # add the card to the new slot's pile
+        slot.pile.append(self)
         self.update()
 
     def cards_to_drag(self):
         """returns list of cards that will be dragged together, starting with current card"""
         top_pile = []
 
-        if self.space is not None:
-            card_index = self.space.pile.index(self)
+        if self.slot is not None:
+            card_index = self.slot.pile.index(self)
 
-            for card in self.space.pile:
-                if self.space.pile.index(card) >= card_index:
+            for card in self.slot.pile:
+                if self.slot.pile.index(card) >= card_index:
                     top_pile.append(card)
 
         return top_pile
 
 
-class Space(ft.Container):
-    def __init__(self, solitaire, space_type, top, left, border):
+class slot(ft.Container):
+    def __init__(self, solitaire, slot_type, top, left, border):
         super().__init__()
         self.solitaire = solitaire
         self.pile = []
-        self.type = space_type
+        self.type = slot_type
         self.width = 65
         self.height = 100
         self.left = left
