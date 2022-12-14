@@ -143,7 +143,7 @@ class Solitaire(ft.Stack):
             card.left = self.current_left
             i += 1
 
-    def show_waste(self):
+    def display_waste(self):
         for card in self.waste.pile:
             card.visible = False
         visible_cards_number = min(self.waste_size, len(self.waste.pile))
@@ -264,7 +264,7 @@ class Card(ft.GestureDetector):
                         # reveal top card in old slot if exists
                         if len(old_slot.pile) > 0 and old_slot.type == 'tableau':
                             old_slot.pile[-1].flip()
-                        self.solitaire.show_waste()
+                        self.solitaire.display_waste()
                         self.page.update()
 
                         return
@@ -284,6 +284,7 @@ class Card(ft.GestureDetector):
                         self.place(slot)
                         if len(old_slot.pile) > 0:
                             old_slot.get_top_card().flip()
+                        self.solitaire.display_waste()
                         self.page.update()
                         return
 
@@ -295,7 +296,7 @@ class Card(ft.GestureDetector):
                 self.move_on_top(self.solitaire.controls, [top_card])
                 top_card.place(self.solitaire.waste)
                 top_card.flip()
-            self.solitaire.show_waste()
+            self.solitaire.display_waste()
             self.page.update()
 
     def place(self, slot):
@@ -303,9 +304,6 @@ class Card(ft.GestureDetector):
         self.left = slot.left
         if slot.type == "tableau":
             self.top += self.solitaire.card_offset * len(slot.pile)
-        #if slot.type == "waste":
-        #    if len(slot.pile) < self.solitaire.waste_size:
-        #        self.left += self.solitaire.card_offset * len(slot.pile)
 
         # remove the card form the old slot's pile if exists
         
