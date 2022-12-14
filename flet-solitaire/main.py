@@ -13,6 +13,11 @@ class Suite:
         self.name = suite_name
         self.color = suite_color
 
+class Rank:
+    def __init__(self, card_name, card_value):
+        self.name = card_name
+        self.value = card_value
+
 
 class Solitaire(ft.Stack):
     def __init__(self):
@@ -31,21 +36,18 @@ class Solitaire(ft.Stack):
 
     def create_slots(self):
         # self.slots = []
-        self.foundation = []
-        self.tableau = []
-        # stock slot index 0
+        
+        
+    
         self.stock = slot(
             solitaire=self, slot_type="stock", top=0, left=0, border=None
         )
 
-        # waste slots index 1-3
-        # x = 100
-        # for i in range(3):
         self.waste = slot(
             solitaire=self, slot_type="waste", top=0, left=100, border=None
         )
-        #    x += 20
-
+     
+        self.foundation = []
         x = 300
         for i in range(4):
             self.foundation.append(
@@ -59,7 +61,7 @@ class Solitaire(ft.Stack):
             )
             x += 100
 
-        # bottom slots (plateau piles)
+        self.tableau = []
         x = 0
         for i in range(7):
             self.tableau.append(
@@ -72,6 +74,7 @@ class Solitaire(ft.Stack):
                 )
             )
             x += 100
+
         self.controls.append(self.stock)
         self.controls.append(self.waste)
         self.controls.extend(self.foundation)
@@ -86,27 +89,27 @@ class Solitaire(ft.Stack):
             Suite("Spades", "BLACK"),
         ]
         # colors = ["BLUE", "YELLOW", "GREEN", "RED"]
-        values = [
-            "Ace",
-            "2",
-            "3",
-            "4",
-            "5",
-            "6",
-            "7",
-            "8",
-            "9",
-            "10",
-            "Jack",
-            "Queen",
-            "King",
+        ranks = [
+            Rank("Ace", 1),
+            Rank("2", 2),
+            Rank("3", 3),
+            Rank("4", 4),
+            Rank("5", 5),
+            Rank("6", 6),
+            Rank("7", 7),
+            Rank("8", 8),
+            Rank("9", 9),
+            Rank("10", 10),
+            Rank("Jack", 11),
+            Rank("Queen", 12),
+            Rank("King", 13)
         ]
 
         self.cards = []
 
         for suite in suites:
-            for value in values:
-                self.cards.append(Card(solitaire=self, suite=suite, value=value))
+            for rank in ranks:
+                self.cards.append(Card(solitaire=self, suite=suite, rank=rank))
         # self.stock = self.cards
         random.shuffle(self.cards)
         self.controls.extend(self.cards)
@@ -124,12 +127,11 @@ class Solitaire(ft.Stack):
 
         # Reveal top cards in slot piles:
         for number in range(len(self.tableau)):
-            self.tableau[number].pile[-1].reveal()
+            self.tableau[number].pile[-1].flip()
 
         # Stock pile
         for i in range(28, len(self.cards)):
             self.cards[i].place(self.stock)
-            # print(f"Card index: {i}, slot index 0")
 
     def bounce_back(self, cards):
         i = 0
@@ -142,12 +144,12 @@ class Solitaire(ft.Stack):
 
 
 class Card(ft.GestureDetector):
-    def __init__(self, solitaire, suite, value):
+    def __init__(self, solitaire, suite, rank):
         super().__init__()
         self.solitaire = solitaire
         self.controls = solitaire.controls
         self.suite = suite
-        self.value = value
+        self.rank = rank
         self.face_up = False
         self.slot = None
 
@@ -164,10 +166,10 @@ class Card(ft.GestureDetector):
             border_radius=ft.border_radius.all(6),
             border=ft.border.all(2),
             bgcolor="GREEN",
-            content=ft.Text(f"{value} of {suite.name}", size=8, color=suite.color),
+            content=ft.Text(f"{rank.name} of {suite.name}", size=8, color=suite.color),
         )
 
-    def reveal(self):
+    def flip(self):
         self.face_up = True
         self.content.bgcolor = "WHITE"
         self.update()
@@ -208,8 +210,8 @@ class Card(ft.GestureDetector):
             for slot in slots:
                 # compare with top and left position of the upper card in the slot pile
                 if (
-                    abs(self.top - slot.upper_card_top()) < 20
-                    and abs(self.left - slot.left) < 20
+                    abs(self.top - slot.upper_card_top()) < 40
+                    and abs(self.left - slot.left) < 40
                 ):
                     # tableau slot
                     # place cards_to_drag to the slot in proximity, if:
@@ -228,7 +230,7 @@ class Card(ft.GestureDetector):
                         slot.type == "foundation"
                         and len(cards_to_drag) == 1
                         and (
-                            len(slot.pile) == 0
+                            (len(slot.pile) == 0 and e.control.rank.name == "Ace")
                             or (
                                 len(slot.pile) != 0
                                 and self.suite.color == slot.pile[-1].suite.color
@@ -241,7 +243,7 @@ class Card(ft.GestureDetector):
                             card.place(slot)
                         # reveal top card in old slot if exists
                         if len(old_slot.pile) > 0:
-                            old_slot.pile[-1].reveal()
+                            old_slot.pile[-1].flip()
                         self.page.update()
                         return
 
@@ -250,9 +252,14 @@ class Card(ft.GestureDetector):
             self.page.update()
 
     def doubleclick(self, e):
-        self.move_on_top(self.solitaire.controls, [self])
-        self.place(self.solitaire.foundation[0])
-        self.page.update()
+        if self.slot.type in ('waste', 'tableau'):
+            if self.face_up:
+                self.move_on_top(self.solitaire.controls, [self])
+                old_slot = self.slot
+                self.place(self.solitaire.foundation[0])
+                if len(old_slot.pile) > 0:
+                            old_slot.pile[-1].flip()
+                self.page.update()
 
     def place(self, slot):
         self.top = slot.top
@@ -272,6 +279,7 @@ class Card(ft.GestureDetector):
         # add the card to the new slot's pile
         slot.pile.append(self)
         self.update()
+
 
     def cards_to_drag(self):
         """returns list of cards that will be dragged together, starting with current card"""
