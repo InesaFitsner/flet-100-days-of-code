@@ -143,12 +143,12 @@ class Solitaire(ft.Stack):
             card.left = self.current_left
             i += 1
 
-    def update_waste(self):
+    def show_waste(self):
         for card in self.waste.pile:
             card.visible = False
         visible_cards_number = min(self.waste_size, len(self.waste.pile))
         for i in range(visible_cards_number):
-            self.waste.pile[len(self.waste.pile)-i-1].left += self.card_offset * (visible_cards_number - i - 1)
+            self.waste.pile[len(self.waste.pile)-i-1].left = self.waste.left + self.card_offset * (visible_cards_number - i - 1)
             self.waste.pile[len(self.waste.pile)-i-1].visible = True
             print(f"waste card number {len(self.waste.pile)-i-1}, offset = {self.card_offset * (visible_cards_number - i - 1)}")
         self.update()
@@ -256,7 +256,7 @@ class Card(ft.GestureDetector):
                         # reveal top card in old slot if exists
                         if len(old_slot.pile) > 0 and old_slot.type == 'tableau':
                             old_slot.pile[-1].flip()
-                        self.solitaire.update_waste()
+                        self.solitaire.show_waste()
                         self.page.update()
 
                         return
@@ -283,7 +283,7 @@ class Card(ft.GestureDetector):
                 self.move_on_top(self.solitaire.controls, [top_card])
                 top_card.place(self.solitaire.waste)
                 top_card.flip()
-            self.solitaire.update_waste()
+            self.solitaire.show_waste()
             self.page.update()
 
     def place(self, slot):
@@ -298,8 +298,8 @@ class Card(ft.GestureDetector):
         # remove the card form the old slot's pile if exists
         
         if self.slot is not None:
-            if self.slot.type == 'waste':
-                self.solitaire.update_waste()
+            #if self.slot.type == 'waste':
+            #    self.solitaire.update_waste()
             self.slot.pile.remove(self)
 
         # set card's slot as new slot
