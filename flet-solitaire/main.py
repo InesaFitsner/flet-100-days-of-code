@@ -153,6 +153,14 @@ class Solitaire(ft.Stack):
             print(f"waste card number {len(self.waste.pile)-i-1}, offset = {self.card_offset * (visible_cards_number - i - 1)}")
         self.update()
 
+    def check_foundation_rules(self, current_card, top_card=None):
+        if top_card is not None:
+            return current_card.suite.name == top_card.suite.name and current_card.rank.value - top_card.rank.value == 1
+        else:
+            return current_card.rank.name == "Ace"
+
+
+
 class Card(ft.GestureDetector):
     def __init__(self, solitaire, suite, rank):
         super().__init__()
@@ -270,10 +278,14 @@ class Card(ft.GestureDetector):
             if self.face_up:
                 self.move_on_top(self.solitaire.controls, [self])
                 old_slot = self.slot
-                self.place(self.solitaire.foundation[0])
-                if len(old_slot.pile) > 0:
-                            old_slot.pile[-1].flip()
-                self.page.update()
+                for slot in self.solitaire.foundation:
+                    if self.solitaire.check_foundation_rules(self, slot.get_top_card()):
+                    #if True:    
+                        self.place(slot)
+                        if len(old_slot.pile) > 0:
+                            old_slot.get_top_card().flip()
+                        self.page.update()
+                        return
 
     def click(self, e):
         if self.slot.type == 'stock':
@@ -337,6 +349,10 @@ class slot(ft.Container):
         self.border_radius = ft.border_radius.all(6)
         self.border = border
 
+    def get_top_card(self):
+        if len(self.pile) > 0:
+            return self.pile[-1]
+    
     def upper_card_top(self):
         if self.type == "tableau":
             if len(self.pile) > 1:
