@@ -41,7 +41,7 @@ class Solitaire(ft.Stack):
         
     
         self.stock = slot(
-            solitaire=self, slot_type="stock", top=0, left=0, border=None
+            solitaire=self, slot_type="stock", top=0, left=0, border=ft.border.all(1)
         )
 
         self.waste = slot(
@@ -152,6 +152,10 @@ class Solitaire(ft.Stack):
             self.waste.pile[len(self.waste.pile)-i-1].visible = True
             print(f"waste card number {len(self.waste.pile)-i-1}, offset = {self.card_offset * (visible_cards_number - i - 1)}")
         self.update()
+
+    def reset_stock(self):
+        for card in self.waste.pile:
+            print("Move card to the zero position")
 
     def check_foundation_rules(self, current_card, top_card=None):
         if top_card is not None:
@@ -346,6 +350,7 @@ class slot(ft.Container):
         self.top = top
         self.border_radius = ft.border_radius.all(6)
         self.border = border
+        self.on_click = self.click
 
     def get_top_card(self):
         if len(self.pile) > 0:
@@ -357,6 +362,10 @@ class slot(ft.Container):
                 return self.top + self.solitaire.card_offset * (len(self.pile) - 1)
         return self.top
 
+    def click(self, e):
+        if self.type == 'stock':
+            print(f"Restart stock pile. Stock pile {len(self.solitaire.stock.pile)}")
+            #self.solitaire.reset_stock()
 
 def main(page: ft.Page):
 
