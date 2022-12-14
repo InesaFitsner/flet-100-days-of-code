@@ -248,14 +248,8 @@ class Card(ft.GestureDetector):
                     ) or (
                         slot.type == "foundation"
                         and len(cards_to_drag) == 1
-                        and (
-                            (len(slot.pile) == 0 and e.control.rank.name == "Ace")
-                            or (
-                                len(slot.pile) != 0
-                                and self.suite.name == slot.pile[-1].suite.name
-                                and self.rank.value - slot.pile[-1].rank.value == 1
-                            )
-                        )
+                        and self.solitaire.check_foundation_rules(self, slot.get_top_card()) 
+
                     ):
 
                         old_slot = self.slot
@@ -263,7 +257,7 @@ class Card(ft.GestureDetector):
                             card.place(slot)
                         # reveal top card in old slot if exists
                         if len(old_slot.pile) > 0 and old_slot.type == 'tableau':
-                            old_slot.pile[-1].flip()
+                            old_slot.get_top_card().flip()
                         self.solitaire.display_waste()
                         self.page.update()
 
