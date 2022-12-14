@@ -159,6 +159,11 @@ class Solitaire(ft.Stack):
         else:
             return current_card.rank.name == "Ace"
 
+    def check_tableau_rules(self, current_card, top_card=None):
+        if top_card is not None:
+            return current_card.suite.color != top_card.suite.color and top_card.rank.value - current_card.rank.value == 1
+        else:
+            return current_card.rank.name == "King"
 
 
 class Card(ft.GestureDetector):
@@ -255,7 +260,7 @@ class Card(ft.GestureDetector):
                         old_slot = self.slot
                         for card in cards_to_drag:
                             card.place(slot)
-                        # reveal top card in old slot if exists
+                        # reveal top card in old tableau slot if exists
                         if len(old_slot.pile) > 0 and old_slot.type == 'tableau':
                             old_slot.get_top_card().flip()
                         self.solitaire.display_waste()
