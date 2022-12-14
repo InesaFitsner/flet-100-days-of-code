@@ -233,7 +233,7 @@ class Card(ft.GestureDetector):
                             (len(slot.pile) == 0 and e.control.rank.name == "Ace")
                             or (
                                 len(slot.pile) != 0
-                                and self.suite.color == slot.pile[-1].suite.color
+                                and self.suite.name == slot.pile[-1].suite.name and self.rank.value - slot.pile[-1].rank.value == 1
                             )
                         )
                     ):
