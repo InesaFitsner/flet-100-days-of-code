@@ -243,13 +243,14 @@ class Card(ft.GestureDetector):
                     # *** For foundation slots: [TBD]
                     if (
                         slot.type == "tableau"
-                        and (
-                            len(slot.pile) == 0
-                            or (
-                                len(slot.pile) != 0
-                                and self.suite.color != slot.pile[-1].suite.color
-                            )
-                        )
+                        and self.solitaire.check_tableau_rules(self, slot.get_top_card()) 
+                        # (
+                        #     len(slot.pile) == 0
+                        #     or (
+                        #         len(slot.pile) != 0
+                        #         and self.suite.color != slot.pile[-1].suite.color
+                        #     )
+                        # )
                     ) or (
                         slot.type == "foundation"
                         and len(cards_to_drag) == 1
