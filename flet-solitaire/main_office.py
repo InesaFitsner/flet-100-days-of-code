@@ -28,7 +28,7 @@ class Solitaire(ft.Stack):
         self.current_top = 0
         self.current_left = 0
         self.card_offset = 20
-        self.waste_size = 1
+        self.waste_size = 3
         self.deck_passes_allowed = 3
         self.deck_passes_remaining = 3
         self.controls = []
@@ -134,6 +134,7 @@ class Solitaire(ft.Stack):
         # Stock pile
         for i in range(28, len(self.cards)):
             self.cards[i].place(self.stock)
+            print(f"Stock card {self.cards[i].rank.name}")
 
     def move_on_top(self, cards_to_drag):
         """Brings draggable card pile to the top of the stack"""
@@ -346,7 +347,7 @@ class Card(ft.GestureDetector):
             ):
                 top_card = self.solitaire.stock.pile[-1]
                 #self.move_on_top(self.solitaire.controls, [top_card])
-                self.solitaire.move_on_top([top_card])
+                #self.solitaire.move_on_top([top_card])
                 top_card.place(self.solitaire.waste)
                 top_card.turn_face_up()
             self.solitaire.display_waste()
