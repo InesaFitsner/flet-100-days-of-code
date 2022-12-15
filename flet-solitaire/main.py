@@ -28,7 +28,7 @@ class Solitaire(ft.Stack):
         self.current_top = 0
         self.current_left = 0
         self.card_offset = 20
-        self.waste_size = 3
+        self.waste_size = 1
         self.deck_passes_allowed = 3
         self.deck_passes_remaining = 3
         self.controls = []
@@ -370,6 +370,7 @@ class Card(ft.GestureDetector):
 
         # add the card to the new slot's pile
         slot.pile.append(self)
+        self.solitaire.move_on_top([self])
         self.update()
 
     def get_partial_pile(self):
