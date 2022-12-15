@@ -162,10 +162,17 @@ class Solitaire(ft.Stack):
         self.waste.pile.reverse()
         print(len(self.waste.pile))
         print(self.waste.pile[0].rank.name)
-        for card in self.waste.pile:
-            print(f"card name {card.rank.name}")
-            card.turn_face_down()
-            card.place(self.stock)
+        # for card in self.waste.pile:
+        #     print(f"card {self.waste.pile.index(card)} name {card.rank.name}")
+        #     card.turn_face_down()
+        #     card.place(self.stock)
+        while len(self.waste.pile) > 0:
+            print(f"First card {self.waste.pile[0].rank.name}")
+            self.waste.pile[0].turn_face_down()
+            self.waste.pile[0].place(self.stock)
+            #self.stock.pile[-1].move_on_top(self.controls, [self.stock.pile[-1]])
+        
+        self.update
 
     def check_foundation_rules(self, current_card, top_card=None):
         if top_card is not None:
