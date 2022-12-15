@@ -127,7 +127,7 @@ class Solitaire(ft.Stack):
 
         # Reveal top cards in slot piles:
         for number in range(len(self.tableau)):
-            self.tableau[number].pile[-1].flip()
+            self.tableau[number].pile[-1].turn_face_up()
 
         # Stock pile
         for i in range(28, len(self.cards)):
@@ -162,6 +162,7 @@ class Solitaire(ft.Stack):
         print(self.waste.pile[0].rank.name)
         for card in self.waste.pile:
             print(f"card name {card.rank.name}")
+            card.turn_face_down()
 
     def check_foundation_rules(self, current_card, top_card=None):
         if top_card is not None:
@@ -209,10 +210,17 @@ class Card(ft.GestureDetector):
             content=ft.Text(f"{rank.name} of {suite.name}", size=8, color=suite.color),
         )
 
-    def flip(self):
+    def turn_face_up(self):
         self.face_up = True
         self.content.bgcolor = "WHITE"
         self.update()
+
+    
+    def turn_face_down(self):
+        self.face_up = False
+        self.content.bgcolor = "GREEN"
+        self.update()
+    
 
     def move_on_top(self, controls, cards_to_drag):
         """Brings draggable card pile to the top of the stack"""
@@ -224,7 +232,7 @@ class Card(ft.GestureDetector):
 
     def start_drag(self, e: ft.DragStartEvent):
         if e.control.face_up:
-            cards_to_drag = self.cards_to_drag()
+            cards_to_drag = self.get_partial_pile()
             self.move_on_top(self.controls, cards_to_drag)
             # remember card original position to return it back if needed
             self.solitaire.current_top = e.control.top
@@ -234,7 +242,7 @@ class Card(ft.GestureDetector):
     def drag(self, e: ft.DragUpdateEvent):
         if e.control.face_up:
             i = 0
-            for card in self.cards_to_drag():
+            for card in self.get_partial_pile():
                 card.top = max(0, self.top + e.delta_y)
                 if card.slot.type == "tableau":
                     card.top += i * self.solitaire.card_offset
@@ -244,7 +252,7 @@ class Card(ft.GestureDetector):
 
     def drop(self, e: ft.DragEndEvent):
         if e.control.face_up:
-            cards_to_drag = self.cards_to_drag()
+            cards_to_drag = self.get_partial_pile()
             slots = self.solitaire.tableau + self.solitaire.foundation
             # check if card is close to any of the tableau slots
             for slot in slots:
@@ -282,7 +290,7 @@ class Card(ft.GestureDetector):
                             card.place(slot)
                         # reveal top card in old tableau slot if exists
                         if len(old_slot.pile) > 0 and old_slot.type == "tableau":
-                            old_slot.get_top_card().flip()
+                            old_slot.get_top_card().turn_face_up()
                         self.solitaire.display_waste()
                         self.page.update()
 
@@ -302,7 +310,7 @@ class Card(ft.GestureDetector):
                         # if True:
                         self.place(slot)
                         if len(old_slot.pile) > 0:
-                            old_slot.get_top_card().flip()
+                            old_slot.get_top_card().turn_face_up()
                         self.solitaire.display_waste()
                         self.page.update()
                         return
@@ -316,7 +324,7 @@ class Card(ft.GestureDetector):
                 top_card = self.solitaire.stock.pile[-1]
                 self.move_on_top(self.solitaire.controls, [top_card])
                 top_card.place(self.solitaire.waste)
-                top_card.flip()
+                top_card.turn_face_up()
             self.solitaire.display_waste()
             self.page.update()
 
@@ -340,18 +348,18 @@ class Card(ft.GestureDetector):
         slot.pile.append(self)
         self.update()
 
-    def cards_to_drag(self):
-        """returns list of cards that will be dragged together, starting with current card"""
-        top_pile = []
+    def get_partial_pile(self):
+        """returns list of cards that will be dragged together, starting with the current card"""
+        partial_pile = []
 
         if self.slot is not None:
             card_index = self.slot.pile.index(self)
 
             for card in self.slot.pile:
                 if self.slot.pile.index(card) >= card_index:
-                    top_pile.append(card)
+                    partial_pile.append(card)
 
-        return top_pile
+        return partial_pile
 
 
 class slot(ft.Container):
