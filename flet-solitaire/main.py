@@ -177,8 +177,10 @@ class Solitaire(ft.Stack):
         #     card.place(self.stock)
         while len(self.waste.pile) > 0:
             print(f"First card {self.waste.pile[0].rank.name}")
-            self.waste.pile[0].turn_face_down()
-            self.waste.pile[0].place(self.stock)
+            card = self.waste.pile[0]
+            card.turn_face_down()
+            card.place(self.stock)
+            self.move_on_top([card])
             #self.stock.pile[-1].move_on_top(self.controls, [self.stock.pile[-1]])
         
         self.update
