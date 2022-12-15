@@ -29,6 +29,8 @@ class Solitaire(ft.Stack):
         self.current_left = 0
         self.card_offset = 20
         self.waste_size = 3
+        self.deck_passes_allowed = 3
+        self.deck_passes_remaining = 3
         self.controls = []
 
     def did_mount(self):
@@ -163,6 +165,7 @@ class Solitaire(ft.Stack):
         for card in self.waste.pile:
             print(f"card name {card.rank.name}")
             card.turn_face_down()
+            card.place(self.stock)
 
     def check_foundation_rules(self, current_card, top_card=None):
         if top_card is not None:
@@ -317,7 +320,7 @@ class Card(ft.GestureDetector):
 
     def click(self, e):
         if self.slot.type == "stock":
-
+            print("Clicked on stock pile")
             for i in range(
                 min(self.solitaire.waste_size, len(self.solitaire.stock.pile))
             ):
