@@ -135,6 +135,15 @@ class Solitaire(ft.Stack):
         for i in range(28, len(self.cards)):
             self.cards[i].place(self.stock)
 
+    def move_on_top(self, cards_to_drag):
+        """Brings draggable card pile to the top of the stack"""
+
+        for card in cards_to_drag:
+            self.controls.remove(card)
+            self.controls.append(card)
+        self.update()
+    
+    
     def bounce_back(self, cards):
         i = 0
         for card in cards:
@@ -197,7 +206,7 @@ class Card(ft.GestureDetector):
     def __init__(self, solitaire, suite, rank):
         super().__init__()
         self.solitaire = solitaire
-        self.controls = solitaire.controls
+        #self.controls = solitaire.controls
         self.suite = suite
         self.rank = rank
         self.face_up = False
@@ -232,18 +241,19 @@ class Card(ft.GestureDetector):
         self.update()
     
 
-    def move_on_top(self, controls, cards_to_drag):
-        """Brings draggable card pile to the top of the stack"""
+    # def move_on_top(self, controls, cards_to_drag):
+    #     """Brings draggable card pile to the top of the stack"""
 
-        for card in cards_to_drag:
-            controls.remove(card)
-            controls.append(card)
-        self.page.update()
+    #     for card in cards_to_drag:
+    #         controls.remove(card)
+    #         controls.append(card)
+    #     self.page.update()
 
     def start_drag(self, e: ft.DragStartEvent):
         if e.control.face_up:
             cards_to_drag = self.get_partial_pile()
-            self.move_on_top(self.controls, cards_to_drag)
+            #self.move_on_top(self.controls, cards_to_drag)
+            self.solitaire.move_on_top(cards_to_drag)
             # remember card original position to return it back if needed
             self.solitaire.current_top = e.control.top
             self.solitaire.current_left = e.control.left
@@ -313,7 +323,8 @@ class Card(ft.GestureDetector):
     def doubleclick(self, e):
         if self.slot.type in ("waste", "tableau"):
             if self.face_up:
-                self.move_on_top(self.solitaire.controls, [self])
+                #self.move_on_top(self.solitaire.controls, [self])
+                self.solitaire.move_on_top([self])
                 old_slot = self.slot
                 for slot in self.solitaire.foundation:
                     if self.solitaire.check_foundation_rules(self, slot.get_top_card()):
@@ -332,7 +343,8 @@ class Card(ft.GestureDetector):
                 min(self.solitaire.waste_size, len(self.solitaire.stock.pile))
             ):
                 top_card = self.solitaire.stock.pile[-1]
-                self.move_on_top(self.solitaire.controls, [top_card])
+                #self.move_on_top(self.solitaire.controls, [top_card])
+                self.solitaire.move_on_top([top_card])
                 top_card.place(self.solitaire.waste)
                 top_card.turn_face_up()
             self.solitaire.display_waste()
