@@ -42,7 +42,7 @@ class Solitaire(ft.Stack):
         # self.slots = []
 
         self.stock = slot(
-            solitaire=self, slot_type="stock", top=0, left=0, border=ft.border.all(1, "outline")
+            solitaire=self, slot_type="stock", top=0, left=0, border=ft.border.all(1)
         )
 
         self.waste = slot(
@@ -72,7 +72,7 @@ class Solitaire(ft.Stack):
                     slot_type="tableau",
                     top=150,
                     left=x,
-                    border=ft.border.all(1, "outline"),
+                    border=ft.border.all(1),
                 )
             )
             x += 100
