@@ -241,30 +241,19 @@ class Card(ft.GestureDetector):
 
     def turn_face_up(self):
         self.face_up = True
-        #self.content.bgcolor = "WHITE"
         self.content.content.src=f"/images/{self.rank.name}_{self.suite.name}.svg"
         self.update()
 
     
     def turn_face_down(self):
         self.face_up = False
-        #self.content.bgcolor = "GREEN"
         self.content.content.src=f"/images/card_back.svg"
         self.update()
     
 
-    # def move_on_top(self, controls, cards_to_drag):
-    #     """Brings draggable card pile to the top of the stack"""
-
-    #     for card in cards_to_drag:
-    #         controls.remove(card)
-    #         controls.append(card)
-    #     self.page.update()
-
     def start_drag(self, e: ft.DragStartEvent):
         if e.control.face_up:
             cards_to_drag = self.get_partial_pile()
-            #self.move_on_top(self.controls, cards_to_drag)
             self.solitaire.move_on_top(cards_to_drag)
             # remember card original position to return it back if needed
             self.solitaire.current_top = e.control.top
@@ -302,13 +291,6 @@ class Card(ft.GestureDetector):
                         and self.solitaire.check_tableau_rules(
                             self, slot.get_top_card()
                         )
-                        # (
-                        #     len(slot.pile) == 0
-                        #     or (
-                        #         len(slot.pile) != 0
-                        #         and self.suite.color != slot.pile[-1].suite.color
-                        #     )
-                        # )
                     ) or (
                         slot.type == "foundation"
                         and len(cards_to_drag) == 1
