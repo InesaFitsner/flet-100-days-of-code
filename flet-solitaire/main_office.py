@@ -229,20 +229,27 @@ class Card(ft.GestureDetector):
             width=70,
             height=100,
             border_radius=ft.border_radius.all(6),
-            border=ft.border.all(2),
-            bgcolor="GREEN",
-            content=ft.Text(f"{rank.name} of {suite.name}", size=8, color=suite.color),
+            #border=ft.border.all(2),
+            #bgcolor="GREEN",
+            
+            content=ft.Image(src=f"/images/card_back.svg"),
+            #width=70,
+            #height=100,
+            #border_radius=10,
+            #content=ft.Text(f"{rank.name} of {suite.name}", size=8, color=suite.color),
         )
 
     def turn_face_up(self):
         self.face_up = True
-        self.content.bgcolor = "WHITE"
+        #self.content.bgcolor = "WHITE"
+        self.content.content.src=f"/images/{self.rank.name}_{self.suite.name}.svg"
         self.update()
 
     
     def turn_face_down(self):
         self.face_up = False
-        self.content.bgcolor = "GREEN"
+        #self.content.bgcolor = "GREEN"
+        self.content.content.src=f"/images/card_back.svg"
         self.update()
     
 
@@ -427,4 +434,4 @@ def main(page: ft.Page):
     page.add(solitaire)
 
 
-ft.app(target=main)
+ft.app(target=main, assets_dir="images")
