@@ -20,8 +20,19 @@ def main(page: ft.Page):
         page.update()
 
     def show_settings(e):
-        print("Show settings")
+        page.dialog = settings_dialog
+        settings_dialog.open = True
         page.update()
+
+    def close_settings(e):
+        settings_dialog.open = False
+        page.update()
+
+    def apply_settings(e):
+        print("Apply settings")
+        settings_dialog.open = False
+        page.update()
+    
 
     page.appbar = ft.AppBar(
         leading=ft.Image(src=f"/images/card.png"),
@@ -57,9 +68,38 @@ If the player can no longer make any meaningful moves, the game is considered lo
 
         """)
 
-
     rules_dialog = ft.AlertDialog(
         title=ft.Text("Solitaire rules"), content=rules_md, on_dismiss=lambda e: print("Dialog dismissed!")
+    )
+    
+    # settings_dialog = ft.AlertDialog(
+    #     modal=True,
+    #     title=ft.Text("Solitaire settings"),
+    #     content=ft.Column(controls = [
+    #         ft.Text("Waste pile size: "),
+    #         ft.RadioGroup(content = ft.Row(
+    #             ft.Radio(value="One card", label="One card"),
+    #             ft.Radio(value="Three cards", label="Three cards")
+    #         )
+
+    #         )]),
+    #     actions=[
+    #         ft.TextButton("Close", on_click=close_settings),
+    #         ft.TextButton("Apply", on_click=apply_settings),
+    #     ],
+    #     actions_alignment=ft.MainAxisAlignment.END,
+    #     on_dismiss=lambda e: print("Modal dialog dismissed!"),
+    # )
+
+    settings_dialog = ft.AlertDialog(
+        modal=True, 
+        title=ft.Text("Settings"), 
+        content=ft.Text("Settings"), 
+        actions=[
+            ft.TextButton("Close", on_click=close_settings),
+            ft.TextButton("Apply", on_click=apply_settings),
+        ],
+        #on_dismiss=lambda e: print("Dialog dismissed!")
     )
 
     solitaire = Solitaire()
