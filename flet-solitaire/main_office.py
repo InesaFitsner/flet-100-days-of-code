@@ -111,6 +111,8 @@ class Solitaire(ft.Stack):
 
         for suite in suites:
             for rank in ranks:
+                file_name = f"{rank.name}_{suite.name}.svg"
+                print(file_name)
                 self.cards.append(Card(solitaire=self, suite=suite, rank=rank))
         # self.stock = self.cards
         random.shuffle(self.cards)
@@ -224,7 +226,7 @@ class Card(ft.GestureDetector):
         self.on_tap = self.click
         self.on_double_tap = self.doubleclick
         self.content = ft.Container(
-            width=65,
+            width=70,
             height=100,
             border_radius=ft.border_radius.all(6),
             border=ft.border.all(2),
@@ -394,7 +396,7 @@ class slot(ft.Container):
         self.solitaire = solitaire
         self.pile = []
         self.type = slot_type
-        self.width = 65
+        self.width = 70
         self.height = 100
         self.left = left
         self.top = top
