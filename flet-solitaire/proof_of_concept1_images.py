@@ -62,15 +62,9 @@ def main(page: ft.Page):
         top=100,
         content=ft.Container(
             content=ft.Image(src=f"/images/Ace_spades.svg"),
-        #visible=False,
-        #margin=10,
-        #padding=10,
-        #alignment=ft.alignment.center,
-        # bgcolor=ft.colors.GREEN_200,
             width=70,
             height=100,
             border_radius=10,
-        #border=ft.border.all(3, ft.colors.BLACK),
     )
     )
 

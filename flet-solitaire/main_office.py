@@ -28,7 +28,7 @@ class Solitaire(ft.Stack):
         self.current_top = 0
         self.current_left = 0
         self.card_offset = 20
-        self.waste_size = 3
+        self.waste_size = 1
         self.deck_passes_allowed = 3
         self.deck_passes_remaining = 3
         self.controls = []
@@ -42,7 +42,7 @@ class Solitaire(ft.Stack):
         # self.slots = []
 
         self.stock = slot(
-            solitaire=self, slot_type="stock", top=0, left=0, border=ft.border.all(1)
+            solitaire=self, slot_type="stock", top=0, left=0, border=ft.border.all(1, "outline")
         )
 
         self.waste = slot(
@@ -58,7 +58,7 @@ class Solitaire(ft.Stack):
                     slot_type="foundation",
                     top=0,
                     left=x,
-                    border=ft.border.all(1),
+                    border=ft.border.all(1, "outline"),
                 )
             )
             x += 100
@@ -72,7 +72,7 @@ class Solitaire(ft.Stack):
                     slot_type="tableau",
                     top=150,
                     left=x,
-                    border=ft.border.all(1),
+                    border=ft.border.all(1, "outline"),
                 )
             )
             x += 100
