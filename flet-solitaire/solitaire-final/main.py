@@ -22,9 +22,8 @@ def main(page: ft.Page):
 
     page.appbar = ft.AppBar(
         leading=ft.Image(src=f"/images/card.png"),
-        leading_width=40,
+        leading_width=30,
         title=ft.Text("Flet solitaire"),
-        center_title=False,
         bgcolor=ft.colors.SURFACE_VARIANT,
         actions=[
             ft.TextButton(text="New game", on_click=start_new_game),
