@@ -1,16 +1,38 @@
 import logging
-import random
+
 
 import flet as ft
 from solitaire import Solitaire
 
-# This prototype is move slot and card creating and dealing to a class
-
 # logging.basicConfig(level=logging.DEBUG)
 
 
-
 def main(page: ft.Page):
+    def start_new_game(e):
+        print("New game clicked")
+        page.update()
+
+    def show_rules(e):
+        print("Solitaire rules")
+        page.update()
+
+    def show_settings(e):
+        print("Show settings")
+        page.update()
+
+    page.appbar = ft.AppBar(
+        leading=ft.Image(src=f"/images/card.png"),
+        leading_width=40,
+        title=ft.Text("Flet solitaire"),
+        center_title=False,
+        bgcolor=ft.colors.SURFACE_VARIANT,
+        actions=[
+            ft.TextButton(text="New game", on_click=start_new_game),
+            ft.TextButton(text="Rules", on_click=show_rules),
+            ft.IconButton(ft.icons.SETTINGS, on_click=show_settings),
+            
+        ],
+    )
 
     solitaire = Solitaire()
 
