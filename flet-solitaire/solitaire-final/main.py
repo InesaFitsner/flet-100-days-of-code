@@ -9,7 +9,9 @@ from solitaire import Solitaire
 
 def main(page: ft.Page):
     def start_new_game(e):
-        print("New game clicked")
+        page.controls.pop()
+        new_solitaire = Solitaire()
+        page.add(new_solitaire)
         page.update()
 
     def show_rules(e):
