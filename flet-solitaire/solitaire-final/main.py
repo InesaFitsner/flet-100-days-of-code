@@ -93,13 +93,23 @@ If the player can no longer make any meaningful moves, the game is considered lo
 
     settings_dialog = ft.AlertDialog(
         modal=True, 
-        title=ft.Text("Settings"), 
-        content=ft.Text("Settings"), 
+        title=ft.Text("Solitare Settings"), 
+        content=ft.Column(controls=[
+            ft.Text("Waste pile size:"),
+            ft.RadioGroup(value=3, content=ft.Row(controls=[
+                ft.Radio(value=1, label="One card"),
+                ft.Radio(value=3, label="Three cards")
+            ])),
+            ft.Text("Passes throgh the deck:"),
+            ft.RadioGroup(value="unlimited", content=ft.Row(controls=[
+                ft.Radio(value=1, label="One card"),
+                ft.Radio(value=3, label="Three cards")
+            ])),
+            ]), 
         actions=[
             ft.TextButton("Close", on_click=close_settings),
             ft.TextButton("Apply", on_click=apply_settings),
         ],
-        #on_dismiss=lambda e: print("Dialog dismissed!")
     )
 
     solitaire = Solitaire()
