@@ -72,7 +72,8 @@ class Solitaire(ft.Stack):
                     slot_type="tableau",
                     top=150,
                     left=x,
-                    border=ft.border.all(1),
+                    #border=ft.border.all(1),
+                    border=None
                 )
             )
             x += 100
