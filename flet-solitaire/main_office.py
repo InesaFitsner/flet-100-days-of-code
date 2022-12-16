@@ -211,14 +211,12 @@ class Card(ft.GestureDetector):
     def __init__(self, solitaire, suite, rank):
         super().__init__()
         self.solitaire = solitaire
-        #self.controls = solitaire.controls
         self.suite = suite
         self.rank = rank
         self.face_up = False
         self.slot = None
 
         self.mouse_cursor = ft.MouseCursor.MOVE
-        # self.visible = False
         self.drag_interval = 5
         self.on_pan_update = self.drag
         self.on_pan_start = self.start_drag
@@ -229,14 +227,7 @@ class Card(ft.GestureDetector):
             width=70,
             height=100,
             border_radius=ft.border_radius.all(6),
-            #border=ft.border.all(2),
-            #bgcolor="GREEN",
-            
             content=ft.Image(src=f"/images/card_back.svg"),
-            #width=70,
-            #height=100,
-            #border_radius=10,
-            #content=ft.Text(f"{rank.name} of {suite.name}", size=8, color=suite.color),
         )
 
     def turn_face_up(self):
@@ -275,17 +266,13 @@ class Card(ft.GestureDetector):
         if e.control.face_up:
             cards_to_drag = self.get_partial_pile()
             slots = self.solitaire.tableau + self.solitaire.foundation
-            # check if card is close to any of the tableau slots
+            # check if card is close to any of the tableau or foundation slots
             for slot in slots:
-                # compare with top and left position of the upper card in the slot pile
+                # compare with top and left position of the top card in the slot pile
                 if (
                     abs(self.top - slot.upper_card_top()) < 40
                     and abs(self.left - slot.left) < 40
-                ):
-                    # tableau slot
-                    # place cards_to_drag to the slot in proximity, if:
-                    # *** For tableau slots: if cards' color is different or slot is empty
-                    # *** For foundation slots: [TBD]
+                ):  
                     if (
                         slot.type == "tableau"
                         and self.solitaire.check_tableau_rules(
