@@ -66,6 +66,7 @@ class SettingsDialog(ft.AlertDialog):
     def apply_settings(self, e):
         self.open = False
         self.settings.waste_size = int(self.waste_size.value)
+        self.settings.deck_passes_allowed = int(self.deck_passes_allowed.value)
         self.settings.card_back = self.selected_card.content.src
         self.on_settings_applied(self.settings)
         print(self.settings.card_back)

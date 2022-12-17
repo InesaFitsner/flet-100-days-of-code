@@ -27,20 +27,15 @@ class Solitaire(ft.Stack):
         self.current_left = 0
         self.card_offset = 20
         self.settings = settings
-        #self.waste_size = waste_size
-        #self.deck_passes_allowed = deck_passes_allowed
-        #self.deck_passes_remaining = deck_passes_allowed
+        self.deck_passes_remaining = self.settings.deck_passes_allowed
         self.controls = []
 
     def did_mount(self):
-        #self.create_settings()
-        #self.settings = Settings()
         self.create_slots()
         self.create_card_deck()
         self.deal_cards()
     
     def create_slots(self):
-        # self.slots = []
 
         self.stock = Slot(
             solitaire=self, slot_type="stock", top=0, left=0, border=ft.border.all(1)
@@ -92,7 +87,6 @@ class Solitaire(ft.Stack):
             Suite("Clubs", "BLACK"),
             Suite("Spades", "BLACK"),
         ]
-        # colors = ["BLUE", "YELLOW", "GREEN", "RED"]
         ranks = [
             Rank("Ace", 1),
             Rank("2", 2),

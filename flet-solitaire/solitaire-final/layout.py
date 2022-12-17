@@ -45,5 +45,3 @@ def create_appbar(page, settings, on_new_game):
     rules_dialog = ft.AlertDialog(
         title=ft.Text("Solitaire rules"), content=rules_md, on_dismiss=lambda e: print("Dialog dismissed!")
     )
-
-    return settings
