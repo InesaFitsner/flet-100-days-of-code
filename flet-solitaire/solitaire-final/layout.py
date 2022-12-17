@@ -38,6 +38,9 @@ def create_appbar(page):
         deck_passes_allowed.value = settings.deck_passes_allowed
         settings_dialog.open = False
         page.update()
+    
+    def choose_card_design(e):
+        settings.card_back = f"/images/card_back{e.control.data}.png"
 
     page.appbar = ft.AppBar(
         leading=ft.Image(src=f"/images/card.png"),
@@ -79,6 +82,11 @@ def create_appbar(page):
                 ft.Radio(value=3, label="Three"),
                 ft.Radio(value="Unlimited", label="Unlimited"),
             ]))
+
+    card_backs = []
+    for i in range(1, 5):
+        card_backs.append(ft.Container(width=70, height=100, content=ft.Image(src=f"/images/card_back{i}.png"), on_click=choose_card_design, data=i))
+        
     
     new_game = ft.Checkbox(label="Start new game", value=True)
 
@@ -90,6 +98,7 @@ def create_appbar(page):
             waste_size,
             ft.Text("Passes through the deck:"),
             deck_passes_allowed,
+            ft.Row(controls=card_backs),
             new_game,
             ], tight=True), 
         actions=[

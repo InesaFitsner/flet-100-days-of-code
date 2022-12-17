@@ -15,7 +15,7 @@ class Rank:
         self.value = card_value
 
 class Settings:
-    def __init__(self, waste_size=3, deck_passes_allowed="Unlimited", card_back=f"/images/card_back1.svg"):
+    def __init__(self, waste_size=3, deck_passes_allowed="Unlimited", card_back=f"/images/card_back1.png"):
         self.waste_size = waste_size
         self.deck_passes_allowed = deck_passes_allowed
         self.card_back = card_back
