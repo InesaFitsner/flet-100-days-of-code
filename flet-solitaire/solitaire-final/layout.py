@@ -2,12 +2,15 @@ import flet as ft
 from solitaire import Solitaire
 
 def create_appbar(page):
-    
-    def start_new_game(e):
+
+    def start_new_game():
         page.controls.pop()
         new_solitaire = Solitaire(int(waste_size.value))
         page.add(new_solitaire)
         page.update()
+
+    def new_game_clicked(e):
+        start_new_game()
 
     def show_rules(e):
         page.dialog = rules_dialog
@@ -21,13 +24,8 @@ def create_appbar(page):
 
 
     def apply_settings(e):
-        print("Apply settings")
-        page.controls.pop()
-        new_solitaire = Solitaire(int(waste_size.value))
-        page.add(new_solitaire)
         settings_dialog.open = False
-        page.update()
-
+        start_new_game()
 
     page.appbar = ft.AppBar(
         leading=ft.Image(src=f"/images/card.png"),
@@ -35,7 +33,7 @@ def create_appbar(page):
         title=ft.Text("Flet solitaire"),
         bgcolor=ft.colors.SURFACE_VARIANT,
         actions=[
-            ft.TextButton(text="New game", on_click=start_new_game),
+            ft.TextButton(text="New game", on_click=new_game_clicked),
             ft.TextButton(text="Rules", on_click=show_rules),
             ft.IconButton(ft.icons.SETTINGS, on_click=show_settings),
             
