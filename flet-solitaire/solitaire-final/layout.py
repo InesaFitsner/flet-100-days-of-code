@@ -1,8 +1,11 @@
 import flet as ft
-from solitaire import Solitaire, Settings
+from solitaire import Solitaire
+from settings import Settings
 
 def create_appbar(page):
     settings = Settings()
+    
+    selected_card = None
 
     def start_new_game():
         page.controls.pop()
@@ -27,10 +30,9 @@ def create_appbar(page):
     def apply_settings(e):
         settings_dialog.open = False
         settings.waste_size = int(waste_size.value)
-        if new_game.value == True:
-            start_new_game()
-        else:
-            new_game.value = True
+        settings.card_back = selected_card.content.src
+        print(settings.card_back)
+        start_new_game()
         page.update()
 
     def cancel(e):
@@ -41,8 +43,10 @@ def create_appbar(page):
     
     def choose_card_design(e):
         e.control.border = ft.border.all(3)
+        selected_card = e.control
+        print(selected_card.content.src)
         page.update()
-        settings.card_back = f"/images/card_back{e.control.data}.png"
+        #settings.card_back = f"/images/card_back{e.control.data}.png"
 
     page.appbar = ft.AppBar(
         leading=ft.Image(src=f"/images/card.png"),
@@ -86,11 +90,12 @@ def create_appbar(page):
             ]))
 
     card_backs = []
-    for i in range(1, 5):
+    for i in range(4):
         card_backs.append(ft.Container(width=70, height=100, content=ft.Image(src=f"/images/card_back{i}.png"), border_radius=ft.border_radius.all(6), on_click=choose_card_design, data=i))
-        
     
-    new_game = ft.Checkbox(label="Start new game", value=True)
+    selected_card = card_backs[0]
+    
+    new_game = ft.Checkbox(label="Start new game", value=True, disabled=True)
 
     settings_dialog = ft.AlertDialog(
         modal=True,
@@ -108,4 +113,6 @@ def create_appbar(page):
             ft.FilledButton("Apply settings", on_click=apply_settings),
         ],
         #on_dismiss=cancel
+    
     )
+

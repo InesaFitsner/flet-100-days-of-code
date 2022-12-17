@@ -1,5 +1,6 @@
 from card import Card
 from slot import Slot
+#from settings import Settings
 import random
 import flet as ft
 
@@ -14,11 +15,7 @@ class Rank:
         self.name = card_name
         self.value = card_value
 
-class Settings:
-    def __init__(self, waste_size=3, deck_passes_allowed="Unlimited", card_back=f"/images/card_back1.png"):
-        self.waste_size = waste_size
-        self.deck_passes_allowed = deck_passes_allowed
-        self.card_back = card_back
+
 
 
 class Solitaire(ft.Stack):
@@ -117,7 +114,7 @@ class Solitaire(ft.Stack):
         for suite in suites:
             for rank in ranks:
                 file_name = f"{rank.name}_{suite.name}.svg"
-                print(file_name)
+                #print(file_name)
                 self.cards.append(Card(solitaire=self, suite=suite, rank=rank))
         # self.stock = self.cards
         random.shuffle(self.cards)
@@ -141,7 +138,7 @@ class Solitaire(ft.Stack):
         # Stock pile
         for i in range(28, len(self.cards)):
             self.cards[i].place(self.stock)
-            print(f"Stock card {self.cards[i].rank.name}")
+            #print(f"Stock card {self.cards[i].rank.name}")
 
     def move_on_top(self, cards_to_drag):
         """Brings draggable card pile to the top of the stack"""
