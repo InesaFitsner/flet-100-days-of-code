@@ -40,6 +40,8 @@ def create_appbar(page):
         page.update()
     
     def choose_card_design(e):
+        e.control.border = ft.border.all(3)
+        page.update()
         settings.card_back = f"/images/card_back{e.control.data}.png"
 
     page.appbar = ft.AppBar(
@@ -85,7 +87,7 @@ def create_appbar(page):
 
     card_backs = []
     for i in range(1, 5):
-        card_backs.append(ft.Container(width=70, height=100, content=ft.Image(src=f"/images/card_back{i}.png"), on_click=choose_card_design, data=i))
+        card_backs.append(ft.Container(width=70, height=100, content=ft.Image(src=f"/images/card_back{i}.png"), border_radius=ft.border_radius.all(6), on_click=choose_card_design, data=i))
         
     
     new_game = ft.Checkbox(label="Start new game", value=True)
