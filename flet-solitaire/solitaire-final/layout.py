@@ -2,9 +2,10 @@ import flet as ft
 from solitaire import Solitaire
 
 def create_appbar(page):
+    
     def start_new_game(e):
         page.controls.pop()
-        new_solitaire = Solitaire()
+        new_solitaire = Solitaire(int(waste_size.value))
         page.add(new_solitaire)
         page.update()
 
@@ -18,12 +19,12 @@ def create_appbar(page):
         settings_dialog.open = True
         page.update()
 
-    def close_settings(e):
-        settings_dialog.open = False
-        page.update()
 
     def apply_settings(e):
         print("Apply settings")
+        page.controls.pop()
+        new_solitaire = Solitaire(int(waste_size.value))
+        page.add(new_solitaire)
         settings_dialog.open = False
         page.update()
 
@@ -59,30 +60,27 @@ def create_appbar(page):
     - Turning one card at a time to the waste, with no limit on passes through the deck.
 
     If the player can no longer make any meaningful moves, the game is considered lost.
-
         """)
 
     rules_dialog = ft.AlertDialog(
         title=ft.Text("Solitaire rules"), content=rules_md, on_dismiss=lambda e: print("Dialog dismissed!")
     )
 
+    waste_size = ft.RadioGroup(value=3, content=ft.Row(controls=[
+                ft.Radio(value=1, label="One card"),
+                ft.Radio(value=3, label="Three cards")
+            ]))
+
     settings_dialog = ft.AlertDialog(
-        modal=True, 
         title=ft.Text("Solitare Settings"), 
         content=ft.Column(controls=[
             ft.Text("Waste pile size:"),
-            ft.RadioGroup(value=3, content=ft.Row(controls=[
-                ft.Radio(value=1, label="One card"),
-                ft.Radio(value=3, label="Three cards")
-            ])),
+            waste_size,
             ft.Text("Passes throgh the deck:"),
             ft.RadioGroup(value="unlimited", content=ft.Row(controls=[
                 ft.Radio(value=1, label="One card"),
                 ft.Radio(value=3, label="Three cards")
             ])),
             ]), 
-        actions=[
-            ft.TextButton("Close", on_click=close_settings),
-            ft.TextButton("Apply", on_click=apply_settings),
-        ],
+        on_dismiss=apply_settings
     )

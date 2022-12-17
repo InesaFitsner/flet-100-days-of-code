@@ -9,6 +9,8 @@ from layout import create_appbar
 
 
 def main(page: ft.Page):
+    
+    
     create_appbar(page)
     solitaire = Solitaire()
     page.add(solitaire)

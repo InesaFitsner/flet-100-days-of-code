@@ -16,14 +16,14 @@ class Rank:
 
 
 class Solitaire(ft.Stack):
-    def __init__(self):
+    def __init__(self, waste_size=1):
         super().__init__()
         self.width = 1000
         self.height = 500
         self.current_top = 0
         self.current_left = 0
         self.card_offset = 20
-        self.waste_size = 1
+        self.waste_size = waste_size
         self.deck_passes_allowed = 3
         self.deck_passes_remaining = 3
         self.controls = []
