@@ -1,20 +1,9 @@
 import flet as ft
-from solitaire import Solitaire
-from settings import Settings
-
-def create_appbar(page):
-    settings = Settings()
-    
-    selected_card = None
-
-    def start_new_game():
-        page.controls.pop()
-        new_solitaire = Solitaire(settings)
-        page.add(new_solitaire)
-        page.update()
+from settings import SettingsDialog
+def create_appbar(page, settings, on_new_game):
 
     def new_game_clicked(e):
-        start_new_game()
+        on_new_game(settings)
 
     def show_rules(e):
         page.dialog = rules_dialog
@@ -22,31 +11,9 @@ def create_appbar(page):
         page.update()
 
     def show_settings(e):
-        page.dialog = settings_dialog
-        settings_dialog.open = True
+        page.dialog = SettingsDialog(settings, on_new_game)
+        page.dialog.open = True
         page.update()
-
-
-    def apply_settings(e):
-        settings_dialog.open = False
-        settings.waste_size = int(waste_size.value)
-        settings.card_back = selected_card.content.src
-        print(settings.card_back)
-        start_new_game()
-        page.update()
-
-    def cancel(e):
-        waste_size.value = settings.waste_size
-        deck_passes_allowed.value = settings.deck_passes_allowed
-        settings_dialog.open = False
-        page.update()
-    
-    def choose_card_design(e):
-        e.control.border = ft.border.all(3)
-        selected_card = e.control
-        print(selected_card.content.src)
-        page.update()
-        #settings.card_back = f"/images/card_back{e.control.data}.png"
 
     page.appbar = ft.AppBar(
         leading=ft.Image(src=f"/images/card.png"),
@@ -79,40 +46,4 @@ def create_appbar(page):
         title=ft.Text("Solitaire rules"), content=rules_md, on_dismiss=lambda e: print("Dialog dismissed!")
     )
 
-    waste_size = ft.RadioGroup(value=3, content=ft.Row(controls=[
-                ft.Radio(value=1, label="One card"),
-                ft.Radio(value=3, label="Three cards")
-            ]))
-
-    deck_passes_allowed = ft.RadioGroup(value="Unlimited", content=ft.Row(controls=[
-                ft.Radio(value=3, label="Three"),
-                ft.Radio(value="Unlimited", label="Unlimited"),
-            ]))
-
-    card_backs = []
-    for i in range(4):
-        card_backs.append(ft.Container(width=70, height=100, content=ft.Image(src=f"/images/card_back{i}.png"), border_radius=ft.border_radius.all(6), on_click=choose_card_design, data=i))
-    
-    selected_card = card_backs[0]
-    
-    new_game = ft.Checkbox(label="Start new game", value=True, disabled=True)
-
-    settings_dialog = ft.AlertDialog(
-        modal=True,
-        title=ft.Text("Solitare Settings"), 
-        content=ft.Column(controls=[
-            ft.Text("Waste pile size:"),
-            waste_size,
-            ft.Text("Passes through the deck:"),
-            deck_passes_allowed,
-            ft.Row(controls=card_backs),
-            new_game,
-            ], tight=True), 
-        actions=[
-            ft.TextButton("Cancel", on_click=cancel),
-            ft.FilledButton("Apply settings", on_click=apply_settings),
-        ],
-        #on_dismiss=cancel
-    
-    )
-
+    return settings

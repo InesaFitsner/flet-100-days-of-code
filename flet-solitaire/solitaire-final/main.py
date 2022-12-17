@@ -11,12 +11,18 @@ from layout import create_appbar
 
 def main(page: ft.Page):
     
+    def on_new_game(settings):
+        page.controls.pop()
+        new_solitaire = Solitaire(settings)
+        page.add(new_solitaire)
+        page.update()
     
-    create_appbar(page)
     settings = Settings()
+    create_appbar(page, settings, on_new_game)
+
+    
     solitaire = Solitaire(settings)
     page.add(solitaire)
-    
     
 
 ft.app(target=main, assets_dir="images")
