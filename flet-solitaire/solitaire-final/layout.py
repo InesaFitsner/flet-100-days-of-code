@@ -74,11 +74,11 @@ def create_appbar(page):
         content=ft.Column(controls=[
             ft.Text("Waste pile size:"),
             waste_size,
-            ft.Text("Passes throgh the deck:"),
+            ft.Text("Passes through the deck:"),
             ft.RadioGroup(value="unlimited", content=ft.Row(controls=[
                 ft.Radio(value=1, label="One card"),
                 ft.Radio(value=3, label="Three cards")
             ])),
-            ]), 
+            ], tight=True), 
         on_dismiss=apply_settings
     )

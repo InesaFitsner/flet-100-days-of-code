@@ -16,7 +16,7 @@ class Rank:
 
 
 class Solitaire(ft.Stack):
-    def __init__(self, waste_size=1):
+    def __init__(self, waste_size=3):
         super().__init__()
         self.width = 1000
         self.height = 500
