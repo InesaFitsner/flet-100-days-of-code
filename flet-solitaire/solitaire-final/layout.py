@@ -28,11 +28,9 @@ def create_appbar(page):
         settings_dialog.open = False
         settings.waste_size = int(waste_size.value)
         if new_game.value == True:
-            print("New game")
             start_new_game()
         else:
             new_game.value = True
-            print("Old game")
         page.update()
 
     def cancel(e):
