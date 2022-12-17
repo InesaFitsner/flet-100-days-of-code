@@ -16,7 +16,7 @@ class Rank:
 
 
 class Solitaire(ft.Stack):
-    def __init__(self, waste_size=3):
+    def __init__(self, waste_size=3, deck_passes_allowed="Unlimited"):
         super().__init__()
         self.width = 1000
         self.height = 500
@@ -24,8 +24,8 @@ class Solitaire(ft.Stack):
         self.current_left = 0
         self.card_offset = 20
         self.waste_size = waste_size
-        self.deck_passes_allowed = 3
-        self.deck_passes_remaining = 3
+        self.deck_passes_allowed = deck_passes_allowed
+        self.deck_passes_remaining = deck_passes_allowed
         self.controls = []
 
     def did_mount(self):

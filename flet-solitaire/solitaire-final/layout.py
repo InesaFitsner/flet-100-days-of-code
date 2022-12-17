@@ -69,16 +69,19 @@ def create_appbar(page):
                 ft.Radio(value=3, label="Three cards")
             ]))
 
+    deck_passes_allowed = ft.RadioGroup(value="Unlimited", content=ft.Row(controls=[
+                ft.Radio(value=1, label="One"),
+                ft.Radio(value=3, label="Three"),
+                ft.Radio(value="Unlimited", label="Unlimited"),
+            ]))
+
     settings_dialog = ft.AlertDialog(
         title=ft.Text("Solitare Settings"), 
         content=ft.Column(controls=[
             ft.Text("Waste pile size:"),
             waste_size,
             ft.Text("Passes through the deck:"),
-            ft.RadioGroup(value="unlimited", content=ft.Row(controls=[
-                ft.Radio(value=1, label="One card"),
-                ft.Radio(value=3, label="Three cards")
-            ])),
+            deck_passes_allowed
             ], tight=True), 
         on_dismiss=apply_settings
     )
