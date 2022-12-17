@@ -14,25 +14,34 @@ class Rank:
         self.name = card_name
         self.value = card_value
 
+class Settings:
+    def __init__(self, waste_size=3, deck_passes_allowed="Unlimited", card_back=f"/images/card_back1.svg"):
+        self.waste_size = waste_size
+        self.deck_passes_allowed = deck_passes_allowed
+        self.card_back = card_back
+
 
 class Solitaire(ft.Stack):
-    def __init__(self, waste_size=3, deck_passes_allowed="Unlimited"):
+    def __init__(self, settings):
         super().__init__()
         self.width = 1000
         self.height = 500
         self.current_top = 0
         self.current_left = 0
         self.card_offset = 20
-        self.waste_size = waste_size
-        self.deck_passes_allowed = deck_passes_allowed
-        self.deck_passes_remaining = deck_passes_allowed
+        self.settings = settings
+        #self.waste_size = waste_size
+        #self.deck_passes_allowed = deck_passes_allowed
+        #self.deck_passes_remaining = deck_passes_allowed
         self.controls = []
 
     def did_mount(self):
+        #self.create_settings()
+        #self.settings = Settings()
         self.create_slots()
         self.create_card_deck()
         self.deal_cards()
-
+    
     def create_slots(self):
         # self.slots = []
 
@@ -155,7 +164,7 @@ class Solitaire(ft.Stack):
     def display_waste(self):
         for card in self.waste.pile:
             card.visible = False
-        visible_cards_number = min(self.waste_size, len(self.waste.pile))
+        visible_cards_number = min(self.settings.waste_size, len(self.waste.pile))
         for i in range(visible_cards_number):
             self.waste.pile[
                 len(self.waste.pile) - i - 1

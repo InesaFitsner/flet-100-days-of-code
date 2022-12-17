@@ -1,11 +1,12 @@
 import flet as ft
-from solitaire import Solitaire
+from solitaire import Solitaire, Settings
 
 def create_appbar(page):
+    settings = Settings()
 
     def start_new_game():
         page.controls.pop()
-        new_solitaire = Solitaire(int(waste_size.value))
+        new_solitaire = Solitaire(settings)
         page.add(new_solitaire)
         page.update()
 
@@ -25,7 +26,20 @@ def create_appbar(page):
 
     def apply_settings(e):
         settings_dialog.open = False
-        start_new_game()
+        settings.waste_size = int(waste_size.value)
+        if new_game.value == True:
+            print("New game")
+            start_new_game()
+        else:
+            new_game.value = True
+            print("Old game")
+        page.update()
+
+    def cancel(e):
+        waste_size.value = settings.waste_size
+        deck_passes_allowed.value = settings.deck_passes_allowed
+        settings_dialog.open = False
+        page.update()
 
     page.appbar = ft.AppBar(
         leading=ft.Image(src=f"/images/card.png"),
@@ -44,17 +58,11 @@ def create_appbar(page):
         """
     Klondike is played with a standard 52-card deck, without Jokers.
 
-    The four foundations (light rectangles in the upper right of the figure) are built up by suit from Ace (low in this game) 
-    to King, and the tableau piles can be built down by alternate colors. Every face-up card in a partial pile, or a complete pile, 
-    can be moved, as a unit, to another tableau pile on the basis of its highest card. Any empty piles can be filled with a King, 
-    or a pile of cards with a King. The aim of the game is to build up four stacks of cards starting with Ace and ending with King, 
-    all of the same suit, on one of the four foundations, at which time the player would have won. There are different ways 
-    of dealing the remainder of the deck from the stock to the waste, which can be selected in the Settings:
+    The four foundations (light rectangles in the upper right of the figure) are built up by suit from Ace (low in this game) to King, and the tableau piles can be built down by alternate colors. Every face-up card in a partial pile, or a complete pile, can be moved, as a unit, to another tableau pile on the basis of its highest card. Any empty piles can be filled with a King, or a pile of cards with a King. The aim of the game is to build up four stacks of cards starting with Ace and ending with King, all of the same suit, on one of the four foundations, at which time the player would have won. There are different ways of dealing the remainder of the deck from the stock to the waste, which can be selected in the Settings:
 
     - Turning three cards at once to the waste, with no limit on passes through the deck.
     - Turning three cards at once to the waste, with three passes through the deck.
     - Turning one card at a time to the waste, with three passes through the deck.
-    - Turning one card at a time to the waste with only a single pass through the deck, and playing it if possible.
     - Turning one card at a time to the waste, with no limit on passes through the deck.
 
     If the player can no longer make any meaningful moves, the game is considered lost.
@@ -70,18 +78,25 @@ def create_appbar(page):
             ]))
 
     deck_passes_allowed = ft.RadioGroup(value="Unlimited", content=ft.Row(controls=[
-                ft.Radio(value=1, label="One"),
                 ft.Radio(value=3, label="Three"),
                 ft.Radio(value="Unlimited", label="Unlimited"),
             ]))
+    
+    new_game = ft.Checkbox(label="Start new game", value=True)
 
     settings_dialog = ft.AlertDialog(
+        modal=True,
         title=ft.Text("Solitare Settings"), 
         content=ft.Column(controls=[
             ft.Text("Waste pile size:"),
             waste_size,
             ft.Text("Passes through the deck:"),
-            deck_passes_allowed
+            deck_passes_allowed,
+            new_game,
             ], tight=True), 
-        on_dismiss=apply_settings
+        actions=[
+            ft.TextButton("Cancel", on_click=cancel),
+            ft.FilledButton("Apply settings", on_click=apply_settings),
+        ],
+        #on_dismiss=cancel
     )

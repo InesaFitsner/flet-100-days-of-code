@@ -20,7 +20,8 @@ class Card(ft.GestureDetector):
             width=70,
             height=100,
             border_radius=ft.border_radius.all(6),
-            content=ft.Image(src=f"/images/card_back.svg"),
+            #content=ft.Image(src=f"/images/card_back.svg"),
+            content=ft.Image(src=self.solitaire.settings.card_back)
         )
 
     def turn_face_up(self):
@@ -31,7 +32,8 @@ class Card(ft.GestureDetector):
     
     def turn_face_down(self):
         self.face_up = False
-        self.content.content.src=f"/images/card_back.svg"
+        #self.content.content.src=f"/images/card_back.svg"
+        self.content.content.src=self.solitaire.settings.card_back
         self.update()
     
 
@@ -114,7 +116,7 @@ class Card(ft.GestureDetector):
         if self.slot.type == "stock":
             print("Clicked on stock pile")
             for i in range(
-                min(self.solitaire.waste_size, len(self.solitaire.stock.pile))
+                min(self.solitaire.settings.waste_size, len(self.solitaire.stock.pile))
             ):
                 top_card = self.solitaire.stock.pile[-1]
                 #self.move_on_top(self.solitaire.controls, [top_card])

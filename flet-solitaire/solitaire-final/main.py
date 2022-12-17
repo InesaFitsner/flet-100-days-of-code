@@ -2,7 +2,7 @@ import logging
 
 
 import flet as ft
-from solitaire import Solitaire
+from solitaire import Solitaire, Settings
 from layout import create_appbar
 
 # logging.basicConfig(level=logging.DEBUG)
@@ -12,7 +12,8 @@ def main(page: ft.Page):
     
     
     create_appbar(page)
-    solitaire = Solitaire()
+    settings = Settings()
+    solitaire = Solitaire(settings)
     page.add(solitaire)
     
     
