@@ -36,9 +36,16 @@ class Card(ft.GestureDetector):
         self.content.content.src=self.solitaire.settings.card_back
         self.update()
     
+    def can_be_moved(self):
+        if self.face_up and self.slot.type != 'waste':
+            return True
+        if self.slot.type == 'waste' and len(self.solitaire.waste.pile)-1 == self.solitaire.waste.pile.index(self):
+            return True
+        return False
 
     def start_drag(self, e: ft.DragStartEvent):
-        if e.control.face_up:
+        #if e.control.face_up:
+        if self.can_be_moved():
             cards_to_drag = self.get_partial_pile()
             self.solitaire.move_on_top(cards_to_drag)
             # remember card original position to return it back if needed
@@ -47,7 +54,7 @@ class Card(ft.GestureDetector):
             # self.page.update()
 
     def drag(self, e: ft.DragUpdateEvent):
-        if e.control.face_up:
+        if self.can_be_moved():
             i = 0
             for card in self.get_partial_pile():
                 card.top = max(0, self.top + e.delta_y)
@@ -58,7 +65,7 @@ class Card(ft.GestureDetector):
                 card.update()
 
     def drop(self, e: ft.DragEndEvent):
-        if e.control.face_up:
+        if self.can_be_moved():
             cards_to_drag = self.get_partial_pile()
             slots = self.solitaire.tableau + self.solitaire.foundation
             # check if card is close to any of the tableau or foundation slots
