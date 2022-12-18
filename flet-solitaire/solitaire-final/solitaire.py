@@ -129,12 +129,12 @@ class Solitaire(ft.Stack):
 
         # Reveal top cards in slot piles:
         for number in range(len(self.tableau)):
-            self.tableau[number].pile[-1].turn_face_up()
+            #self.tableau[number].pile[-1].turn_face_up()
+            self.tableau[number].get_top_card().turn_face_up()
 
         # Stock pile
         for i in range(28, len(self.cards)):
             self.cards[i].place(self.stock)
-            #print(f"Stock card {self.cards[i].rank.name}")
 
     def move_on_top(self, cards_to_drag):
         """Brings draggable card pile to the top of the stack"""
@@ -170,19 +170,10 @@ class Solitaire(ft.Stack):
 
     def restart_stock(self):
         self.waste.pile.reverse()
-        #print(len(self.waste.pile))
-        #print(self.waste.pile[0].rank.name)
-        # for card in self.waste.pile:
-        #     print(f"card {self.waste.pile.index(card)} name {card.rank.name}")
-        #     card.turn_face_down()
-        #     card.place(self.stock)
         while len(self.waste.pile) > 0:
-            #print(f"First card {self.waste.pile[0].rank.name}")
             card = self.waste.pile[0]
             card.turn_face_down()
             card.place(self.stock)
-            #self.move_on_top([card])
-            #self.stock.pile[-1].move_on_top(self.controls, [self.stock.pile[-1]])
         self.update
 
     def check_foundation_rules(self, current_card, top_card=None):
@@ -207,5 +198,5 @@ class Solitaire(ft.Stack):
         cards_num = 0
         for slot in self.foundation:
             cards_num += len(slot.pile)
-        if cards_num == 1:
+        if cards_num == 52:
             return True

@@ -53,7 +53,6 @@ class SettingsDialog(ft.AlertDialog):
                 card.border = None
         e.control.border = ft.border.all(3)
         self.selected_card = e.control
-        print(self.selected_card.content.src)
         self.update()
 
         
@@ -69,7 +68,6 @@ class SettingsDialog(ft.AlertDialog):
         self.settings.deck_passes_allowed = int(self.deck_passes_allowed.value)
         self.settings.card_back = self.selected_card.content.src
         self.on_settings_applied(self.settings)
-        print(self.settings.card_back)
         self.update()
 
 
