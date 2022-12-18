@@ -92,8 +92,8 @@ class Card(ft.GestureDetector):
                         for card in cards_to_drag:
                             card.place(slot)
                         # reveal top card in old tableau slot if exists
-                        if len(old_slot.pile) > 0 and old_slot.type == "tableau":
-                            old_slot.get_top_card().turn_face_up()
+                        #if len(old_slot.pile) > 0 and old_slot.type == "tableau":
+                        #    old_slot.get_top_card().turn_face_up()
                         self.solitaire.display_waste()
                         self.page.update()
 
@@ -113,8 +113,8 @@ class Card(ft.GestureDetector):
                     if self.solitaire.check_foundation_rules(self, slot.get_top_card()):
                         # if True:
                         self.place(slot)
-                        if len(old_slot.pile) > 0:
-                            old_slot.get_top_card().turn_face_up()
+                        #if len(old_slot.pile) > 0:
+                            #old_slot.get_top_card().turn_face_up()
                         self.solitaire.display_waste()
                         self.page.update()
                         return
@@ -132,6 +132,10 @@ class Card(ft.GestureDetector):
                 top_card.turn_face_up()
             self.solitaire.display_waste()
             self.page.update()
+
+        if self.slot.type == "tableau":
+            if self.face_up == False and len(self.slot.pile)-1 == self.slot.pile.index(self):
+                self.turn_face_up()
 
     def place(self, slot):
         self.top = slot.top
