@@ -18,7 +18,7 @@ class SettingsDialog(ft.AlertDialog):
                     ft.Radio(value=1, label="One card"),
                     ft.Radio(value=3, label="Three cards")
                 ]))
-        self.deck_passes_allowed = ft.RadioGroup(value="Unlimited", content=ft.Row(controls=[
+        self.deck_passes_allowed = ft.RadioGroup(value=self.settings.deck_passes_allowed, content=ft.Row(controls=[
             ft.Radio(value=3, label="Three"),
             ft.Radio(value="Unlimited", label="Unlimited"),
         ]))
@@ -66,7 +66,7 @@ class SettingsDialog(ft.AlertDialog):
     def apply_settings(self, e):
         self.open = False
         self.settings.waste_size = int(self.waste_size.value)
-        self.settings.deck_passes_allowed = int(self.deck_passes_allowed.value)
+        self.settings.deck_passes_allowed = self.deck_passes_allowed.value
         self.settings.card_back = self.selected_card.content.src
         self.on_settings_applied(self.settings)
         print(self.settings.card_back)

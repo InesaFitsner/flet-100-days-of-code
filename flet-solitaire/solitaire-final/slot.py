@@ -26,5 +26,8 @@ class Slot(ft.Container):
 
     def click(self, e):
         if self.type == "stock":
-            print(f"Restart stock pile. Stock pile {len(self.solitaire.stock.pile)}")
-            self.solitaire.restart_stock()
+            if self.solitaire.deck_passes_remaining != "Unlimited" and self.solitaire.deck_passes_remaining > 1:
+                self.solitaire.deck_passes_remaining -= 1
+                self.solitaire.restart_stock()
+            elif self.solitaire.deck_passes_remaining == "Unlimited":
+                self.solitaire.restart_stock()

@@ -27,14 +27,22 @@ class Solitaire(ft.Stack):
         self.current_left = 0
         self.card_offset = 20
         self.settings = settings
-        self.deck_passes_remaining = self.settings.deck_passes_allowed
         self.controls = []
 
     def did_mount(self):
+        self.count_deck_passes()
         self.create_slots()
         self.create_card_deck()
         self.deal_cards()
-    
+        #print(self.deck_passes_remaining)
+
+    def count_deck_passes(self):
+        if self.settings.deck_passes_allowed != "Unlimited":
+            self.deck_passes_remaining = int(self.settings.deck_passes_allowed)
+        else:
+            self.deck_passes_remaining = "Unlimited"
+
+
     def create_slots(self):
 
         self.stock = Slot(
@@ -168,14 +176,14 @@ class Solitaire(ft.Stack):
 
     def restart_stock(self):
         self.waste.pile.reverse()
-        print(len(self.waste.pile))
-        print(self.waste.pile[0].rank.name)
+        #print(len(self.waste.pile))
+        #print(self.waste.pile[0].rank.name)
         # for card in self.waste.pile:
         #     print(f"card {self.waste.pile.index(card)} name {card.rank.name}")
         #     card.turn_face_down()
         #     card.place(self.stock)
         while len(self.waste.pile) > 0:
-            print(f"First card {self.waste.pile[0].rank.name}")
+            #print(f"First card {self.waste.pile[0].rank.name}")
             card = self.waste.pile[0]
             card.turn_face_down()
             card.place(self.stock)
