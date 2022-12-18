@@ -1,7 +1,7 @@
 import flet as ft
 
 class Settings:
-    def __init__(self, waste_size=3, deck_passes_allowed="Unlimited", card_back=f"/images/card_back0.png"):
+    def __init__(self, waste_size=3, deck_passes_allowed=1000, card_back=f"/images/card_back0.png"):
         self.waste_size = waste_size
         self.deck_passes_allowed = deck_passes_allowed
         self.card_back = card_back
@@ -20,7 +20,7 @@ class SettingsDialog(ft.AlertDialog):
                 ]))
         self.deck_passes_allowed = ft.RadioGroup(value=self.settings.deck_passes_allowed, content=ft.Row(controls=[
             ft.Radio(value=3, label="Three"),
-            ft.Radio(value="Unlimited", label="Unlimited"),
+            ft.Radio(value=1000, label="Unlimited"),
         ]))
         self.generate_card_backs()
 
@@ -66,7 +66,7 @@ class SettingsDialog(ft.AlertDialog):
     def apply_settings(self, e):
         self.open = False
         self.settings.waste_size = int(self.waste_size.value)
-        self.settings.deck_passes_allowed = self.deck_passes_allowed.value
+        self.settings.deck_passes_allowed = int(self.deck_passes_allowed.value)
         self.settings.card_back = self.selected_card.content.src
         self.on_settings_applied(self.settings)
         print(self.settings.card_back)

@@ -156,6 +156,8 @@ class Card(ft.GestureDetector):
         # add the card to the new slot's pile
         slot.pile.append(self)
         self.solitaire.move_on_top([self])
+        if self.solitaire.check_if_you_won():
+            self.solitaire.on_win()
         self.update()
 
     def get_partial_pile(self):

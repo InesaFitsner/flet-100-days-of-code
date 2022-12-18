@@ -19,7 +19,7 @@ class Rank:
 
 
 class Solitaire(ft.Stack):
-    def __init__(self, settings):
+    def __init__(self, settings, on_win):
         super().__init__()
         self.width = 1000
         self.height = 500
@@ -27,20 +27,14 @@ class Solitaire(ft.Stack):
         self.current_left = 0
         self.card_offset = 20
         self.settings = settings
+        self.deck_passes_remaining = int(self.settings.deck_passes_allowed)
         self.controls = []
+        self.on_win = on_win
 
     def did_mount(self):
-        self.count_deck_passes()
         self.create_slots()
         self.create_card_deck()
         self.deal_cards()
-        #print(self.deck_passes_remaining)
-
-    def count_deck_passes(self):
-        if self.settings.deck_passes_allowed != "Unlimited":
-            self.deck_passes_remaining = int(self.settings.deck_passes_allowed)
-        else:
-            self.deck_passes_remaining = "Unlimited"
 
 
     def create_slots(self):
@@ -169,9 +163,9 @@ class Solitaire(ft.Stack):
                 len(self.waste.pile) - i - 1
             ].left = self.waste.left + self.card_offset * (visible_cards_number - i - 1)
             self.waste.pile[len(self.waste.pile) - i - 1].visible = True
-            print(
-                f"waste card number {len(self.waste.pile)-i-1}, offset = {self.card_offset * (visible_cards_number - i - 1)}"
-            )
+            #print(
+            #    f"waste card number {len(self.waste.pile)-i-1}, offset = {self.card_offset * (visible_cards_number - i - 1)}"
+            #)
         self.update()
 
     def restart_stock(self):
@@ -189,7 +183,6 @@ class Solitaire(ft.Stack):
             card.place(self.stock)
             #self.move_on_top([card])
             #self.stock.pile[-1].move_on_top(self.controls, [self.stock.pile[-1]])
-        
         self.update
 
     def check_foundation_rules(self, current_card, top_card=None):
@@ -209,3 +202,10 @@ class Solitaire(ft.Stack):
             )
         else:
             return current_card.rank.name == "King"
+
+    def check_if_you_won(self):
+        cards_num = 0
+        for slot in self.foundation:
+            cards_num += len(slot.pile)
+        if cards_num == 1:
+            return True
