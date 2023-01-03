@@ -2,7 +2,7 @@ import flet as ft
 
 # Using Container for slot where the card should be dropped
 # on_pan_start event for the card: remember position of card to bounce it back on_pan_end of needed. 
-# on_pan_end: check if card is in proximity of the slot and either drop or return to original position.
+# on_pan_end: check if card is in proximity of the slot and either place it to the slot or return to original position (bounce back).
 # Solitaire class created for holding original position coordinates
 
 class Solitaire:
@@ -12,6 +12,15 @@ class Solitaire:
 
 
 def main(page: ft.Page):
+    def place(card, slot):
+        """place card to the slot"""
+        card.top = slot.top
+        card.left = slot.left
+
+    def bounce_back(game, card):
+        """return card to its original position"""
+        card.top = game.start_top
+        card.left = game.start_left
 
     def start_drag(e: ft.DragStartEvent):
         solitaire.start_top = e.control.top
@@ -29,13 +38,10 @@ def main(page: ft.Page):
             abs(e.control.top - slot.top) < 20
             and abs(e.control.left - slot.left) < 20
         ):
-            # drop card to the slot
-            e.control.top = slot.top
-            e.control.left = slot.left
+            place(e.control, slot)
+
         else:
-            # return card to origfinal position
-            e.control.top = solitaire.start_top
-            e.control.left = solitaire.start_left
+            bounce_back(solitaire, e.control)
 
         page.update()
 

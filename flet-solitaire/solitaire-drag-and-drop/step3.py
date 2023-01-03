@@ -10,6 +10,16 @@ class Solitaire:
 
 
 def main(page: ft.Page):
+    
+    def place(card, slot):
+        """place card to the slot"""
+        card.top = slot.top
+        card.left = slot.left
+
+    def bounce_back(game, card):
+        """return card to its original position"""
+        card.top = game.start_top
+        card.left = game.start_left
 
     def move_on_top(card, controls):
         """Moves draggable card to the top of the stack"""
@@ -33,11 +43,9 @@ def main(page: ft.Page):
             abs(e.control.top - slot.top) < 20
             and abs(e.control.left - slot.left) < 20
         ):
-            e.control.top = slot.top
-            e.control.left = slot.left
+            place(e.control, slot)
         else:
-            e.control.top = solitaire.start_top
-            e.control.left = solitaire.start_left
+            bounce_back(solitaire, e.control)
 
         page.update()
 
