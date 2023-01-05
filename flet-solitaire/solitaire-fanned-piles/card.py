@@ -1,3 +1,5 @@
+CARD_OFFSET = 20
+
 import flet as ft
 
 class Card(ft.GestureDetector):
@@ -11,13 +13,25 @@ class Card(ft.GestureDetector):
         self.left=left
         self.top=top
         self.solitaire = solitaire
+        self.slot = None
         self.color = color
         self.content=ft.Container(bgcolor=self.color, width=70, height=100)
 
     def place(self, slot):
         """Place card to the slot"""
-        self.top = slot.top
+        
+        self.top = slot.top + len(slot.pile) * CARD_OFFSET
         self.left = slot.left
+
+        # remove card from it's original slot, if exists
+        if self.slot is not None:
+            self.slot.pile.remove(self)
+        
+        # change card's slot to a new slot
+        self.slot = slot
+
+        # add card to the new slot's pile
+        slot.pile.append(self)
 
     def start_drag(self, e: ft.DragStartEvent):
         self.solitaire.move_on_top(self)
