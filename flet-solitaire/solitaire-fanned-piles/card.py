@@ -37,8 +37,7 @@ class Card(ft.GestureDetector):
     def get_pile_to_move(self):
         """returns list of cards that will be dragged together, starting with the current card"""
         if self.slot is not None:
-            partial_pile = self.slot.pile[self.slot.pile.index(self):]
-            return partial_pile
+            return self.slot.pile[self.slot.pile.index(self):]
         return [self]
 
     def start_drag(self, e: ft.DragStartEvent):
