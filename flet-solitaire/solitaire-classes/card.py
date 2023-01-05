@@ -20,26 +20,26 @@ class Card(ft.GestureDetector):
         self.left = slot.left
 
     def start_drag(self, e: ft.DragStartEvent):
-        self.solitaire.move_on_top(e.control)
-        self.solitaire.start_top = e.control.top
-        self.solitaire.start_left = e.control.left
+        self.solitaire.move_on_top(self)
+        self.solitaire.start_top = self.top
+        self.solitaire.start_left = self.left
         self.update()
 
     
     def drag(self, e: ft.DragUpdateEvent):
-        e.control.top = max(0, e.control.top + e.delta_y)
-        e.control.left = max(0, e.control.left + e.delta_x)
-        e.control.update()
+        self.top = max(0, self.top + e.delta_y)
+        self.left = max(0, self.left + e.delta_x)
+        self.update()
 
     def drop(self, e: ft.DragEndEvent):
         for slot in self.solitaire.slots:
             if (
-                abs(e.control.top - slot.top) < 20
-            and abs(e.control.left - slot.left) < 20
+                abs(self.top - slot.top) < 20
+            and abs(self.left - slot.left) < 20
           ):
                 self.place(slot)
                 self.update()
                 return
            
-        self.solitaire.bounce_back(e.control)
+        self.solitaire.bounce_back(self)
         self.update()
