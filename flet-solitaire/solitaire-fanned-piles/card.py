@@ -19,7 +19,8 @@ class Card(ft.GestureDetector):
 
     def place(self, slot):
         """Place card to the slot"""
-        
+        print(len(self.get_pile_to_move()))
+
         self.top = slot.top + len(slot.pile) * CARD_OFFSET
         self.left = slot.left
 
@@ -32,6 +33,13 @@ class Card(ft.GestureDetector):
 
         # add card to the new slot's pile
         slot.pile.append(self)
+
+    def get_pile_to_move(self):
+        """returns list of cards that will be dragged together, starting with the current card"""
+        if self.slot is not None:
+            partial_pile = self.slot.pile[self.slot.pile.index(self):]
+            return partial_pile
+        return [self]
 
     def start_drag(self, e: ft.DragStartEvent):
         self.solitaire.move_on_top(self)
