@@ -24,10 +24,34 @@ class Solitaire(ft.Stack):
     def create_slots(self):
         # stock 
         self.slots.append(Slot(top=0, left=0))
+        
         # waste
         self.slots.append(Slot(top=0, left=100))
-
         
+        # foundation
+        slot_left = 300
+        for slot in range(4):
+            self.slots.append(
+                Slot(
+                    top=0,
+                    left=slot_left,
+                )
+            )
+            slot_left += 100
+        
+        #tableau
+        slot_left = 0
+        for slot in range(7):
+            self.slots.append(
+                Slot(
+                    top=150,
+                    left=slot_left,
+
+                )
+            )
+            slot_left += 100
+
+
         self.controls.extend(self.slots)
         self.update()
 
