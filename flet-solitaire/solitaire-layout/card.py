@@ -5,7 +5,7 @@ DROP_PROXIMITY = 20
 import flet as ft
 
 class Card(ft.GestureDetector):
-    def __init__(self, solitaire, color, top, left):
+    def __init__(self, solitaire, suite, rank, top, left):
         super().__init__()
         self.mouse_cursor=ft.MouseCursor.MOVE
         self.drag_interval=5
@@ -14,10 +14,11 @@ class Card(ft.GestureDetector):
         self.on_pan_end=self.drop
         self.left=left
         self.top=top
+        self.suite=suite
+        self.rank=rank
         self.solitaire = solitaire
         self.slot = None
-        self.color = color
-        self.content=ft.Container(bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGTH)
+        self.content=ft.Container(bgcolor="green",width=CARD_WIDTH, height=CARD_HEIGTH, border_radius = ft.border_radius.all(6))
 
     def place(self, slot):
         """Place draggable pile to the slot"""
