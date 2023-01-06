@@ -12,3 +12,4 @@ class Slot(ft.Container):
         self.left=left
         self.top=top
         self.border=ft.border.all(1)
+        self.border_radius = ft.border_radius.all(6)

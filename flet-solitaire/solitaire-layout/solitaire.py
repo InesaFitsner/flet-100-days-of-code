@@ -22,10 +22,12 @@ class Solitaire(ft.Stack):
         self.create_card_deck()
 
     def create_slots(self):
-        slot1 = Slot(top=0, left=200)
-        slot2 = Slot(top=0, left=300)
-        slots = [slot1, slot2]
-        self.slots.extend(slots)
+        # stock 
+        self.slots.append(Slot(top=0, left=0))
+        # waste
+        self.slots.append(Slot(top=0, left=100))
+
+        
         self.controls.extend(self.slots)
         self.update()
 
