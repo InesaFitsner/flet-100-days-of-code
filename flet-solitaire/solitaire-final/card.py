@@ -46,7 +46,7 @@ class Card(ft.GestureDetector):
     def start_drag(self, e: ft.DragStartEvent):
         #if e.control.face_up:
         if self.can_be_moved():
-            cards_to_drag = self.get_partial_pile()
+            cards_to_drag = self.get_cards_to_move()
             self.solitaire.move_on_top(cards_to_drag)
             # remember card original position to return it back if needed
             self.solitaire.current_top = e.control.top
@@ -56,7 +56,7 @@ class Card(ft.GestureDetector):
     def drag(self, e: ft.DragUpdateEvent):
         if self.can_be_moved():
             i = 0
-            for card in self.get_partial_pile():
+            for card in self.get_cards_to_move():
                 card.top = max(0, self.top + e.delta_y)
                 if card.slot.type == "tableau":
                     card.top += i * self.solitaire.card_offset
@@ -66,7 +66,7 @@ class Card(ft.GestureDetector):
 
     def drop(self, e: ft.DragEndEvent):
         if self.can_be_moved():
-            cards_to_drag = self.get_partial_pile()
+            cards_to_drag = self.get_cards_to_move()
             slots = self.solitaire.tableau + self.solitaire.foundation
             # check if card is close to any of the tableau or foundation slots
             for slot in slots:
@@ -160,7 +160,7 @@ class Card(ft.GestureDetector):
             self.solitaire.on_win()
         self.update()
 
-    def get_partial_pile(self):
+    def get_cards_to_move(self):
         """returns list of cards that will be dragged together, starting with the current card"""
         if self.slot is not None:
             return self.slot.pile[self.slot.pile.index(self):]
