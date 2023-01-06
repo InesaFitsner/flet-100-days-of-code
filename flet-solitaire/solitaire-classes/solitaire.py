@@ -1,3 +1,6 @@
+SOLITAIRE_WIDTH = 1000
+SOLITAIRE_HEIGHT = 500
+
 import flet as ft
 
 class Solitaire(ft.Stack):
@@ -7,8 +10,8 @@ class Solitaire(ft.Stack):
         self.start_left = 0
         self.controls = []
         self.slots = []
-        self.width = 1000
-        self.height = 500
+        self.width = SOLITAIRE_WIDTH
+        self.height = SOLITAIRE_HEIGHT
 
     def move_on_top(self, card):
         """Moves draggable card to the top of the stack"""

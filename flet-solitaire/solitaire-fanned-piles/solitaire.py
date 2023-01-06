@@ -1,3 +1,7 @@
+CARD_OFFSET = 20
+SOLITAIRE_WIDTH = 1000
+SOLITAIRE_HEIGHT = 500
+
 import flet as ft
 
 class Solitaire(ft.Stack):
@@ -7,18 +11,21 @@ class Solitaire(ft.Stack):
         self.start_left = 0
         self.controls = []
         self.slots = []
-        self.width = 1000
-        self.height = 500
+        self.card_offset = CARD_OFFSET
+        self.width = SOLITAIRE_WIDTH
+        self.height = SOLITAIRE_HEIGHT
 
-    def move_on_top(self, cards_to_drag):
+    def move_on_top(self, draggable_pile):
         """Brings draggable card pile to the top of the stack"""
 
-        for card in cards_to_drag:
+        for card in draggable_pile:
             self.controls.remove(card)
             self.controls.append(card)
         self.update()
     
-    def bounce_back(self, card):
-        """Returns card to its original position"""
-        card.top = self.start_top
-        card.left = self.start_left
+    def bounce_back(self, draggable_pile):
+        """Returns draggable pile to its original position"""
+        for card in draggable_pile:
+            card.top = self.start_top + draggable_pile.index(card) * self.card_offset
+            card.left = self.start_left
+        self.update()

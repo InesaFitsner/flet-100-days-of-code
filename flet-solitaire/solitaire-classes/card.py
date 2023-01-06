@@ -1,3 +1,7 @@
+CARD_WIDTH = 70
+CARD_HEIGTH = 100
+DROP_PROXIMITY = 20
+
 import flet as ft
 
 class Card(ft.GestureDetector):
@@ -12,7 +16,7 @@ class Card(ft.GestureDetector):
         self.top=top
         self.solitaire = solitaire
         self.color = color
-        self.content=ft.Container(bgcolor=self.color, width=70, height=100)
+        self.content=ft.Container(bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGTH)
 
     def place(self, slot):
         """Place card to the slot"""
@@ -34,8 +38,8 @@ class Card(ft.GestureDetector):
     def drop(self, e: ft.DragEndEvent):
         for slot in self.solitaire.slots:
             if (
-                abs(self.top - slot.top) < 20
-            and abs(self.left - slot.left) < 20
+                abs(self.top - slot.top) < DROP_PROXIMITY
+            and abs(self.left - slot.left) < DROP_PROXIMITY
           ):
                 self.place(slot)
                 self.update()
