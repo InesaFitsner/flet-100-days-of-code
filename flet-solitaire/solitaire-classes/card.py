@@ -18,6 +18,7 @@ class Card(ft.GestureDetector):
         self.color = color
         self.content=ft.Container(bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGTH)
 
+    
     def place(self, slot):
         """Place card to the slot"""
         self.top = slot.top

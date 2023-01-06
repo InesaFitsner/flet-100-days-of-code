@@ -23,3 +23,4 @@ class Solitaire(ft.Stack):
         """Returns card to its original position"""
         card.top = self.start_top
         card.left = self.start_left
+        self.update()
