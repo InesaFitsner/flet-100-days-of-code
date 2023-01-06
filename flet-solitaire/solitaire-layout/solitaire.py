@@ -3,7 +3,6 @@ SOLITAIRE_WIDTH = 1000
 SOLITAIRE_HEIGHT = 500
 
 import flet as ft
-from slot import Slot
 
 class Solitaire(ft.Stack):
     def __init__(self):
@@ -18,47 +17,17 @@ class Solitaire(ft.Stack):
 
     def did_mount(self):
         self.create_slots()
-        #self.create_card_deck()
-        #self.deal_cards()
-
+        self.create_card_deck()
+        self.deal_cards()
 
     def create_slots(self):
-        self.slots.append(Slot(
-            top=0, left=0, slot_type="stock", border=ft.border.all(1)
-        ))
+        pass
 
-        self.slots.append(Slot(
-            top=0, slot_type="waste", left=100, border=None
-        ))
+    def create_card_deck(self):
+        pass
 
-        x = 300
-        for i in range(4):
-            self.slots.append(
-                Slot(
-                    slot_type="foundation",
-                    top=0,
-                    left=x,
-                    border=ft.border.all(1, "outline"),
-                )
-            )
-            x += 100
-
-        x = 0
-        for i in range(7):
-            self.slots.append(
-                Slot(
-                    slot_type="tableau",
-                    top=150,
-                    left=x,
-                    border=None
-                )
-            )
-            x += 100
-
-        self.controls.extend(self.slots)
-        print(len(self.slots))
-        self.update()
-
+    def deal_cards(self):
+        pass
 
     def move_on_top(self, draggable_pile):
         """Brings draggable card pile to the top of the stack"""
