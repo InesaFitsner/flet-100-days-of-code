@@ -32,15 +32,16 @@ class Solitaire(ft.Stack):
     def did_mount(self):
         self.create_slots()
         self.create_card_deck()
+        self.deal_cards()
 
     def create_slots(self):
-        # stock 
+        # stock self.slots[0]
         self.slots.append(Slot(top=0, left=0))
         
-        # waste
+        # waste self.slots[1]
         self.slots.append(Slot(top=0, left=100))
         
-        # foundation
+        # foundation self.slots[2:6]
         slot_left = 300
         for slot in range(4):
             self.slots.append(
@@ -51,7 +52,7 @@ class Solitaire(ft.Stack):
             )
             slot_left += 100
         
-        #tableau
+        #tableau self.slots[6:]
         slot_left = 0
         for slot in range(7):
             self.slots.append(
@@ -100,8 +101,28 @@ class Solitaire(ft.Stack):
         
         random.shuffle(self.cards)
         self.controls.extend(self.cards)
-        print(len(self.cards))
         self.update()
+
+    
+    def deal_cards(self):
+        # Tableau
+        card_index = 0
+        first_slot = 6
+        while card_index <= 27:
+            for slot_index in range(first_slot, len(self.slots)):
+                self.cards[card_index].place(self.slots[slot_index])
+                card_index += 1
+            first_slot += 1
+
+        # Reveal top cards in slot piles:
+        #for number in range(7):
+            #self.tableau[number].pile[-1].turn_face_up()
+            #self.tableau[number].get_top_card().turn_face_up()
+            
+
+        # Stock pile
+        for i in range(28, len(self.cards)):
+            self.cards[i].place(self.slots[0])
         
 
     def move_on_top(self, draggable_pile):

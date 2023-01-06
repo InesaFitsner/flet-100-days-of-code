@@ -12,13 +12,17 @@ class Card(ft.GestureDetector):
         self.on_pan_start=self.start_drag
         self.on_pan_update=self.drag
         self.on_pan_end=self.drop
-        self.left=left
-        self.top=top
         self.suite=suite
         self.rank=rank
+        self.top=top
+        self.left=left
         self.solitaire = solitaire
         self.slot = None
-        self.content=ft.Container(bgcolor="green",width=CARD_WIDTH, height=CARD_HEIGTH, border_radius = ft.border_radius.all(6))
+        self.content=ft.Container(
+            width=CARD_WIDTH, 
+            height=CARD_HEIGTH, 
+            border_radius = ft.border_radius.all(6), 
+            content=ft.Image(src="card_back.png"))
 
     def place(self, slot):
         """Place draggable pile to the slot"""
