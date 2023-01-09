@@ -25,8 +25,6 @@ def main(page: ft.Page):
     def start_drag(e: ft.DragStartEvent):
         solitaire.start_top = e.control.top
         solitaire.start_left = e.control.left
-        page.update()
-
 
     def drag(e: ft.DragUpdateEvent):
         e.control.top = max(0, e.control.top + e.delta_y)
@@ -43,7 +41,7 @@ def main(page: ft.Page):
         else:
             bounce_back(solitaire, e.control)
 
-        page.update()
+        e.control.update()
 
     slot = ft.Container(
         width=70, height=100, left=200, top=0, border=ft.border.all(1)
@@ -61,10 +59,8 @@ def main(page: ft.Page):
     )
 
     solitaire = Solitaire()
-    controls = [slot, card]
-    
 
-    page.add(ft.Stack(controls, width=1000, height=500))
+    page.add(ft.Stack(controls = [slot, card], width=1000, height=500))
 
 
 ft.app(target=main)

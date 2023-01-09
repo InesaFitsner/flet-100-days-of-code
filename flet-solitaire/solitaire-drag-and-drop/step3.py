@@ -25,12 +25,12 @@ def main(page: ft.Page):
         """Moves draggable card to the top of the stack"""
         controls.remove(card)
         controls.append(card)
+        page.update()
 
     def start_drag(e: ft.DragStartEvent):
         move_on_top(e.control, controls)
         solitaire.start_top = e.control.top
         solitaire.start_left = e.control.left
-        page.update()
 
 
     def drag(e: ft.DragUpdateEvent):
@@ -47,7 +47,7 @@ def main(page: ft.Page):
         else:
             bounce_back(solitaire, e.control)
 
-        page.update()
+        e.control.update()
 
     slot = ft.Container(
         width=70, height=100, left=200, top=0, border=ft.border.all(1)
@@ -76,10 +76,9 @@ def main(page: ft.Page):
     )
 
     solitaire = Solitaire()
-    controls = [slot, card1, card2]
     
-
-    page.add(ft.Stack(controls, width=1000, height=500))
+    controls = [slot, card1, card2]
+    page.add(ft.Stack(controls=controls, width=1000, height=500))
 
 
 ft.app(target=main)

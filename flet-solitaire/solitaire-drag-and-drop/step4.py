@@ -20,17 +20,18 @@ def main(page: ft.Page):
         """return card to its original position"""
         card.top = game.start_top
         card.left = game.start_left
+        page.update()
 
     def move_on_top(card, controls):
         """Moves draggable card to the top of the stack"""
         controls.remove(card)
         controls.append(card)
+        page.update()
 
     def start_drag(e: ft.DragStartEvent):
         move_on_top(e.control, controls)
         solitaire.start_top = e.control.top
         solitaire.start_left = e.control.left
-        page.update()
 
 
     def drag(e: ft.DragUpdateEvent):
@@ -45,11 +46,11 @@ def main(page: ft.Page):
             and abs(e.control.left - slot.left) < 20
           ):
                 place(e.control, slot)
-                page.update()
+                e.control.update()
                 return
            
         bounce_back(solitaire, e.control)
-        page.update()
+        e.control.update()
 
     slot1 = ft.Container(
         width=70, height=100, left=200, top=0, border=ft.border.all(1)
@@ -60,7 +61,6 @@ def main(page: ft.Page):
     )
 
     slots = [slot1, slot2]
-
 
     card1 = ft.GestureDetector(
         mouse_cursor=ft.MouseCursor.MOVE,
@@ -84,14 +84,11 @@ def main(page: ft.Page):
         content=ft.Container(bgcolor=ft.colors.YELLOW, width=70, height=100),
     )
 
-    cards = [card1, card2]
-    controls = slots + cards
+    controls = [slot1, slot2, card1, card2]
 
     solitaire = Solitaire()
     
-    
-
-    page.add(ft.Stack(controls, width=1000, height=500))
+    page.add(ft.Stack(controls=controls, width=1000, height=500))
 
 
 ft.app(target=main)

@@ -7,6 +7,7 @@ import flet as ft
 class Card(ft.GestureDetector):
     def __init__(self, solitaire, color, top, left):
         super().__init__()
+        self.slot = None
         self.mouse_cursor=ft.MouseCursor.MOVE
         self.drag_interval=5
         self.on_pan_start=self.start_drag
