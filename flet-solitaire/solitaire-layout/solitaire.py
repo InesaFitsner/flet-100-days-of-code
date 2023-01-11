@@ -35,37 +35,41 @@ class Solitaire(ft.Stack):
         self.deal_cards()
 
     def create_slots(self):
-        # stock self.slots[0]
-        self.slots.append(Slot(top=0, left=0))
         
-        # waste self.slots[1]
-        self.slots.append(Slot(top=0, left=100))
-        
-        # foundation self.slots[2:6]
-        slot_left = 300
-        for slot in range(4):
-            self.slots.append(
+        self.stock = Slot(
+            top=0, left=0
+        )
+
+        self.waste = Slot(
+            top=0, left=100
+        )
+
+        self.foundations = []
+        x = 300
+        for i in range(4):
+            self.foundations.append(
                 Slot(
                     top=0,
-                    left=slot_left,
+                    left=x,
                 )
             )
-            slot_left += 100
-        
-        #tableau self.slots[6:]
-        slot_left = 0
-        for slot in range(7):
-            self.slots.append(
+            x += 100
+
+        self.tableau = []
+        x = 0
+        for i in range(7):
+            self.tableau.append(
                 Slot(
                     top=150,
-                    left=slot_left,
-
+                    left=x,
                 )
             )
-            slot_left += 100
+            x += 100
 
-
-        self.controls.extend(self.slots)
+        self.controls.append(self.stock)
+        self.controls.append(self.waste)
+        self.controls.extend(self.foundations)
+        self.controls.extend(self.tableau)
         self.update()
 
     def create_card_deck(self):
@@ -95,35 +99,38 @@ class Solitaire(ft.Stack):
 
         for suite in suites:
             for rank in ranks:
-                file_name = f"{rank.name}_{suite.name}.svg"
+                #file_name = f"{rank.name}_{suite.name}.svg"
                 #print(file_name)
                 self.cards.append(Card(solitaire=self, suite=suite, rank=rank, top=0, left=0))
         
-        random.shuffle(self.cards)
-        self.controls.extend(self.cards)
-        self.update()
+        #random.shuffle(self.cards)
+        #random.shuffle(self.cards)
+        #self.controls.extend(self.cards)
+        #self.update()
 
     
     def deal_cards(self):
+        random.shuffle(self.cards)
+        self.controls.extend(self.cards)
         # Tableau
         card_index = 0
-        first_slot = 6
+        first_slot = 0
         while card_index <= 27:
-            for slot_index in range(first_slot, len(self.slots)):
-                self.cards[card_index].place(self.slots[slot_index])
+            for slot_index in range(first_slot, len(self.tableau)):
+                self.cards[card_index].place(self.tableau[slot_index])
                 card_index += 1
             first_slot += 1
 
         # Reveal top cards in slot piles:
-        #for number in range(7):
-            #self.tableau[number].pile[-1].turn_face_up()
-            #self.tableau[number].get_top_card().turn_face_up()
-            
+        # for number in range(len(self.tableau)):
+        #     #self.tableau[number].pile[-1].turn_face_up()
+        #     self.tableau[number].get_top_card().turn_face_up()
 
         # Stock pile
         for i in range(28, len(self.cards)):
-            self.cards[i].place(self.slots[0])
-        
+            self.cards[i].place(self.stock)
+
+        self.update()
 
     def move_on_top(self, draggable_pile):
         """Brings draggable card pile to the top of the stack"""

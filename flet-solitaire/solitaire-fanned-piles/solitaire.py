@@ -47,4 +47,5 @@ class Solitaire(ft.Stack):
         for card in draggable_pile:
             card.top = self.start_top + draggable_pile.index(card) * self.card_offset
             card.left = self.start_left
+ 
         self.update()
