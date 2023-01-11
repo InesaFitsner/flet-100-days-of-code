@@ -39,7 +39,6 @@ class Solitaire(ft.Stack):
             card.place(self.slots[0])
         self.update()
         
-
     def move_on_top(self, card):
         """Moves draggable card to the top of the stack"""
         self.controls.remove(card)

@@ -1,6 +1,7 @@
 import flet as ft
 
-# Adding secord slot and cards and slots lists
+# Adding 2 more slots
+# Deal cards before the beginning of the game
 # On_pan_end, go through slots list to find slot in proximity if possible
 
 class Solitaire:
@@ -52,6 +53,11 @@ def main(page: ft.Page):
         bounce_back(solitaire, e.control)
         e.control.update()
 
+
+    slot0 = ft.Container(
+        width=70, height=100, left=0, top=0, border=ft.border.all(1)
+    )
+
     slot1 = ft.Container(
         width=70, height=100, left=200, top=0, border=ft.border.all(1)
     )
@@ -60,7 +66,7 @@ def main(page: ft.Page):
         width=70, height=100, left=300, top=0, border=ft.border.all(1)
     )
 
-    slots = [slot1, slot2]
+    slots = [slot0, slot1, slot2]
 
     card1 = ft.GestureDetector(
         mouse_cursor=ft.MouseCursor.MOVE,
@@ -84,7 +90,11 @@ def main(page: ft.Page):
         content=ft.Container(bgcolor=ft.colors.YELLOW, width=70, height=100),
     )
 
-    controls = [slot1, slot2, card1, card2]
+    controls = [slot0, slot1, slot2, card1, card2]
+    
+    # deal cards
+    place(card1, slot0)
+    place(card2, slot0)
 
     solitaire = Solitaire()
     
