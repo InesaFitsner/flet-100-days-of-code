@@ -12,25 +12,33 @@ class Solitaire(ft.Stack):
         self.start_left = 0
         self.controls = []
         self.slots = []
+        self.cards = []
         self.width = SOLITAIRE_WIDTH
         self.height = SOLITAIRE_HEIGHT
 
     def did_mount(self):
-        self.create_slots()
         self.create_card_deck()
+        self.create_slots()
+        self.deal_cards()
 
     def create_slots(self):
+        self.slots.append(Slot(top=0, left=0))
         self.slots.append(Slot(top=0, left=200))
         self.slots.append(Slot(top=0, left=300))
         self.controls.extend(self.slots)
         self.update()
 
     def create_card_deck(self):
-        card1 = Card(self, color="GREEN", top=0, left=0)
-        card2 = Card(self, color="YELLOW", top=0, left=100)
-        cards = [card1, card2]
-        self.controls.extend(cards)
+        card1 = Card(self, color="GREEN")
+        card2 = Card(self, color="YELLOW")
+        self.cards = [card1, card2]
+
+    def deal_cards(self):
+        self.controls.extend(self.cards)
+        for card in self.cards:
+            card.place(self.slots[0])
         self.update()
+        
 
     def move_on_top(self, card):
         """Moves draggable card to the top of the stack"""

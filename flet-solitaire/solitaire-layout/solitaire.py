@@ -99,14 +99,7 @@ class Solitaire(ft.Stack):
 
         for suite in suites:
             for rank in ranks:
-                #file_name = f"{rank.name}_{suite.name}.svg"
-                #print(file_name)
                 self.cards.append(Card(solitaire=self, suite=suite, rank=rank, top=0, left=0))
-        
-        #random.shuffle(self.cards)
-        #random.shuffle(self.cards)
-        #self.controls.extend(self.cards)
-        #self.update()
 
     
     def deal_cards(self):
