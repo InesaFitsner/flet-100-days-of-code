@@ -9,8 +9,8 @@ from card import Card
 class Solitaire(ft.Stack):
     def __init__(self):
         super().__init__()
-        self.start_top = 0
-        self.start_left = 0
+        #self.start_top = 0
+        #self.start_left = 0
         self.controls = []
         self.slots = []
         self.card_offset = CARD_OFFSET
