@@ -127,6 +127,11 @@ class Card(ft.GestureDetector):
             if not self.face_up and self == self.slot.get_top_card():
                 self.turn_face_up()
                 self.update()
+        elif self.slot == self.solitaire.stock:
+            self.move_on_top()
+            self.place(self.solitaire.waste)
+            self.turn_face_up()
+            self.solitaire.update()
 
     def doubleclick(self, e):
         if self.face_up:
