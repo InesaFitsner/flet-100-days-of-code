@@ -19,6 +19,17 @@ class Card(ft.GestureDetector):
         self.color = color
         self.content=ft.Container(bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGTH)
 
+    def move_on_top(self):
+        """Moves draggable card to the top of the stack"""
+        self.solitaire.controls.remove(self)
+        self.solitaire.controls.append(self)
+        self.solitaire.update()
+
+    def bounce_back(self):
+        """Returns card to its original position"""
+        self.top = self.solitaire.start_top
+        self.left = self.solitaire.start_left
+        self.solitaire.update()
     
     def place(self, slot):
         """Place card to the slot"""
@@ -26,7 +37,7 @@ class Card(ft.GestureDetector):
         self.left = slot.left
 
     def start_drag(self, e: ft.DragStartEvent):
-        self.solitaire.move_on_top(self)
+        self.move_on_top()
         self.solitaire.start_top = self.top
         self.solitaire.start_left = self.left
         self.update()
@@ -47,5 +58,5 @@ class Card(ft.GestureDetector):
                 self.update()
                 return
            
-        self.solitaire.bounce_back(self)
+        self.bounce_back()
         self.update()
