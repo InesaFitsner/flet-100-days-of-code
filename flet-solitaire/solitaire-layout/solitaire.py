@@ -30,8 +30,9 @@ class Solitaire(ft.Stack):
         self.height = SOLITAIRE_HEIGHT
 
     def did_mount(self):
-        self.create_slots()
+        
         self.create_card_deck()
+        self.create_slots()  
         self.deal_cards()
 
     def create_slots(self):
@@ -105,23 +106,28 @@ class Solitaire(ft.Stack):
     def deal_cards(self):
         random.shuffle(self.cards)
         self.controls.extend(self.cards)
-        # Tableau
-        card_index = 0
+        
+        # deal to tableau
         first_slot = 0
-        while card_index <= 27:
-            for slot_index in range(first_slot, len(self.tableau)):
-                self.cards[card_index].place(self.tableau[slot_index])
-                card_index += 1
-            first_slot += 1
+        remaining_cards = self.cards
+        
+        while first_slot < len(self.tableau):
+            for slot in self.tableau[first_slot:]:
+                top_card = remaining_cards[0]
+                top_card.place(slot)
+                remaining_cards.remove(top_card)
+            first_slot +=1
+
+
 
         # Reveal top cards in slot piles:
         # for number in range(len(self.tableau)):
         #     #self.tableau[number].pile[-1].turn_face_up()
         #     self.tableau[number].get_top_card().turn_face_up()
 
-        # Stock pile
-        for i in range(28, len(self.cards)):
-            self.cards[i].place(self.stock)
+        # place remaining cards to stock pile
+        for card in remaining_cards:
+            card.place(self.stock)
 
         self.update()
 
