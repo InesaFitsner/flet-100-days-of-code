@@ -1,0 +1,17 @@
+SLOT_WIDTH = 70
+SLOT_HEIGHT = 100
+
+import flet as ft
+
+class Slot(ft.Container):
+    def __init__(self, top, left, border):
+        super().__init__()
+        self.pile=[]
+        self.width=SLOT_WIDTH
+        self.height=SLOT_HEIGHT
+        self.left=left
+        self.top=top
+        self.border=border
+
+    def get_top_card(self):
+        return self.pile[-1]
