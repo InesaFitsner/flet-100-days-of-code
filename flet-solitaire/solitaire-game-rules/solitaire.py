@@ -128,3 +128,6 @@ class Solitaire(ft.Stack):
             )
         else:
             return card.rank.name == "King"
+
+    def restart_stock(self):
+        print("RESTART STOCK")

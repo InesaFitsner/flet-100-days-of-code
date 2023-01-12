@@ -21,5 +21,4 @@ class Slot(ft.Container):
 
     def click(self, e):
         if self == self.solitaire.stock:
-            #self.solitaire.restart_stock()
-            print("Clicked on stock slot")
+            self.solitaire.restart_stock()
