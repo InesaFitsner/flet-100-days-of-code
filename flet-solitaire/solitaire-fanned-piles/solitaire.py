@@ -57,13 +57,13 @@ class Solitaire(ft.Stack):
             card.place(self.slots[0])
         self.update()
 
-    def move_on_top(self, draggable_pile):
-        """Brings draggable card pile to the top of the stack"""
+    # def move_on_top(self, draggable_pile):
+    #     """Brings draggable card pile to the top of the stack"""
 
-        for card in draggable_pile:
-            self.controls.remove(card)
-            self.controls.append(card)
-        self.update()
+    #     for card in draggable_pile:
+    #         self.controls.remove(card)
+    #         self.controls.append(card)
+    #     self.update()
     
     def bounce_back(self, draggable_pile):
         """Returns draggable pile to its original position"""

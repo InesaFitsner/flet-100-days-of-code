@@ -19,6 +19,14 @@ class Card(ft.GestureDetector):
         self.color = color
         self.content=ft.Container(bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGTH)
 
+    def move_on_top(self):
+        """Brings draggable card pile to the top of the stack"""
+
+        for card in self.get_draggable_pile():
+            self.solitaire.controls.remove(card)
+            self.solitaire.controls.append(card)
+        self.solitaire.update()
+
     def place(self, slot):
         """Place draggable pile to the slot"""
         
@@ -28,14 +36,14 @@ class Card(ft.GestureDetector):
             card.top = slot.top + len(slot.pile) * self.solitaire.card_offset
             card.left = slot.left
 
-        # remove card from it's original slot, if exists
+            # remove card from it's original slot, if exists
             if card.slot is not None:
                 card.slot.pile.remove(card)
         
-        # change card's slot to a new slot
+            # change card's slot to a new slot
             card.slot = slot
 
-        # add card to the new slot's pile
+            # add card to the new slot's pile
             slot.pile.append(card)
         
         self.solitaire.update()
@@ -47,7 +55,8 @@ class Card(ft.GestureDetector):
         return [self]
 
     def start_drag(self, e: ft.DragStartEvent):
-        self.solitaire.move_on_top(self.get_draggable_pile())
+        #self.solitaire.move_on_top(self.get_draggable_pile())
+        self.move_on_top()
         self.solitaire.start_top = self.top
         self.solitaire.start_left = self.left
         self.update()
