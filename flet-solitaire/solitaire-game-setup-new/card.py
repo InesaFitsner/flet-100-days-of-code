@@ -52,7 +52,11 @@ class Card(ft.GestureDetector):
         draggable_pile = self.get_draggable_pile()
 
         for card in draggable_pile:
-            card.top = slot.top + len(slot.pile) * CARD_OFFSET
+            if slot in self.solitaire.tableau:
+                card.top = slot.top + len(slot.pile) * CARD_OFFSET
+            else:
+                card.top = slot.top
+            #card.top = slot.top + len(slot.pile) * CARD_OFFSET
             card.left = slot.left
 
             # remove card from it's original slot, if exists
