@@ -6,20 +6,25 @@ CARD_OFFSET = 20
 import flet as ft
 
 class Card(ft.GestureDetector):
-    def __init__(self, solitaire, color):
+    def __init__(self, solitaire, suite, rank):
         super().__init__()
         self.mouse_cursor=ft.MouseCursor.MOVE
         self.drag_interval=5
         self.on_pan_start=self.start_drag
         self.on_pan_update=self.drag
         self.on_pan_end=self.drop
-        self.left=None
+        self.suite=suite
+        self.rank=rank
+        self.face_up=False
         self.top=None
+        self.left=None
         self.solitaire = solitaire
         self.slot = None
-        self.card_offset = CARD_OFFSET
-        self.color = color
-        self.content=ft.Container(bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGTH)
+        self.content=ft.Container(
+            width=CARD_WIDTH, 
+            height=CARD_HEIGTH, 
+            border_radius = ft.border_radius.all(6), 
+            content=ft.Image(src="card_back.png"))
 
     def move_on_top(self):
         """Brings draggable card pile to the top of the stack"""
