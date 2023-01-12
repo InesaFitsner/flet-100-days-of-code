@@ -108,10 +108,6 @@ class Solitaire(ft.Stack):
         for card in remaining_cards:
             card.place(self.stock)
 
-        # Reveal top cards in slot piles:
-        # for number in range(len(self.tableau)):
-        #     #self.tableau[number].pile[-1].turn_face_up()
-        #     self.tableau[number].get_top_card().turn_face_up()
         self.update()
 
         for slot in self.tableau:

@@ -5,6 +5,7 @@ SOLITAIRE_HEIGHT = 500
 import flet as ft
 from slot import Slot
 from card import Card
+import random
 
 class Suite:
     def __init__(self, suite_name, suite_color):
@@ -96,7 +97,27 @@ class Solitaire(ft.Stack):
 
 
     def deal_cards(self):
+        random.shuffle(self.cards)
         self.controls.extend(self.cards)
-        for card in self.cards:
+        
+        # deal to tableau
+        first_slot = 0
+        remaining_cards = self.cards
+        
+        while first_slot < len(self.tableau):
+            for slot in self.tableau[first_slot:]:
+                top_card = remaining_cards[0]
+                top_card.place(slot)
+                remaining_cards.remove(top_card)
+            first_slot +=1
+
+        # place remaining cards to stock pile
+        for card in remaining_cards:
             card.place(self.stock)
+
+        self.update()
+
+        #for slot in self.tableau:
+        #    slot.get_top_card().turn_face_up()
+        
         self.update()
