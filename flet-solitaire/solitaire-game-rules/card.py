@@ -82,35 +82,40 @@ class Card(ft.GestureDetector):
         return [self]
 
     def start_drag(self, e: ft.DragStartEvent):
-        self.move_on_top()
-        self.update()
+        if self.face_up:
+           self.move_on_top()
+           self.update()
 
     
     def drag(self, e: ft.DragUpdateEvent):
-        draggable_pile = self.get_draggable_pile()
-        for card in draggable_pile:
-            card.top = max(0, self.top + e.delta_y) + draggable_pile.index(card) * CARD_OFFSET
-            card.left = max(0, self.left + e.delta_x)
-            card.update()
+        if self.face_up:
+            draggable_pile = self.get_draggable_pile()
+            for card in draggable_pile:
+                card.top = max(0, self.top + e.delta_y) + draggable_pile.index(card) * CARD_OFFSET
+                card.left = max(0, self.left + e.delta_x)
+                card.update()
 
 
     def drop(self, e: ft.DragEndEvent):
-        for slot in self.solitaire.tableau:
-            if (
-                abs(self.top - (slot.top + len(slot.pile) * CARD_OFFSET)) < DROP_PROXIMITY
-            and abs(self.left - slot.left) < DROP_PROXIMITY
-          ):
-                self.place(slot)
-                self.update()
-                return
-        for slot in self.solitaire.foundations:
-            if (
-                abs(self.top - slot.top) < DROP_PROXIMITY
-            and abs(self.left - slot.left) < DROP_PROXIMITY
-          ):
-                self.place(slot)
-                self.update()
-                return
-           
-        self.bounce_back()
-        self.update()
+        if self.face_up:
+            for slot in self.solitaire.tableau:
+                if (
+                    abs(self.top - (slot.top + len(slot.pile) * CARD_OFFSET)) < DROP_PROXIMITY
+                and abs(self.left - slot.left) < DROP_PROXIMITY
+            ):
+                    self.place(slot)
+                    self.update()
+                    return
+            
+            if len(self.get_draggable_pile()) == 1:
+                for slot in self.solitaire.foundations:
+                    if (
+                        abs(self.top - slot.top) < DROP_PROXIMITY
+                and abs(self.left - slot.left) < DROP_PROXIMITY
+            ):
+                        self.place(slot)
+                        self.update()
+                        return
+            
+            self.bounce_back()
+            self.update()
