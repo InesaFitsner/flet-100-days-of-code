@@ -14,6 +14,7 @@ class Card(ft.GestureDetector):
         self.on_pan_end=self.drop
         self.suite=suite
         self.rank=rank
+        self.face_up=False
         self.top=top
         self.left=left
         self.solitaire = solitaire
@@ -24,10 +25,19 @@ class Card(ft.GestureDetector):
             border_radius = ft.border_radius.all(6), 
             content=ft.Image(src="card_back.png"))
 
+    def turn_face_up(self):
+        self.face_up = True
+        self.content.content.src=f"/images/{self.rank.name}_{self.suite.name}.svg"
+        self.update()
+
     def place(self, slot):
         """Place draggable pile to the slot"""
 
-        self.top = slot.top + len(slot.pile) * self.solitaire.card_offset
+        if slot in self.solitaire.tableau:
+            self.top = slot.top + len(slot.pile) * self.solitaire.card_offset
+        else:
+            self.top = slot.top
+        
         self.left = slot.left
 
         # remove card from it's original slot, if exists

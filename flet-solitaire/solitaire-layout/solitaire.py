@@ -37,34 +37,20 @@ class Solitaire(ft.Stack):
 
     def create_slots(self):
         
-        self.stock = Slot(
-            top=0, left=0
-        )
+        self.stock = Slot(top=0, left=0, border=ft.border.all(1))
 
-        self.waste = Slot(
-            top=0, left=100
-        )
+        self.waste = Slot(top=0, left=100, border=None)
 
         self.foundations = []
         x = 300
         for i in range(4):
-            self.foundations.append(
-                Slot(
-                    top=0,
-                    left=x,
-                )
-            )
+            self.foundations.append(Slot(top=0, left=x, border=ft.border.all(1, "outline")))
             x += 100
 
         self.tableau = []
         x = 0
         for i in range(7):
-            self.tableau.append(
-                Slot(
-                    top=150,
-                    left=x,
-                )
-            )
+            self.tableau.append(Slot(top=150, left=x, border=None))
             x += 100
 
         self.controls.append(self.stock)
@@ -118,17 +104,19 @@ class Solitaire(ft.Stack):
                 remaining_cards.remove(top_card)
             first_slot +=1
 
-
+        # place remaining cards to stock pile
+        for card in remaining_cards:
+            card.place(self.stock)
 
         # Reveal top cards in slot piles:
         # for number in range(len(self.tableau)):
         #     #self.tableau[number].pile[-1].turn_face_up()
         #     self.tableau[number].get_top_card().turn_face_up()
+        self.update()
 
-        # place remaining cards to stock pile
-        for card in remaining_cards:
-            card.place(self.stock)
-
+        for slot in self.tableau:
+            slot.get_top_card().turn_face_up()
+        
         self.update()
 
     def move_on_top(self, draggable_pile):
