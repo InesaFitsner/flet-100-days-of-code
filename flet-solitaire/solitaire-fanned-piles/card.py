@@ -1,6 +1,6 @@
 CARD_WIDTH = 70
 CARD_HEIGTH = 100
-DROP_PROXIMITY = 20
+DROP_PROXIMITY = 30
 CARD_OFFSET = 20
 
 import flet as ft
@@ -87,7 +87,7 @@ class Card(ft.GestureDetector):
     def drop(self, e: ft.DragEndEvent):
         for slot in self.solitaire.slots:
             if (
-                abs(self.top - slot.top) < DROP_PROXIMITY
+                abs(self.top - (slot.top + len(slot.pile) * CARD_OFFSET))< DROP_PROXIMITY
             and abs(self.left - slot.left) < DROP_PROXIMITY
           ):
                 #for card in self.get_draggable_pile():
