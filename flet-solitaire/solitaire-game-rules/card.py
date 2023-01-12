@@ -104,7 +104,7 @@ class Card(ft.GestureDetector):
                 if (
                     abs(self.top - (slot.top + len(slot.pile) * CARD_OFFSET)) < DROP_PROXIMITY
                 and abs(self.left - slot.left) < DROP_PROXIMITY
-            ):
+            ) and self.solitaire.check_tableau_rules(self, slot):
                     self.place(slot)
                     self.update()
                     return

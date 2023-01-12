@@ -117,3 +117,14 @@ class Solitaire(ft.Stack):
             )
         else:
             return card.rank.name == "Ace"
+
+    def check_tableau_rules(self, card, slot):
+        top_card = slot.get_top_card()
+        if top_card is not None:
+            return (
+                card.suite.color != top_card.suite.color
+                and top_card.rank.value - card.rank.value == 1
+                and top_card.face_up
+            )
+        else:
+            return card.rank.name == "King"
