@@ -107,3 +107,13 @@ class Solitaire(ft.Stack):
             slot.get_top_card().turn_face_up()
         
         self.update()
+    
+    def check_foundations_rules(self, card, slot):
+        top_card = slot.get_top_card()
+        if top_card is not None:
+            return (
+                card.suite.name == top_card.suite.name
+                and card.rank.value - top_card.rank.value == 1
+            )
+        else:
+            return card.rank.name == "Ace"

@@ -112,7 +112,7 @@ class Card(ft.GestureDetector):
                     if (
                         abs(self.top - slot.top) < DROP_PROXIMITY
                 and abs(self.left - slot.left) < DROP_PROXIMITY
-            ):
+            ) and self.solitaire.check_foundations_rules(self, slot):
                         self.place(slot)
                         self.update()
                         return

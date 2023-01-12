@@ -14,4 +14,5 @@ class Slot(ft.Container):
         self.border=border
 
     def get_top_card(self):
-        return self.pile[-1]
+        if len(self.pile) > 0:
+            return self.pile[-1]
