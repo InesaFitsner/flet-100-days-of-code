@@ -26,6 +26,11 @@ class Card(ft.GestureDetector):
             border_radius = ft.border_radius.all(6), 
             content=ft.Image(src="card_back.png"))
 
+    def turn_face_up(self):
+        self.face_up = True
+        self.content.content.src=f"/images/{self.rank.name}_{self.suite.name}.svg"
+        self.update()
+
     def move_on_top(self):
         """Brings draggable card pile to the top of the stack"""
 
@@ -38,11 +43,10 @@ class Card(ft.GestureDetector):
         """Returns draggable pile to its original position"""
         draggable_pile = self.get_draggable_pile()
         for card in draggable_pile:
-            #card.top = self.solitaire.start_top + draggable_pile.index(card) * self.solitaire.card_offset
-            #card.left = self.solitaire.start_left
-            #card.top = self.slot.top + self.slot.pile.index(card) * self.card_offset
-            #card.left = self.slot.left
-            card.top = card.slot.top + card.slot.pile.index(card) * CARD_OFFSET
+            if card.slot in self.solitaire.tableau:
+                card.top = card.slot.top + card.slot.pile.index(card) * CARD_OFFSET
+            else:
+                card.top = card.slot.top
             card.left = card.slot.left
         self.solitaire.update()
 
@@ -56,7 +60,6 @@ class Card(ft.GestureDetector):
                 card.top = slot.top + len(slot.pile) * CARD_OFFSET
             else:
                 card.top = slot.top
-            #card.top = slot.top + len(slot.pile) * CARD_OFFSET
             card.left = slot.left
 
             # remove card from it's original slot, if exists
@@ -78,10 +81,7 @@ class Card(ft.GestureDetector):
         return [self]
 
     def start_drag(self, e: ft.DragStartEvent):
-        #self.solitaire.move_on_top(self.get_draggable_pile())
         self.move_on_top()
-        #self.solitaire.start_top = self.top
-        #self.solitaire.start_left = self.left
         self.update()
 
     
@@ -100,7 +100,6 @@ class Card(ft.GestureDetector):
                 abs(self.top - (slot.top + len(slot.pile) * CARD_OFFSET))< DROP_PROXIMITY
             and abs(self.left - slot.left) < DROP_PROXIMITY
           ):
-                #for card in self.get_draggable_pile():
                 self.place(slot)
                 self.update()
                 return

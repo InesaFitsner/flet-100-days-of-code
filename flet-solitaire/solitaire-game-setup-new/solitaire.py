@@ -20,11 +20,7 @@ class Rank:
 class Solitaire(ft.Stack):
     def __init__(self):
         super().__init__()
-        #self.start_top = 0
-        #self.start_left = 0
         self.controls = []
-        #self.slots = []
-        #self.card_offset = CARD_OFFSET
         self.width = SOLITAIRE_WIDTH
         self.height = SOLITAIRE_HEIGHT
 
@@ -33,11 +29,6 @@ class Solitaire(ft.Stack):
         self.create_slots()
         self.deal_cards()
 
-    #def create_card_deck(self):
-        # card1 = Card(self, color="GREEN")
-        # card2 = Card(self, color="YELLOW")
-        # card3 = Card(self, color="RED")
-        # self.cards = [card1, card2, card3]
     def create_card_deck(self):
         suites = [
             Suite("Hearts", "RED"),
@@ -68,11 +59,6 @@ class Solitaire(ft.Stack):
                 self.cards.append(Card(solitaire=self, suite=suite, rank=rank))
 
     def create_slots(self):
-        # self.slots.append(Slot(top=0, left=0, border=ft.border.all(1)))
-        # self.slots.append(Slot(top=0, left=200, border=ft.border.all(1)))
-        # self.slots.append(Slot(top=0, left=300, border=ft.border.all(1)))
-        # self.controls.extend(self.slots)
-        # self.update()
         self.stock = Slot(top=0, left=0, border=ft.border.all(1))
 
         self.waste = Slot(top=0, left=100, border=None)
@@ -117,7 +103,7 @@ class Solitaire(ft.Stack):
 
         self.update()
 
-        #for slot in self.tableau:
-        #    slot.get_top_card().turn_face_up()
+        for slot in self.tableau:
+            slot.get_top_card().turn_face_up()
         
         self.update()
