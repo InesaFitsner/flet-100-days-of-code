@@ -34,6 +34,12 @@ class Card(ft.GestureDetector):
         self.content.content.src=f"/images/{self.rank.name}_{self.suite.name}.svg"
         self.update()
 
+    def turn_face_down(self):
+        """Hides card"""
+        self.face_up = False
+        self.content.content.src="card_back.png"
+        self.update()
+
     def move_on_top(self):
         """Brings draggable card pile to the top of the stack"""
 

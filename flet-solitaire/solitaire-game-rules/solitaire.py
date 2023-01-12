@@ -130,4 +130,4 @@ class Solitaire(ft.Stack):
             return card.rank.name == "King"
 
     def restart_stock(self):
-        print("RESTART STOCK")
+        self.waste.pile[-1].place(self.stock)
