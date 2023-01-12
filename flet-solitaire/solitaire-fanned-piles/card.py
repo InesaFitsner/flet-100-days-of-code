@@ -1,6 +1,7 @@
 CARD_WIDTH = 70
 CARD_HEIGTH = 100
 DROP_PROXIMITY = 20
+CARD_OFFSET = 20
 
 import flet as ft
 
@@ -16,6 +17,7 @@ class Card(ft.GestureDetector):
         self.top=None
         self.solitaire = solitaire
         self.slot = None
+        self.card_offset = CARD_OFFSET
         self.color = color
         self.content=ft.Container(bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGTH)
 
@@ -33,7 +35,7 @@ class Card(ft.GestureDetector):
         for card in draggable_pile:
             #card.top = self.solitaire.start_top + draggable_pile.index(card) * self.solitaire.card_offset
             #card.left = self.solitaire.start_left
-            card.top = self.slot.top + self.slot.pile.index(card) * self.solitaire.card_offset
+            card.top = self.slot.top + self.slot.pile.index(card) * self.card_offset
             card.left = self.slot.left
         self.solitaire.update()
 
@@ -43,7 +45,7 @@ class Card(ft.GestureDetector):
         draggable_pile = self.get_draggable_pile()
 
         for card in draggable_pile:
-            card.top = slot.top + len(slot.pile) * self.solitaire.card_offset
+            card.top = slot.top + len(slot.pile) * self.card_offset
             card.left = slot.left
 
             # remove card from it's original slot, if exists
@@ -75,7 +77,7 @@ class Card(ft.GestureDetector):
     def drag(self, e: ft.DragUpdateEvent):
         draggable_pile = self.get_draggable_pile()
         for card in draggable_pile:
-            card.top = max(0, self.top + e.delta_y) + draggable_pile.index(card) * self.solitaire.card_offset
+            card.top = max(0, self.top + e.delta_y) + draggable_pile.index(card) * self.card_offset
             card.left = max(0, self.left + e.delta_x)
             card.update()
 

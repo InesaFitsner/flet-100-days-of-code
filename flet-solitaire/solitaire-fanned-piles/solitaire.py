@@ -1,4 +1,4 @@
-CARD_OFFSET = 20
+#CARD_OFFSET = 20
 SOLITAIRE_WIDTH = 1000
 SOLITAIRE_HEIGHT = 500
 
@@ -13,7 +13,7 @@ class Solitaire(ft.Stack):
         #self.start_left = 0
         self.controls = []
         self.slots = []
-        self.card_offset = CARD_OFFSET
+        #self.card_offset = CARD_OFFSET
         self.width = SOLITAIRE_WIDTH
         self.height = SOLITAIRE_HEIGHT
 
