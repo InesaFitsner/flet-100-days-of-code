@@ -59,20 +59,20 @@ class Solitaire(ft.Stack):
                 self.cards.append(Card(solitaire=self, suite=suite, rank=rank))
 
     def create_slots(self):
-        self.stock = Slot(top=0, left=0, border=ft.border.all(1))
+        self.stock = Slot(solitaire=self, top=0, left=0, border=ft.border.all(1))
 
-        self.waste = Slot(top=0, left=100, border=None)
+        self.waste = Slot(solitaire=self, top=0, left=100, border=None)
 
         self.foundations = []
         x = 300
         for i in range(4):
-            self.foundations.append(Slot(top=0, left=x, border=ft.border.all(1, "outline")))
+            self.foundations.append(Slot(solitaire=self, top=0, left=x, border=ft.border.all(1, "outline")))
             x += 100
 
         self.tableau = []
         x = 0
         for i in range(7):
-            self.tableau.append(Slot(top=150, left=x, border=None))
+            self.tableau.append(Slot(solitaire=self, top=150, left=x, border=None))
             x += 100
 
         self.controls.append(self.stock)
