@@ -95,8 +95,7 @@ class Card(ft.GestureDetector):
 
 
     def drop(self, e: ft.DragEndEvent):
-        slots = self.solitaire.tableau + self.solitaire.foundations
-        for slot in slots:
+        for slot in self.solitaire.tableau:
             if (
                 abs(self.top - (slot.top + len(slot.pile) * CARD_OFFSET))< DROP_PROXIMITY
             and abs(self.left - slot.left) < DROP_PROXIMITY
