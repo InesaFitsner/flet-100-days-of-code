@@ -6,7 +6,7 @@ CARD_OFFSET = 20
 import flet as ft
 
 class Card(ft.GestureDetector):
-    def __init__(self, solitaire, color):
+    def __init__(self, solitaire, suite, rank):
         super().__init__()
         self.mouse_cursor=ft.MouseCursor.MOVE
         self.drag_interval=5
@@ -18,9 +18,16 @@ class Card(ft.GestureDetector):
         self.solitaire = solitaire
         self.slot = None
         self.card_offset = CARD_OFFSET
-        self.color = color
-        self.content=ft.Container(bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGTH)
-
+        #self.color = color
+        self.suite = suite
+        self.rank = rank
+        #self.content=ft.Container(bgcolor=self.color, width=CARD_WIDTH, height=CARD_HEIGTH)
+        self.content=ft.Container(
+            width=CARD_WIDTH, 
+            height=CARD_HEIGTH, 
+            border_radius = ft.border_radius.all(6), 
+            content=ft.Image(src="card_back.png"))
+    
     def move_on_top(self):
         """Brings draggable card pile to the top of the stack"""
 
@@ -35,9 +42,7 @@ class Card(ft.GestureDetector):
         for card in draggable_pile:
             #card.top = self.solitaire.start_top + draggable_pile.index(card) * self.solitaire.card_offset
             #card.left = self.solitaire.start_left
-            #card.top = self.slot.top + self.slot.pile.index(card) * self.card_offset
-            #card.left = self.slot.left
-            card.top = card.slot.top + card.slot.pile.index(card) * CARD_OFFSET
+            card.top = card.slot.top + card.slot.pile.index(card) * self.card_offset
             card.left = card.slot.left
         self.solitaire.update()
 
@@ -47,7 +52,7 @@ class Card(ft.GestureDetector):
         draggable_pile = self.get_draggable_pile()
 
         for card in draggable_pile:
-            card.top = slot.top + len(slot.pile) * CARD_OFFSET
+            card.top = slot.top + len(slot.pile) * self.card_offset
             card.left = slot.left
 
             # remove card from it's original slot, if exists
@@ -79,8 +84,8 @@ class Card(ft.GestureDetector):
     def drag(self, e: ft.DragUpdateEvent):
         draggable_pile = self.get_draggable_pile()
         for card in draggable_pile:
-            card.top = max(0, self.top + e.delta_y) + draggable_pile.index(card) * CARD_OFFSET
-            card.left = max(0, self.left + e.delta_x)
+            card.top = max(0, card.top + e.delta_y) + draggable_pile.index(card) * self.card_offset
+            card.left = max(0, card.left + e.delta_x)
             card.update()
 
 
