@@ -27,6 +27,15 @@ class Card(ft.GestureDetector):
             self.solitaire.controls.append(card)
         self.solitaire.update()
 
+    def bounce_back(self):
+        """Returns draggable pile to its original position"""
+        draggable_pile = self.get_draggable_pile()
+        for card in draggable_pile:
+            card.top = self.solitaire.start_top + draggable_pile.index(card) * self.solitaire.card_offset
+            card.left = self.solitaire.start_left
+ 
+        self.solitaire.update()
+
     def place(self, slot):
         """Place draggable pile to the slot"""
         
@@ -81,5 +90,5 @@ class Card(ft.GestureDetector):
                 self.update()
                 return
            
-        self.solitaire.bounce_back(self.get_draggable_pile())
+        self.bounce_back()
         self.update()

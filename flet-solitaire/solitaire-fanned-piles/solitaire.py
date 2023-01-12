@@ -65,10 +65,10 @@ class Solitaire(ft.Stack):
     #         self.controls.append(card)
     #     self.update()
     
-    def bounce_back(self, draggable_pile):
-        """Returns draggable pile to its original position"""
-        for card in draggable_pile:
-            card.top = self.start_top + draggable_pile.index(card) * self.card_offset
-            card.left = self.start_left
+    # def bounce_back(self, draggable_pile):
+    #     """Returns draggable pile to its original position"""
+    #     for card in draggable_pile:
+    #         card.top = self.start_top + draggable_pile.index(card) * self.card_offset
+    #         card.left = self.start_left
  
-        self.update()
+    #     self.update()
