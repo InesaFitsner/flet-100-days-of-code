@@ -27,19 +27,22 @@ class Card(ft.GestureDetector):
 
     def bounce_back(self):
         """Returns card to its original position"""
-        self.top = self.solitaire.start_top
-        self.left = self.solitaire.start_left
-        self.solitaire.update()
+        #self.top = self.solitaire.start_top
+        #self.left = self.solitaire.start_left
+        self.top = self.slot.top
+        self.left = self.slot.left
+        self.update()
     
     def place(self, slot):
         """Place card to the slot"""
         self.top = slot.top
         self.left = slot.left
+        self.slot = slot
 
     def start_drag(self, e: ft.DragStartEvent):
         self.move_on_top()
-        self.solitaire.start_top = self.top
-        self.solitaire.start_left = self.left
+        #self.solitaire.start_top = self.top
+        #self.solitaire.start_left = self.left
         self.update()
 
     
