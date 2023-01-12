@@ -22,7 +22,7 @@ class Solitaire(ft.Stack):
         #self.start_top = 0
         #self.start_left = 0
         self.controls = []
-        self.slots = []
+        #self.slots = []
         #self.card_offset = CARD_OFFSET
         self.width = SOLITAIRE_WIDTH
         self.height = SOLITAIRE_HEIGHT
@@ -67,15 +67,36 @@ class Solitaire(ft.Stack):
                 self.cards.append(Card(solitaire=self, suite=suite, rank=rank))
 
     def create_slots(self):
-        self.slots.append(Slot(top=0, left=0, border=ft.border.all(1)))
-        self.slots.append(Slot(top=0, left=200, border=ft.border.all(1)))
-        self.slots.append(Slot(top=0, left=300, border=ft.border.all(1)))
-        self.controls.extend(self.slots)
+        # self.slots.append(Slot(top=0, left=0, border=ft.border.all(1)))
+        # self.slots.append(Slot(top=0, left=200, border=ft.border.all(1)))
+        # self.slots.append(Slot(top=0, left=300, border=ft.border.all(1)))
+        # self.controls.extend(self.slots)
+        # self.update()
+        self.stock = Slot(top=0, left=0, border=ft.border.all(1))
+
+        self.waste = Slot(top=0, left=100, border=None)
+
+        self.foundations = []
+        x = 300
+        for i in range(4):
+            self.foundations.append(Slot(top=0, left=x, border=ft.border.all(1, "outline")))
+            x += 100
+
+        self.tableau = []
+        x = 0
+        for i in range(7):
+            self.tableau.append(Slot(top=150, left=x, border=None))
+            x += 100
+
+        self.controls.append(self.stock)
+        self.controls.append(self.waste)
+        self.controls.extend(self.foundations)
+        self.controls.extend(self.tableau)
         self.update()
 
 
     def deal_cards(self):
         self.controls.extend(self.cards)
         for card in self.cards:
-            card.place(self.slots[0])
+            card.place(self.stock)
         self.update()
