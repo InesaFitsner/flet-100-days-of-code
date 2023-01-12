@@ -8,8 +8,6 @@ from card import Card
 class Solitaire(ft.Stack):
     def __init__(self):
         super().__init__()
-        self.start_top = 0
-        self.start_left = 0
         self.controls = []
         self.slots = []
         self.cards = []
@@ -21,17 +19,17 @@ class Solitaire(ft.Stack):
         self.create_slots()
         self.deal_cards()
 
+    def create_card_deck(self):
+        card1 = Card(self, color="GREEN")
+        card2 = Card(self, color="YELLOW")
+        self.cards = [card1, card2]
+    
     def create_slots(self):
         self.slots.append(Slot(top=0, left=0))
         self.slots.append(Slot(top=0, left=200))
         self.slots.append(Slot(top=0, left=300))
         self.controls.extend(self.slots)
         self.update()
-
-    def create_card_deck(self):
-        card1 = Card(self, color="GREEN")
-        card2 = Card(self, color="YELLOW")
-        self.cards = [card1, card2]
 
     def deal_cards(self):
         self.controls.extend(self.cards)
