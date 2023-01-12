@@ -33,10 +33,6 @@ class Card(ft.GestureDetector):
         """Returns draggable pile to its original position"""
         draggable_pile = self.get_draggable_pile()
         for card in draggable_pile:
-            #card.top = self.solitaire.start_top + draggable_pile.index(card) * self.solitaire.card_offset
-            #card.left = self.solitaire.start_left
-            #card.top = self.slot.top + self.slot.pile.index(card) * self.card_offset
-            #card.left = self.slot.left
             card.top = card.slot.top + card.slot.pile.index(card) * CARD_OFFSET
             card.left = card.slot.left
         self.solitaire.update()
