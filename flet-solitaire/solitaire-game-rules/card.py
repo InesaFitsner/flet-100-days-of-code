@@ -13,6 +13,8 @@ class Card(ft.GestureDetector):
         self.on_pan_start=self.start_drag
         self.on_pan_update=self.drag
         self.on_pan_end=self.drop
+        self.on_tap=self.click
+        self.on_double_tap=self.doubleclick
         self.suite=suite
         self.rank=rank
         self.face_up=False
@@ -119,3 +121,18 @@ class Card(ft.GestureDetector):
             
             self.bounce_back()
             self.update()
+
+    def click(self, e):
+        if self.slot in self.solitaire.tableau:
+            if not self.face_up and self == self.slot.get_top_card():
+                self.turn_face_up()
+                self.update()
+
+    def doubleclick(self, e):
+        if self.face_up:
+            self.move_on_top()
+            for slot in self.solitaire.foundations:
+                if self.solitaire.check_foundations_rules(self, slot):
+                    self.place(slot)
+                    self.page.update()
+                    return
