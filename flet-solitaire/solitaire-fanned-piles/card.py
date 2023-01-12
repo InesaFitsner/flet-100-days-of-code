@@ -69,10 +69,7 @@ class Card(ft.GestureDetector):
         return [self]
 
     def start_drag(self, e: ft.DragStartEvent):
-        #self.solitaire.move_on_top(self.get_draggable_pile())
         self.move_on_top()
-        #self.solitaire.start_top = self.top
-        #self.solitaire.start_left = self.left
         self.update()
 
     
@@ -90,7 +87,6 @@ class Card(ft.GestureDetector):
                 abs(self.top - (slot.top + len(slot.pile) * CARD_OFFSET))< DROP_PROXIMITY
             and abs(self.left - slot.left) < DROP_PROXIMITY
           ):
-                #for card in self.get_draggable_pile():
                 self.place(slot)
                 self.update()
                 return
