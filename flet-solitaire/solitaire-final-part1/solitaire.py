@@ -1,4 +1,3 @@
-#CARD_OFFSET = 20
 SOLITAIRE_WIDTH = 1000
 SOLITAIRE_HEIGHT = 500
 
@@ -151,7 +150,7 @@ class Solitaire(ft.Stack):
             for card in slot.pile:
                 card.animate_position=1000
                 card.move_on_top()
-                card.top = random.randint(0, 500)
-                card.left = random.randint(0, 1000)
+                card.top = random.randint(0, SOLITAIRE_HEIGHT)
+                card.left = random.randint(0, SOLITAIRE_WIDTH)
                 self.update()
         self.controls.append(ft.AlertDialog(title=ft.Text("Congratulations! You won!"), open=True))
