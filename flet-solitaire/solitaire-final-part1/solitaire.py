@@ -109,31 +109,26 @@ class Solitaire(ft.Stack):
         
         self.update()
     
-    # def check_foundations_rules(self, card, slot):
-    #     top_card = slot.get_top_card()
-    #     if top_card is not None:
-    #         return (
-    #             card.suite.name == top_card.suite.name
-    #             and card.rank.value - top_card.rank.value == 1
-    #         )
-    #     else:
-    #         return card.rank.name == "Ace"
-
-    # def check_tableau_rules(self, card, slot):
-    #     top_card = slot.get_top_card()
-    #     if top_card is not None:
-    #         return (
-    #             card.suite.color != top_card.suite.color
-    #             and top_card.rank.value - card.rank.value == 1
-    #             and top_card.face_up
-    #         )
-    #     else:
-    #         return card.rank.name == "King"
-
     def check_foundations_rules(self, card, slot):
-        return True
+        top_card = slot.get_top_card()
+        if top_card is not None:
+            return (
+                card.suite.name == top_card.suite.name
+                and card.rank.value - top_card.rank.value == 1
+            )
+        else:
+            return card.rank.name == "Ace"
+
     def check_tableau_rules(self, card, slot):
-        return True
+        top_card = slot.get_top_card()
+        if top_card is not None:
+            return (
+                card.suite.color != top_card.suite.color
+                and top_card.rank.value - card.rank.value == 1
+                and top_card.face_up
+            )
+        else:
+            return card.rank.name == "King"
 
     def restart_stock(self):
         while len(self.waste.pile) > 0:
