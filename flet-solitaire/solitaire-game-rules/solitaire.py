@@ -100,6 +100,7 @@ class Solitaire(ft.Stack):
         # place remaining cards to stock pile
         for card in remaining_cards:
             card.place(self.stock)
+            print(f"Card in stock: {card.rank.name} {card.suite.name}")
 
         self.update()
 
@@ -141,19 +142,19 @@ class Solitaire(ft.Stack):
         #     card.move_on_top()
         # self.update()
         #self.waste.pile.reverse()
-        temp_waste_pile = self.waste.pile
-        temp_waste_pile.reverse()
-        for card in temp_waste_pile:
-            card.place(self.stock)
-            card.turn_face_down()
-        self.update()
-
-        # self.waste.pile.reverse()
-        # while len(self.waste.pile) > 0:
-        #     card = self.waste.pile[0]
-        #     card.turn_face_down()
+        # temp_waste_pile = self.waste.pile
+        # temp_waste_pile.reverse()
+        # for card in temp_waste_pile:
         #     card.place(self.stock)
-        # self.update
+        #     card.turn_face_down()
+        # self.update()
+
+        #self.waste.pile.reverse()
+        while len(self.waste.pile) > 0:
+            card = self.waste.pile[0]
+            card.turn_face_down()
+            card.place(self.stock)
+        self.update
         # card = self.waste.pile[-1]
         # card.place(self.stock)
         # card.turn_face_down()
