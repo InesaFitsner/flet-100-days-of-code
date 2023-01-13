@@ -129,6 +129,9 @@ class Solitaire(ft.Stack):
         else:
             return card.rank.name == "King"
 
+    # def check_tableau_rules(self, card, slot):
+    #     return True
+
     def restart_stock(self):
         while len(self.waste.pile) > 0:
             card = self.waste.get_top_card()
@@ -148,7 +151,7 @@ class Solitaire(ft.Stack):
     def winning_sequence(self):
         for slot in self.foundations:    
             for card in slot.pile:
-                card.animate_position=1000
+                card.animate_position=2000
                 card.move_on_top()
                 card.top = random.randint(0, SOLITAIRE_HEIGHT)
                 card.left = random.randint(0, SOLITAIRE_WIDTH)
