@@ -81,6 +81,9 @@ class Card(ft.GestureDetector):
             # add card to the new slot's pile
             slot.pile.append(card)
         
+        if self.solitaire.check_win():
+            self.solitaire.winning_sequence()
+        
         self.solitaire.update()
 
     def get_draggable_pile(self):

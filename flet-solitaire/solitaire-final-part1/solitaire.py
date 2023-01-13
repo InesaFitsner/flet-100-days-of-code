@@ -137,3 +137,15 @@ class Solitaire(ft.Stack):
             card.move_on_top()
             card.place(self.stock)    
         self.update
+
+    def check_win(self):
+        cards_num = 0
+        for slot in self.foundations:
+            cards_num += len(slot.pile)
+        if cards_num == 1:
+            return True
+        return False
+
+    def winning_sequence(self):
+        self.controls.append(ft.AlertDialog(title=ft.Text("YOU WIN!"), open=True))
+        c1 = ft.Container(width=50, height=50, bgcolor="red", animate_position=1000)

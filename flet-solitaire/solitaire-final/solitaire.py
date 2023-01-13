@@ -200,3 +200,4 @@ class Solitaire(ft.Stack):
             cards_num += len(slot.pile)
         if cards_num == 52:
             return True
+        return False
