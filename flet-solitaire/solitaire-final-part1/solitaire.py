@@ -109,26 +109,31 @@ class Solitaire(ft.Stack):
         
         self.update()
     
-    def check_foundations_rules(self, card, slot):
-        top_card = slot.get_top_card()
-        if top_card is not None:
-            return (
-                card.suite.name == top_card.suite.name
-                and card.rank.value - top_card.rank.value == 1
-            )
-        else:
-            return card.rank.name == "Ace"
+    # def check_foundations_rules(self, card, slot):
+    #     top_card = slot.get_top_card()
+    #     if top_card is not None:
+    #         return (
+    #             card.suite.name == top_card.suite.name
+    #             and card.rank.value - top_card.rank.value == 1
+    #         )
+    #     else:
+    #         return card.rank.name == "Ace"
 
+    # def check_tableau_rules(self, card, slot):
+    #     top_card = slot.get_top_card()
+    #     if top_card is not None:
+    #         return (
+    #             card.suite.color != top_card.suite.color
+    #             and top_card.rank.value - card.rank.value == 1
+    #             and top_card.face_up
+    #         )
+    #     else:
+    #         return card.rank.name == "King"
+
+    def check_foundations_rules(self, card, slot):
+        return True
     def check_tableau_rules(self, card, slot):
-        top_card = slot.get_top_card()
-        if top_card is not None:
-            return (
-                card.suite.color != top_card.suite.color
-                and top_card.rank.value - card.rank.value == 1
-                and top_card.face_up
-            )
-        else:
-            return card.rank.name == "King"
+        return True
 
     def restart_stock(self):
         while len(self.waste.pile) > 0:
@@ -142,10 +147,16 @@ class Solitaire(ft.Stack):
         cards_num = 0
         for slot in self.foundations:
             cards_num += len(slot.pile)
-        if cards_num == 1:
+        if cards_num == 52:
             return True
         return False
 
     def winning_sequence(self):
-        self.controls.append(ft.AlertDialog(title=ft.Text("YOU WIN!"), open=True))
-        c1 = ft.Container(width=50, height=50, bgcolor="red", animate_position=1000)
+        for slot in self.foundations:    
+            for card in slot.pile:
+                card.animate_position=1000
+                card.move_on_top()
+                card.top = random.randint(0, 500)
+                card.left = random.randint(0, 1000)
+                self.update()
+        self.controls.append(ft.AlertDialog(title=ft.Text("Congratulations! You won!"), open=True))
