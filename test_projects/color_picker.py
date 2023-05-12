@@ -17,7 +17,7 @@ class CustomColorPicker(ft.AlertDialog):
         def rgb2hex(rgb):
             return '#{:02x}{:02x}{:02x}'.format(int(rgb[0]*255.0), int(rgb[1]*255.0), int(rgb[2]*255.0))
         
-        selected_color = ft.Text()
+        selected_color = ft.Text("#0a0a0a")
         colors = ft.Stack(
             height=HEIGHT*SQUARE_SIZE+CIRCLE_SIZE, 
             width=WIDTH*SQUARE_SIZE+CIRCLE_SIZE
@@ -28,7 +28,7 @@ class CustomColorPicker(ft.AlertDialog):
         def pick_color(e):
             circle.top = e.control.top - CIRCLE_SIZE/2
             circle.left = e.control.left - CIRCLE_SIZE/2
-            circle.bgcolor = e.control.bgcolor
+            circle.content.bgcolor = e.control.bgcolor
             circle.update()
             selected_color.value = e.control.bgcolor
             selected_color.update()
@@ -45,14 +45,32 @@ class CustomColorPicker(ft.AlertDialog):
                     top = j*SQUARE_SIZE+CIRCLE_SIZE/2,
                     left = i*SQUARE_SIZE+CIRCLE_SIZE/2  ))
 
-        circle = ft.Container(
-            top = 0,
+        def find_color(top, left):
+            for control in colors.controls:
+                if (control.top < top and control.top > top - 5 ) and (control.left < left and control.left > left - 5):
+                    return control.bgcolor
+            return 'red'
+
+        def on_pan_end(e: ft.DragEndEvent):
+            e.control.content.bgcolor = find_color(top = e.control.top + CIRCLE_SIZE/2, left = e.control.left + CIRCLE_SIZE/2)
+            e.control.update()
+        
+        def on_pan_update(e: ft.DragUpdateEvent):
+            e.control.top = max(0, e.control.top + e.delta_y)
+            e.control.left = max(0, e.control.left + e.delta_x)
+            e.control.update()
+
+        circle = ft.GestureDetector(
+            top = HEIGHT*SQUARE_SIZE,
             left = 0,
+            on_pan_update=on_pan_update,
+            on_pan_end=on_pan_end,
+            content=ft.Container(
             width=CIRCLE_SIZE,
             height=CIRCLE_SIZE,
-            bgcolor='blue',
+            bgcolor='#0a0a0a',
             border_radius=SQUARE_SIZE*5,
-            border=ft.border.all(width=2, color='white'))
+            border=ft.border.all(width=2, color='white')))
 
         colors.controls.append(circle)
         
