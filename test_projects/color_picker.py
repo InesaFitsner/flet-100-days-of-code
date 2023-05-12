@@ -1,10 +1,10 @@
 import flet as ft
 import colorsys
 
-WIDTH = 50
-HEIGHT = 25
-SQUARE_SIZE = 5
-CIRCLE_SIZE = SQUARE_SIZE*5
+WIDTH = 10
+HEIGHT = 10
+SQUARE_SIZE = 40
+CIRCLE_SIZE = SQUARE_SIZE*2
 
 class CustomColorPicker(ft.AlertDialog):
     def __init__(self):
@@ -18,7 +18,7 @@ class CustomColorPicker(ft.AlertDialog):
             return '#{:02x}{:02x}{:02x}'.format(int(rgb[0]*255.0), int(rgb[1]*255.0), int(rgb[2]*255.0))
         
         selected_color = ft.Text("#0a0a0a")
-        colors = ft.Stack(
+        color_matrix = ft.Stack(
             height=HEIGHT*SQUARE_SIZE+CIRCLE_SIZE, 
             width=WIDTH*SQUARE_SIZE+CIRCLE_SIZE
             )
@@ -26,8 +26,8 @@ class CustomColorPicker(ft.AlertDialog):
         #colors.controls = []
 
         def pick_color(e):
-            circle.top = e.control.top - CIRCLE_SIZE/2
-            circle.left = e.control.left - CIRCLE_SIZE/2
+            circle.top = e.control.top + SQUARE_SIZE/2 - CIRCLE_SIZE/2
+            circle.left = e.control.left + SQUARE_SIZE/2 - CIRCLE_SIZE/2
             circle.content.bgcolor = e.control.bgcolor
             circle.update()
             selected_color.value = e.control.bgcolor
@@ -37,7 +37,7 @@ class CustomColorPicker(ft.AlertDialog):
             for i in range (0, WIDTH):
                 #color = rgb2hex(colorsys.hsv_to_rgb(i/WIDTH,  1, 1 * (HEIGHT - j + 1) / HEIGHT))
                 color = rgb2hex(colorsys.hsv_to_rgb(hue,  (i) /WIDTH, 1 * (HEIGHT - j) / HEIGHT))
-                colors.controls.append(ft.Container(
+                color_matrix.controls.append(ft.Container(
                     height=SQUARE_SIZE, 
                     width=SQUARE_SIZE, 
                     bgcolor=color, 
@@ -45,17 +45,21 @@ class CustomColorPicker(ft.AlertDialog):
                     top = j*SQUARE_SIZE+CIRCLE_SIZE/2,
                     left = i*SQUARE_SIZE+CIRCLE_SIZE/2  ))
 
-        def find_color(top, left):
-            for control in colors.controls:
-                if (control.top < top and control.top > top - 5 ) and (control.left < left and control.left > left - 5):
-                    return control.bgcolor
-            return 'red'
+        def find_color(x, y):
+            for color_square in color_matrix.controls[:-1]:
+                #if (control.top < x and control.top > x-SQUARE_SIZE) and (control.left < y and control.left > y-SQUARE_SIZE):
+                if x > color_square.top and x < color_square.top + SQUARE_SIZE and y > color_square.left and y < color_square.left + SQUARE_SIZE:
+                    return color_square.bgcolor
+            return 'blue'
 
         def on_pan_end(e: ft.DragEndEvent):
-            e.control.content.bgcolor = find_color(top = e.control.top + CIRCLE_SIZE/2, left = e.control.left + CIRCLE_SIZE/2)
+            e.control.content.bgcolor = find_color(x = e.control.top + CIRCLE_SIZE/2, y = e.control.left + CIRCLE_SIZE/2)
             e.control.update()
+            selected_color.value = e.control.content.bgcolor
+            selected_color.update()
         
         def on_pan_update(e: ft.DragUpdateEvent):
+            
             e.control.top = max(0, e.control.top + e.delta_y)
             e.control.left = max(0, e.control.left + e.delta_x)
             e.control.update()
@@ -72,10 +76,10 @@ class CustomColorPicker(ft.AlertDialog):
             border_radius=SQUARE_SIZE*5,
             border=ft.border.all(width=2, color='white')))
 
-        colors.controls.append(circle)
+        color_matrix.controls.append(circle)
         
         
-        self.content.controls.append(colors)
+        self.content.controls.append(color_matrix)
         self.content.controls.append(selected_color)
         #self.update()
 
