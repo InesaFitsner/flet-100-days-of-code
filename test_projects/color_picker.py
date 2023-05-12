@@ -1,8 +1,12 @@
 import flet as ft
 import colorsys
 
-WIDTH = 20
-HEIGHT = 20
+WIDTH = 50
+HEIGHT = 50
+
+class CustomColorPicker(ft.AlertDialog):
+    def __init__(self):
+        pass
 
 def main(page: ft.Page):
     
@@ -13,24 +17,26 @@ def main(page: ft.Page):
     grey_colors.controls = []
 
     # grey colors
-    for i in range(0, WIDTH):
-        color = rgb2hex(colorsys.hsv_to_rgb(0, 0, i/WIDTH))
-        grey_colors.controls.append(ft.Container(height=20, width=20, bgcolor = color))
+    # for i in range(0, WIDTH):
+    #     color = rgb2hex(colorsys.hsv_to_rgb(0, 0, i/WIDTH))
+    #     grey_colors.controls.append(ft.Container(height=20, width=20, bgcolor = color))
     # color matrix
     #color = 'red'
     colors = ft.Column(spacing=0)
     colors.controls = []
-    for j in range (1, HEIGHT):
+    hue = 0.1
+    for j in range (0, HEIGHT):
         colors.controls.append(ft.Row(spacing=0))
         for i in range (0, WIDTH):
-            color = rgb2hex(colorsys.hsv_to_rgb(i/WIDTH,  1, 1 * (HEIGHT - j + 1) / HEIGHT))
-            colors.controls[-1].controls.append(ft.Container(height=20, width=20, bgcolor = color))
+            #color = rgb2hex(colorsys.hsv_to_rgb(i/WIDTH,  1, 1 * (HEIGHT - j + 1) / HEIGHT))
+            color = rgb2hex(colorsys.hsv_to_rgb(hue,  (i) /WIDTH, 1 * (HEIGHT - j) / HEIGHT))
+            colors.controls[-1].controls.append(ft.Container(height=5, width=5, bgcolor = color))
 
         
 
     #print(colors)
-    page.add(ft.Text("ColorPicker"), grey_colors, colors)
-
+    #page.add(ft.Text("ColorPicker"), grey_colors, colors)
+    page.add(ft.Text("ColorPicker"), colors)
 ft.app(target=main)
 
 
