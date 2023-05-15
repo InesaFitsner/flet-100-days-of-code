@@ -47,8 +47,7 @@ class CustomColorPicker(ft.AlertDialog):
 
         def find_color(x, y):
             for color_square in color_matrix.controls[:-1]:
-                #if (control.top < x and control.top > x-SQUARE_SIZE) and (control.left < y and control.left > y-SQUARE_SIZE):
-                if x > color_square.top and x < color_square.top + SQUARE_SIZE and y > color_square.left and y < color_square.left + SQUARE_SIZE:
+                if x >= color_square.top and x <= color_square.top + SQUARE_SIZE and y >= color_square.left and y <= color_square.left + SQUARE_SIZE:
                     return color_square.bgcolor
             return 'blue'
 
