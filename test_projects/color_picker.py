@@ -7,23 +7,25 @@ SQUARE_SIZE = 8
 CIRCLE_SIZE = SQUARE_SIZE * 2
 
 
+def rgb2hex(rgb):
+    return "#{:02x}{:02x}{:02x}".format(
+        int(rgb[0] * 255.0), int(rgb[1] * 255.0), int(rgb[2] * 255.0)
+    )
+
+
 class HueSlider(ft.Container):
-    def __init__(self):
+    def __init__(self, on_change_hue):
         super().__init__()
         self.height = SQUARE_SIZE
         self.width = SQUARE_SIZE * WIDTH / 2
         self.border_radius = 5
         self.content = ft.Stack(controls=[ft.Container(bgcolor="green")])
         self.generate_hues()
+        self.on_change_hue = on_change_hue
 
     def generate_hues(self):
-        def rgb2hex(rgb):
-            return "#{:02x}{:02x}{:02x}".format(
-                int(rgb[0] * 255.0), int(rgb[1] * 255.0), int(rgb[2] * 255.0)
-            )
-
         def pick_hue(e):
-            self.hue = e.control.bgcolor
+            self.on_change_hue(e.control.bgcolor)
 
         for i in range(0, WIDTH):
             # color = rgb2hex(colorsys.hsv_to_rgb(i/WIDTH,  1, 1 * (HEIGHT - j + 1) / HEIGHT))
@@ -45,7 +47,7 @@ class CustomColorPicker(ft.AlertDialog):
     def __init__(self):
         super().__init__()
         self.content = ft.Column()
-        self.hue_slider = HueSlider()
+        self.hue_slider = HueSlider(on_change_hue=self.update_color_matrix)
         self.generate_color_matrix(hue=0)
         self.generate_selected_color(color="#0a0a0a")
         self.on_dismiss = lambda e: print("Dialog dismissed!")
@@ -70,14 +72,9 @@ class CustomColorPicker(ft.AlertDialog):
         self.selected_color.update()
 
     def update_color_matrix(self, hue):
-        pass
+        print(f"Color Matrix updated with {hue}")
 
     def generate_color_matrix(self, hue):
-        def rgb2hex(rgb):
-            return "#{:02x}{:02x}{:02x}".format(
-                int(rgb[0] * 255.0), int(rgb[1] * 255.0), int(rgb[2] * 255.0)
-            )
-
         color_matrix = ft.Stack(
             height=HEIGHT * SQUARE_SIZE + CIRCLE_SIZE,
             width=WIDTH * SQUARE_SIZE + CIRCLE_SIZE,
