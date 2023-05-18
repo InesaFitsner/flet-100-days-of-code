@@ -25,7 +25,9 @@ class HueSlider(ft.Container):
 
     def generate_hues(self):
         def pick_hue(e):
-            self.on_change_hue(e.control.bgcolor)
+            hue = colorsys.rgb_to_hsv(140 / 255, 140 / 255, 140 / 255)
+            # self.on_change_hue(e.control.bgcolor)
+            self.on_change_hue(hue[0])
 
         for i in range(0, WIDTH):
             # color = rgb2hex(colorsys.hsv_to_rgb(i/WIDTH,  1, 1 * (HEIGHT - j + 1) / HEIGHT))
@@ -73,6 +75,18 @@ class CustomColorPicker(ft.AlertDialog):
 
     def update_color_matrix(self, hue):
         print(f"Color Matrix updated with {hue}")
+        n = 0
+        for j in range(0, HEIGHT):
+            for i in range(0, WIDTH):
+                # color = rgb2hex(colorsys.hsv_to_rgb(i/WIDTH,  1, 1 * (HEIGHT - j + 1) / HEIGHT))
+                color = rgb2hex(
+                    colorsys.hsv_to_rgb(
+                        hue, (i) / WIDTH, 1 * (HEIGHT - j) / HEIGHT
+                    )  # 0.5 should be hue
+                )
+                self.content.controls[0].controls[n].bgcolor = color
+                n += 1
+        self.content.update()
 
     def generate_color_matrix(self, hue):
         color_matrix = ft.Stack(
