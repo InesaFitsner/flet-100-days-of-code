@@ -7,12 +7,17 @@ SQUARE_SIZE = 8
 CIRCLE_SIZE = SQUARE_SIZE * 2
 
 
-class HueSlider(ft.Stack):
+class HueSlider(ft.Container):
     def __init__(self):
         super().__init__()
         self.height = SQUARE_SIZE
         self.width = SQUARE_SIZE * WIDTH / 2
-        self.controls = [ft.Container(bgcolor="green")]
+        self.border_radius = 5
+        self.content = ft.Stack(controls=[ft.Container(bgcolor="green")])
+        self.generate_hues()
+
+    def generate_hues(self):
+        pass
 
 
 class CustomColorPicker(ft.AlertDialog):
