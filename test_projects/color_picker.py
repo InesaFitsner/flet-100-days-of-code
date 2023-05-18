@@ -17,7 +17,28 @@ class HueSlider(ft.Container):
         self.generate_hues()
 
     def generate_hues(self):
-        pass
+        def rgb2hex(rgb):
+            return "#{:02x}{:02x}{:02x}".format(
+                int(rgb[0] * 255.0), int(rgb[1] * 255.0), int(rgb[2] * 255.0)
+            )
+
+        def pick_hue(e):
+            pass
+
+        for i in range(0, WIDTH):
+            # color = rgb2hex(colorsys.hsv_to_rgb(i/WIDTH,  1, 1 * (HEIGHT - j + 1) / HEIGHT))
+            color = rgb2hex(colorsys.hsv_to_rgb(i * 2 / WIDTH, 1, 1))
+            # c color = rgb2hex(colorsys.hls_to_rgb(i / WIDTH, 1, 1))
+            self.content.controls.append(
+                ft.Container(
+                    height=SQUARE_SIZE,
+                    width=SQUARE_SIZE,
+                    bgcolor=color,
+                    on_click=pick_hue,
+                    top=0,
+                    left=i * SQUARE_SIZE,
+                )
+            )
 
 
 class CustomColorPicker(ft.AlertDialog):
