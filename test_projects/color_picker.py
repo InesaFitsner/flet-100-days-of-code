@@ -23,7 +23,8 @@ class HueSlider(ft.Container):
             )
 
         def pick_hue(e):
-            pass
+            self.hue = e.control.bgcolor
+            print(self.hue)
 
         for i in range(0, WIDTH):
             # color = rgb2hex(colorsys.hsv_to_rgb(i/WIDTH,  1, 1 * (HEIGHT - j + 1) / HEIGHT))
