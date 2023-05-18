@@ -12,6 +12,10 @@ class CustomColorPicker(ft.AlertDialog):
         super().__init__()
         self.content = ft.Column()
         self.generate_color_matrix(hue=0)
+        # self.color = "#0a0a0a"
+        # self.color_display = ft.Row(
+        #     [ft.Container(width=20, height=20, bgcolor=self.color), ft.Text(self.color)]
+        # )
         self.on_dismiss = lambda e: print("Dialog dismissed!")
 
     def generate_color_matrix(self, hue):
@@ -54,7 +58,9 @@ class CustomColorPicker(ft.AlertDialog):
                 )
 
         def find_color(x, y):
-            for color_square in color_matrix.controls[:-1]:
+            for color_square in color_matrix.controls[
+                :-1
+            ]:  # excluding the last element of the controls list which is the circle
                 if (
                     x >= color_square.top
                     and x <= color_square.top + SQUARE_SIZE
