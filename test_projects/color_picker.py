@@ -24,7 +24,6 @@ class HueSlider(ft.Container):
 
         def pick_hue(e):
             self.hue = e.control.bgcolor
-            print(self.hue)
 
         for i in range(0, WIDTH):
             # color = rgb2hex(colorsys.hsv_to_rgb(i/WIDTH,  1, 1 * (HEIGHT - j + 1) / HEIGHT))
@@ -46,6 +45,7 @@ class CustomColorPicker(ft.AlertDialog):
     def __init__(self):
         super().__init__()
         self.content = ft.Column()
+        self.hue_slider = HueSlider()
         self.generate_color_matrix(hue=0)
         self.generate_selected_color(color="#0a0a0a")
         self.on_dismiss = lambda e: print("Dialog dismissed!")
@@ -58,7 +58,7 @@ class CustomColorPicker(ft.AlertDialog):
                 controls=[
                     ft.Container(width=20, height=20, border_radius=20, bgcolor=color),
                     ft.Text(color),
-                    HueSlider(),
+                    self.hue_slider,
                 ],
             ),
         )
@@ -68,6 +68,9 @@ class CustomColorPicker(ft.AlertDialog):
         self.selected_color.content.controls[0].bgcolor = color
         self.selected_color.content.controls[1].value = color
         self.selected_color.update()
+
+    def update_color_matrix(self, hue):
+        pass
 
     def generate_color_matrix(self, hue):
         def rgb2hex(rgb):
@@ -152,7 +155,6 @@ class CustomColorPicker(ft.AlertDialog):
         )
 
         color_matrix.controls.append(circle)
-
         self.content.controls.append(color_matrix)
 
 
