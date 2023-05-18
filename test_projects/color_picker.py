@@ -31,15 +31,13 @@ class HueSlider(ft.Container):
 
     def generate_hues(self):
         def pick_hue(e):
-            color = hex2rgb(e.control.bgcolor)
-            hue = colorsys.rgb_to_hsv(
-                round(color[0] / 255, 1),
-                round(color[1] / 255, 1),
-                round(color[2] / 255, 1),
+            rgb_color = hex2rgb(e.control.bgcolor)
+            hsv_color = colorsys.rgb_to_hsv(
+                round(rgb_color[0] / 255, 1),
+                round(rgb_color[1] / 255, 1),
+                round(rgb_color[2] / 255, 1),
             )
-            print(hue[0], hue[1], hue[0])
-            # self.on_change_hue(e.control.bgcolor)
-            self.on_change_hue(hue[0])
+            self.on_change_hue(hsv_color[0])
 
         for i in range(0, WIDTH):
             # color = rgb2hex(colorsys.hsv_to_rgb(i/WIDTH,  1, 1 * (HEIGHT - j + 1) / HEIGHT))
@@ -86,15 +84,11 @@ class CustomColorPicker(ft.AlertDialog):
         self.selected_color.update()
 
     def update_color_matrix(self, hue):
-        print(f"Color Matrix updated with {hue}")
         n = 0
         for j in range(0, HEIGHT):
             for i in range(0, WIDTH):
-                # color = rgb2hex(colorsys.hsv_to_rgb(i/WIDTH,  1, 1 * (HEIGHT - j + 1) / HEIGHT))
                 color = rgb2hex(
-                    colorsys.hsv_to_rgb(
-                        hue, (i) / WIDTH, 1 * (HEIGHT - j) / HEIGHT
-                    )  # 0.5 should be hue
+                    colorsys.hsv_to_rgb(hue, (i) / WIDTH, 1 * (HEIGHT - j) / HEIGHT)
                 )
                 self.content.controls[0].controls[n].bgcolor = color
                 n += 1
