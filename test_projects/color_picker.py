@@ -13,6 +13,12 @@ def rgb2hex(rgb):
     )
 
 
+def hex2rgb(value):
+    value = value.lstrip("#")
+    lv = len(value)
+    return tuple(int(value[i : i + lv // 3], 16) for i in range(0, lv, lv // 3))
+
+
 class HueSlider(ft.Container):
     def __init__(self, on_change_hue):
         super().__init__()
@@ -25,7 +31,13 @@ class HueSlider(ft.Container):
 
     def generate_hues(self):
         def pick_hue(e):
-            hue = colorsys.rgb_to_hsv(140 / 255, 140 / 255, 140 / 255)
+            color = hex2rgb(e.control.bgcolor)
+            hue = colorsys.rgb_to_hsv(
+                round(color[0] / 255, 1),
+                round(color[1] / 255, 1),
+                round(color[2] / 255, 1),
+            )
+            print(hue[0], hue[1], hue[0])
             # self.on_change_hue(e.control.bgcolor)
             self.on_change_hue(hue[0])
 
