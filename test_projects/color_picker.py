@@ -1,11 +1,13 @@
 import flet as ft
 import colorsys
+import math
 
 WIDTH = 35
-WIDTH_PIX = 280
+COLOR_MATRIX_WIDTH = 296
 SLIDER_WIDTH = 180
 HEIGHT = 20
-HEIGHT_PIX = 160
+COLOR_MATRIX_HEIGHT = 176
+NUMBER_OF_COLORS = 700
 SQUARE_SIZE = 8
 NUMBER_OF_HUES = 40
 # CIRCLE_SIZE = SQUARE_SIZE * 2
@@ -28,13 +30,8 @@ def hex2rgb(value):
 class HueSlider(ft.Stack):
     def __init__(self, on_change_hue):
         super().__init__()
-        # self.height = SQUARE_SIZE
         self.height = CIRCLE_SIZE
-        # self.width = SQUARE_SIZE * WIDTH / 2 + CIRCLE_SIZE
-        # self.width = WIDTH_PIX / 2 + CIRCLE_SIZE
         self.width = SLIDER_WIDTH
-        # self.border_radius = 5
-        # self.content = ft.Stack()
         self.generate_hues()
         self.on_change_hue = on_change_hue
 
@@ -48,23 +45,16 @@ class HueSlider(ft.Stack):
             )
             self.on_change_hue(hsv_color[0])
 
-        # for i in range(0, WIDTH):
         hue_width = (self.width - CIRCLE_SIZE) / NUMBER_OF_HUES
         for i in range(0, NUMBER_OF_HUES):
-            # color = rgb2hex(colorsys.hsv_to_rgb(i/WIDTH,  1, 1 * (HEIGHT - j + 1) / HEIGHT))
-            # color = rgb2hex(colorsys.hsv_to_rgb(i * 2 / WIDTH, 1, 1))
             color = rgb2hex(colorsys.hsv_to_rgb(i / NUMBER_OF_HUES, 1, 1))
-            # c color = rgb2hex(colorsys.hls_to_rgb(i / WIDTH, 1, 1))
-            # self.content.controls.append(
             self.controls.append(
                 ft.Container(
-                    # height=SQUARE_SIZE,
                     height=CIRCLE_SIZE / 2,
-                    # width=SQUARE_SIZE,
                     width=hue_width,
                     bgcolor=color,
                     on_click=pick_hue,
-                    top=0 + (CIRCLE_SIZE) / 4,
+                    top=(CIRCLE_SIZE) / 4,
                     left=i * hue_width + CIRCLE_SIZE / 2,
                 )
             )
@@ -88,7 +78,6 @@ class HueSlider(ft.Stack):
             ),
         )
 
-        # self.content.controls.append(circle)
         self.controls.append(circle)
 
 
@@ -117,6 +106,7 @@ class CustomColorPicker(ft.AlertDialog):
 
     def generate_selected_color_view(self, color):
         rgb = hex2rgb(color)
+
         self.selected_color_view = ft.Container(
             # padding=CIRCLE_SIZE / 2,
             content=ft.Column(
@@ -182,15 +172,27 @@ class CustomColorPicker(ft.AlertDialog):
         self.update()
 
     def generate_color_matrix(self, hue):
+        square_side = math.sqrt(
+            (COLOR_MATRIX_WIDTH - CIRCLE_SIZE)
+            * (COLOR_MATRIX_HEIGHT - CIRCLE_SIZE)
+            / NUMBER_OF_COLORS
+        )
+        number_of_colors_width = (COLOR_MATRIX_WIDTH - CIRCLE_SIZE) / square_side
+        number_of_colors_height = (COLOR_MATRIX_HEIGHT - CIRCLE_SIZE) / square_side
+
         self.color_matrix = ft.Stack(
-            height=HEIGHT * SQUARE_SIZE + CIRCLE_SIZE,
-            width=WIDTH * SQUARE_SIZE + CIRCLE_SIZE,
+            # height=HEIGHT * SQUARE_SIZE + CIRCLE_SIZE,
+            height=COLOR_MATRIX_HEIGHT,
+            width=COLOR_MATRIX_WIDTH
+            # width=WIDTH * SQUARE_SIZE + CIRCLE_SIZE,
         )
         self.content.controls = []
 
         def pick_color(e):
-            circle.top = e.control.top + SQUARE_SIZE / 2 - CIRCLE_SIZE / 2
-            circle.left = e.control.left + SQUARE_SIZE / 2 - CIRCLE_SIZE / 2
+            # circle.top = e.control.top + SQUARE_SIZE / 2 - CIRCLE_SIZE / 2
+            # circle.left = e.control.left + SQUARE_SIZE / 2 - CIRCLE_SIZE / 2
+            circle.top = e.control.top + square_side / 2 - CIRCLE_SIZE / 2
+            circle.left = e.control.left + square_side / 2 - CIRCLE_SIZE / 2
             circle.update()
             self.color = e.control.bgcolor
             self.update_selected_color_view(self.color)
