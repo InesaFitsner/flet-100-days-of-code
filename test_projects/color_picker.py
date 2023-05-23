@@ -177,8 +177,8 @@ class CustomColorPicker(ft.AlertDialog):
             * (COLOR_MATRIX_HEIGHT - CIRCLE_SIZE)
             / NUMBER_OF_COLORS
         )
-        number_of_colors_width = (COLOR_MATRIX_WIDTH - CIRCLE_SIZE) / square_side
-        number_of_colors_height = (COLOR_MATRIX_HEIGHT - CIRCLE_SIZE) / square_side
+        number_of_colors_width = int((COLOR_MATRIX_WIDTH - CIRCLE_SIZE) / square_side)
+        number_of_colors_height = int((COLOR_MATRIX_HEIGHT - CIRCLE_SIZE) / square_side)
 
         self.color_matrix = ft.Stack(
             # height=HEIGHT * SQUARE_SIZE + CIRCLE_SIZE,
@@ -197,20 +197,33 @@ class CustomColorPicker(ft.AlertDialog):
             self.color = e.control.bgcolor
             self.update_selected_color_view(self.color)
 
-        for j in range(0, HEIGHT):
-            for i in range(0, WIDTH):
+        # for j in range(0, HEIGHT):
+        for j in range(0, number_of_colors_height):
+            # for i in range(0, WIDTH):
+            for i in range(0, number_of_colors_width):
                 # color = rgb2hex(colorsys.hsv_to_rgb(i/WIDTH,  1, 1 * (HEIGHT - j + 1) / HEIGHT))
+                # color = rgb2hex(
+                #     colorsys.hsv_to_rgb(hue, (i) / WIDTH, 1 * (HEIGHT - j) / HEIGHT)
+                # )
                 color = rgb2hex(
-                    colorsys.hsv_to_rgb(hue, (i) / WIDTH, 1 * (HEIGHT - j) / HEIGHT)
+                    colorsys.hsv_to_rgb(
+                        hue,
+                        (i) / number_of_colors_width,
+                        1 * (number_of_colors_height - j) / number_of_colors_height,
+                    )
                 )
                 self.color_matrix.controls.append(
                     ft.Container(
-                        height=SQUARE_SIZE,
-                        width=SQUARE_SIZE,
+                        # height=SQUARE_SIZE,
+                        height=square_side,
+                        # width=SQUARE_SIZE,
+                        width=square_side,
                         bgcolor=color,
                         on_click=pick_color,
-                        top=j * SQUARE_SIZE + CIRCLE_SIZE / 2,
-                        left=i * SQUARE_SIZE + CIRCLE_SIZE / 2,
+                        # top=j * SQUARE_SIZE + CIRCLE_SIZE / 2,
+                        # left=i * SQUARE_SIZE + CIRCLE_SIZE / 2,
+                        top=j * square_side + CIRCLE_SIZE / 2,
+                        left=i * square_side + CIRCLE_SIZE / 2,
                     )
                 )
 
@@ -233,7 +246,8 @@ class CustomColorPicker(ft.AlertDialog):
             self.update_selected_color_view(self.color)
 
         circle = ft.GestureDetector(
-            top=HEIGHT * SQUARE_SIZE,
+            # top=HEIGHT * SQUARE_SIZE,
+            top=HEIGHT * square_side,
             left=0,
             on_pan_update=on_pan_update,
             on_pan_end=on_pan_end,
@@ -241,7 +255,8 @@ class CustomColorPicker(ft.AlertDialog):
                 width=CIRCLE_SIZE,
                 height=CIRCLE_SIZE,
                 bgcolor="#0a0a0a",
-                border_radius=SQUARE_SIZE * 5,
+                # border_radius=SQUARE_SIZE * 5,
+                border_radius=CIRCLE_SIZE,
                 border=ft.border.all(width=2, color="white"),
             ),
         )
