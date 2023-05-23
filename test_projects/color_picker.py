@@ -2,15 +2,13 @@ import flet as ft
 import colorsys
 import math
 
-WIDTH = 35
 COLOR_MATRIX_WIDTH = 280
-SLIDER_WIDTH = 180
-HEIGHT = 20
 COLOR_MATRIX_HEIGHT = 160
 NUMBER_OF_COLORS = 700
-SQUARE_SIZE = 8
+
+SLIDER_WIDTH = 180
 NUMBER_OF_HUES = 40
-# CIRCLE_SIZE = SQUARE_SIZE * 2
+
 CIRCLE_SIZE = 16
 
 
@@ -97,9 +95,9 @@ class CustomColorPicker(ft.AlertDialog):
         ]:  # excluding the last element of the controls list which is the circle
             if (
                 x >= color_square.top
-                and x <= color_square.top + SQUARE_SIZE
+                and x <= color_square.top + self.square_side
                 and y >= color_square.left
-                and y <= color_square.left + SQUARE_SIZE
+                and y <= color_square.left + self.square_side
             ):
                 return color_square.bgcolor
         return "blue"
