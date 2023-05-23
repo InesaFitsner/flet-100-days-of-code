@@ -3,6 +3,7 @@ import colorsys
 
 WIDTH = 35
 WIDTH_PIX = 280
+SLIDER_WIDTH = 180
 HEIGHT = 20
 HEIGHT_PIX = 160
 SQUARE_SIZE = 8
@@ -29,7 +30,8 @@ class HueSlider(ft.Container):
         # self.height = SQUARE_SIZE
         self.height = CIRCLE_SIZE
         # self.width = SQUARE_SIZE * WIDTH / 2 + CIRCLE_SIZE
-        self.width = WIDTH_PIX / 2 + CIRCLE_SIZE
+        # self.width = WIDTH_PIX / 2 + CIRCLE_SIZE
+        self.width = SLIDER_WIDTH
         self.border_radius = 5
         self.content = ft.Stack()
         self.generate_hues()
@@ -79,7 +81,7 @@ class HueSlider(ft.Container):
                 width=CIRCLE_SIZE,
                 height=CIRCLE_SIZE,
                 bgcolor="#000000",
-                border_radius=SQUARE_SIZE * 5,
+                border_radius=CIRCLE_SIZE,
                 border=ft.border.all(width=2, color="white"),
             ),
         )
