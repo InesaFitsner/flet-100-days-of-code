@@ -25,7 +25,7 @@ class HueSlider(ft.Container):
         self.height = SQUARE_SIZE
         self.width = SQUARE_SIZE * WIDTH / 2
         self.border_radius = 5
-        self.content = ft.Stack(controls=[ft.Container(bgcolor="green")])
+        self.content = ft.Stack(controls=[ft.Container()])
         self.generate_hues()
         self.on_change_hue = on_change_hue
 
@@ -79,7 +79,7 @@ class CustomColorPicker(ft.AlertDialog):
         return "blue"
 
     def generate_selected_color_view(self, color):
-        self.selected_color = ft.Container(
+        self.selected_color_view = ft.Container(
             padding=CIRCLE_SIZE / 2,
             content=ft.Row(
                 alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
@@ -90,13 +90,13 @@ class CustomColorPicker(ft.AlertDialog):
                 ],
             ),
         )
-        self.content.controls.append(self.selected_color)
+        self.content.controls.append(self.selected_color_view)
 
     def update_selected_color_view(self, color):
-        self.selected_color.content.controls[0].bgcolor = color
-        self.selected_color.content.controls[1].value = color
+        self.selected_color_view.content.controls[0].bgcolor = color
+        self.selected_color_view.content.controls[1].value = color
         self.color_matrix.controls[-1].content.bgcolor = color
-        self.selected_color.update()
+        self.update()
 
     def generate_color_matrix(self, hue):
         self.color_matrix = ft.Stack(
@@ -108,6 +108,7 @@ class CustomColorPicker(ft.AlertDialog):
         def pick_color(e):
             circle.top = e.control.top + SQUARE_SIZE / 2 - CIRCLE_SIZE / 2
             circle.left = e.control.left + SQUARE_SIZE / 2 - CIRCLE_SIZE / 2
+            circle.update()
             self.color = e.control.bgcolor
             self.update_selected_color_view(self.color)
 
