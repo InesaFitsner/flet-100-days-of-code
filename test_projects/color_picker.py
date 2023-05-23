@@ -2,8 +2,11 @@ import flet as ft
 import colorsys
 
 WIDTH = 35
+WIDTH_PIX = 280
 HEIGHT = 20
+HEIGHT_PIX = 160
 SQUARE_SIZE = 8
+NUMBER_OF_HUES = 40
 # CIRCLE_SIZE = SQUARE_SIZE * 2
 CIRCLE_SIZE = 16
 
@@ -25,7 +28,8 @@ class HueSlider(ft.Container):
         super().__init__()
         # self.height = SQUARE_SIZE
         self.height = CIRCLE_SIZE
-        self.width = SQUARE_SIZE * WIDTH / 2 + CIRCLE_SIZE
+        # self.width = SQUARE_SIZE * WIDTH / 2 + CIRCLE_SIZE
+        self.width = WIDTH_PIX / 2 + CIRCLE_SIZE
         self.border_radius = 5
         self.content = ft.Stack(controls=[ft.Container()])
         self.generate_hues()
@@ -41,18 +45,23 @@ class HueSlider(ft.Container):
             )
             self.on_change_hue(hsv_color[0])
 
-        for i in range(0, WIDTH):
+        # for i in range(0, WIDTH):
+        hue_width = (self.width - CIRCLE_SIZE) / NUMBER_OF_HUES
+        for i in range(0, NUMBER_OF_HUES):
             # color = rgb2hex(colorsys.hsv_to_rgb(i/WIDTH,  1, 1 * (HEIGHT - j + 1) / HEIGHT))
-            color = rgb2hex(colorsys.hsv_to_rgb(i * 2 / WIDTH, 1, 1))
+            # color = rgb2hex(colorsys.hsv_to_rgb(i * 2 / WIDTH, 1, 1))
+            color = rgb2hex(colorsys.hsv_to_rgb(i / NUMBER_OF_HUES, 1, 1))
             # c color = rgb2hex(colorsys.hls_to_rgb(i / WIDTH, 1, 1))
             self.content.controls.append(
                 ft.Container(
-                    height=SQUARE_SIZE,
-                    width=SQUARE_SIZE,
+                    # height=SQUARE_SIZE,
+                    height=CIRCLE_SIZE / 2,
+                    # width=SQUARE_SIZE,
+                    width=hue_width,
                     bgcolor=color,
                     on_click=pick_hue,
-                    top=0 + (CIRCLE_SIZE - SQUARE_SIZE) / 2,
-                    left=i * SQUARE_SIZE + CIRCLE_SIZE / 2,
+                    top=0 + (CIRCLE_SIZE) / 4,
+                    left=i * hue_width + CIRCLE_SIZE / 2,
                 )
             )
 
