@@ -56,8 +56,6 @@ class HueSlider(ft.Container):
             )
 
         def on_pan_update(e: ft.DragUpdateEvent):
-            # if e.control.top + e.delta_y < self.color_matrix.height - CIRCLE_SIZE:
-            # e.control.top = max(0, e.control.top + e.delta_y)
             if e.control.left + e.delta_x < self.width - CIRCLE_SIZE / 2:
                 e.control.left = max(0, e.control.left + e.delta_x)
             e.control.update()
@@ -104,21 +102,60 @@ class CustomColorPicker(ft.AlertDialog):
 
     def generate_selected_color_view(self, color):
         self.selected_color_view = ft.Container(
-            padding=CIRCLE_SIZE / 2,
-            content=ft.Row(
-                alignment=ft.MainAxisAlignment.SPACE_BETWEEN,
+            # padding=CIRCLE_SIZE / 2,
+            content=ft.Column(
+                spacing=20,
                 controls=[
-                    ft.Container(width=20, height=20, border_radius=20, bgcolor=color),
-                    ft.Text(color),
-                    self.hue_slider,
+                    ft.Row(
+                        alignment=ft.MainAxisAlignment.SPACE_AROUND,
+                        controls=[
+                            ft.Container(
+                                width=30, height=30, border_radius=30, bgcolor=color
+                            ),
+                            # ft.Text(color),
+                            self.hue_slider,
+                        ],
+                    ),
+                    ft.Row(
+                        controls=[
+                            ft.TextField(
+                                label="Hex",
+                                text_size=12,
+                                value=color,
+                                height=40,
+                                width=90,
+                            ),
+                            ft.TextField(
+                                label="R",
+                                height=40,
+                                width=55,
+                                value="255",
+                                text_size=12,
+                            ),
+                            ft.TextField(
+                                label="G",
+                                height=40,
+                                width=55,
+                                value="0",
+                                text_size=12,
+                            ),
+                            ft.TextField(
+                                label="B",
+                                height=40,
+                                width=55,
+                                value="0",
+                                text_size=12,
+                            ),
+                        ]
+                    ),
                 ],
             ),
         )
         self.content.controls.append(self.selected_color_view)
 
     def update_selected_color_view(self, color):
-        self.selected_color_view.content.controls[0].bgcolor = color
-        self.selected_color_view.content.controls[1].value = color
+        self.selected_color_view.content.controls[0].controls[0].bgcolor = color
+        self.selected_color_view.content.controls[1].controls[0].value = color
         self.color_matrix.controls[-1].content.bgcolor = color
         self.update()
 
