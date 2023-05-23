@@ -4,7 +4,8 @@ import math
 
 COLOR_MATRIX_WIDTH = 280
 COLOR_MATRIX_HEIGHT = 160
-NUMBER_OF_COLORS = 700
+# NUMBER_OF_COLORS = 900
+COLOR_BLOCK_SIDE = 6
 
 SLIDER_WIDTH = 180
 NUMBER_OF_HUES = 100
@@ -95,9 +96,9 @@ class CustomColorPicker(ft.AlertDialog):
         ]:  # excluding the last element of the controls list which is the circle
             if (
                 x >= color_square.top
-                and x <= color_square.top + self.square_side
+                and x <= color_square.top + COLOR_BLOCK_SIDE
                 and y >= color_square.left
-                and y <= color_square.left + self.square_side
+                and y <= color_square.left + COLOR_BLOCK_SIDE
             ):
                 return color_square.bgcolor
         return "blue"
@@ -170,19 +171,25 @@ class CustomColorPicker(ft.AlertDialog):
         self.update()
 
     def generate_color_matrix(self, hue):
-        self.square_side = math.sqrt(
-            (COLOR_MATRIX_WIDTH) * (COLOR_MATRIX_HEIGHT) / NUMBER_OF_COLORS
-        )
-        self.colors_x = int((COLOR_MATRIX_WIDTH) / self.square_side)
-        self.colors_y = int((COLOR_MATRIX_HEIGHT) / self.square_side)
-
+        # self.square_side = math.sqrt(
+        #     (COLOR_MATRIX_WIDTH) * (COLOR_MATRIX_HEIGHT) / NUMBER_OF_COLORS
+        # )
+        # self.colors_x = int((COLOR_MATRIX_WIDTH) / self.square_side)
+        # self.colors_y = int((COLOR_MATRIX_HEIGHT) / self.square_side)
+        self.colors_x = int(COLOR_MATRIX_WIDTH / COLOR_BLOCK_SIDE)
+        self.colors_y = int(COLOR_MATRIX_HEIGHT / COLOR_BLOCK_SIDE)
+        self.square_side = COLOR_BLOCK_SIDE
         self.color_matrix = ft.Stack(
-            height=COLOR_MATRIX_HEIGHT + CIRCLE_SIZE,
-            width=COLOR_MATRIX_WIDTH + CIRCLE_SIZE,
+            # height=COLOR_MATRIX_HEIGHT + CIRCLE_SIZE,
+            # width=COLOR_MATRIX_WIDTH + CIRCLE_SIZE,
+            height=self.colors_y * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
+            width=self.colors_x * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
         )
         self.content.controls = []
 
         def pick_color(e):
+            # circle.top = e.control.top + self.square_side / 2 - CIRCLE_SIZE / 2
+            # circle.left = e.control.left + self.square_side / 2 - CIRCLE_SIZE / 2
             circle.top = e.control.top + self.square_side / 2 - CIRCLE_SIZE / 2
             circle.left = e.control.left + self.square_side / 2 - CIRCLE_SIZE / 2
             circle.update()
@@ -207,6 +214,10 @@ class CustomColorPicker(ft.AlertDialog):
                         top=j * self.square_side + CIRCLE_SIZE / 2,
                         left=i * self.square_side + CIRCLE_SIZE / 2,
                     )
+                )
+                print(
+                    self.color_matrix.controls[-1].top,
+                    self.color_matrix.controls[-1].left,
                 )
 
         def on_pan_end(e: ft.DragEndEvent):
