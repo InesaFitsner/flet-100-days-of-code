@@ -31,7 +31,7 @@ class HueSlider(ft.Container):
         # self.width = SQUARE_SIZE * WIDTH / 2 + CIRCLE_SIZE
         self.width = WIDTH_PIX / 2 + CIRCLE_SIZE
         self.border_radius = 5
-        self.content = ft.Stack(controls=[ft.Container()])
+        self.content = ft.Stack()
         self.generate_hues()
         self.on_change_hue = on_change_hue
 
@@ -66,7 +66,7 @@ class HueSlider(ft.Container):
             )
 
         def on_pan_update(e: ft.DragUpdateEvent):
-            if e.control.left + e.delta_x < self.width - CIRCLE_SIZE / 2:
+            if e.control.left + e.delta_x < self.width - CIRCLE_SIZE:
                 e.control.left = max(0, e.control.left + e.delta_x)
             e.control.update()
 
