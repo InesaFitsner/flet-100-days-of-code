@@ -24,7 +24,8 @@ def hex2rgb(value):
     return tuple(int(value[i : i + lv // 3], 16) for i in range(0, lv, lv // 3))
 
 
-class HueSlider(ft.Container):
+# class HueSlider(ft.Container):
+class HueSlider(ft.Stack):
     def __init__(self, on_change_hue):
         super().__init__()
         # self.height = SQUARE_SIZE
@@ -32,8 +33,8 @@ class HueSlider(ft.Container):
         # self.width = SQUARE_SIZE * WIDTH / 2 + CIRCLE_SIZE
         # self.width = WIDTH_PIX / 2 + CIRCLE_SIZE
         self.width = SLIDER_WIDTH
-        self.border_radius = 5
-        self.content = ft.Stack()
+        # self.border_radius = 5
+        # self.content = ft.Stack()
         self.generate_hues()
         self.on_change_hue = on_change_hue
 
@@ -54,7 +55,8 @@ class HueSlider(ft.Container):
             # color = rgb2hex(colorsys.hsv_to_rgb(i * 2 / WIDTH, 1, 1))
             color = rgb2hex(colorsys.hsv_to_rgb(i / NUMBER_OF_HUES, 1, 1))
             # c color = rgb2hex(colorsys.hls_to_rgb(i / WIDTH, 1, 1))
-            self.content.controls.append(
+            # self.content.controls.append(
+            self.controls.append(
                 ft.Container(
                     # height=SQUARE_SIZE,
                     height=CIRCLE_SIZE / 2,
@@ -86,7 +88,8 @@ class HueSlider(ft.Container):
             ),
         )
 
-        self.content.controls.append(circle)
+        # self.content.controls.append(circle)
+        self.controls.append(circle)
 
 
 class CustomColorPicker(ft.AlertDialog):
