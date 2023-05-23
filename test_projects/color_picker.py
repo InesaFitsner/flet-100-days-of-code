@@ -4,7 +4,8 @@ import colorsys
 WIDTH = 35
 HEIGHT = 20
 SQUARE_SIZE = 8
-CIRCLE_SIZE = SQUARE_SIZE * 2
+# CIRCLE_SIZE = SQUARE_SIZE * 2
+CIRCLE_SIZE = 16
 
 
 def rgb2hex(rgb):
@@ -68,7 +69,7 @@ class HueSlider(ft.Container):
             content=ft.Container(
                 width=CIRCLE_SIZE,
                 height=CIRCLE_SIZE,
-                bgcolor="#0a0a0a",
+                bgcolor="#000000",
                 border_radius=SQUARE_SIZE * 5,
                 border=ft.border.all(width=2, color="white"),
             ),
@@ -80,7 +81,7 @@ class HueSlider(ft.Container):
 class CustomColorPicker(ft.AlertDialog):
     def __init__(self):
         super().__init__()
-        self.color = "#0a0a0a"
+        self.color = "#000000"
         self.content = ft.Column()
         self.hue_slider = HueSlider(on_change_hue=self.update_color_matrix)
         self.generate_color_matrix(hue=0)
@@ -101,6 +102,7 @@ class CustomColorPicker(ft.AlertDialog):
         return "blue"
 
     def generate_selected_color_view(self, color):
+        rgb = hex2rgb(color)
         self.selected_color_view = ft.Container(
             # padding=CIRCLE_SIZE / 2,
             content=ft.Column(
@@ -129,21 +131,21 @@ class CustomColorPicker(ft.AlertDialog):
                                 label="R",
                                 height=40,
                                 width=55,
-                                value="255",
+                                value=rgb[0],
                                 text_size=12,
                             ),
                             ft.TextField(
                                 label="G",
                                 height=40,
                                 width=55,
-                                value="0",
+                                value=rgb[1],
                                 text_size=12,
                             ),
                             ft.TextField(
                                 label="B",
                                 height=40,
                                 width=55,
-                                value="0",
+                                value=rgb[2],
                                 text_size=12,
                             ),
                         ]
@@ -155,7 +157,6 @@ class CustomColorPicker(ft.AlertDialog):
 
     def update_selected_color_view(self, color):
         rgb = hex2rgb(color)
-        print(rgb)
         self.selected_color_view.content.controls[0].controls[
             0
         ].bgcolor = color  # Colored circle
