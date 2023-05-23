@@ -65,18 +65,18 @@ class CustomColorPicker(ft.AlertDialog):
         self.generate_selected_color(color=self.color)
         self.on_dismiss = lambda e: print("Dialog dismissed!")
 
-        def find_color(self, x, y):
-            for color_square in self.color_matrix.controls[
-                :-1
-            ]:  # excluding the last element of the controls list which is the circle
-                if (
-                    x >= color_square.top
-                    and x <= color_square.top + SQUARE_SIZE
-                    and y >= color_square.left
-                    and y <= color_square.left + SQUARE_SIZE
-                ):
-                    return color_square.bgcolor
-            return "blue"
+    def find_color(self, x, y):
+        for color_square in self.color_matrix.controls[
+            :-1
+        ]:  # excluding the last element of the controls list which is the circle
+            if (
+                x >= color_square.top
+                and x <= color_square.top + SQUARE_SIZE
+                and y >= color_square.left
+                and y <= color_square.left + SQUARE_SIZE
+            ):
+                return color_square.bgcolor
+        return "blue"
 
     def generate_selected_color(self, color):
         self.selected_color = ft.Container(
@@ -95,6 +95,7 @@ class CustomColorPicker(ft.AlertDialog):
     def update_selected_color(self, color):
         self.selected_color.content.controls[0].bgcolor = color
         self.selected_color.content.controls[1].value = color
+        self.color_matrix.controls[-1].content.bgcolor = color
         self.selected_color.update()
 
     def generate_color_matrix(self, hue):
@@ -176,7 +177,13 @@ class CustomColorPicker(ft.AlertDialog):
                 )
                 self.content.controls[0].controls[n].bgcolor = color
                 n += 1
+        self.color = self.find_color(
+            x=self.color_matrix.controls[-1].top + CIRCLE_SIZE / 2,
+            y=self.color_matrix.controls[-1].left + CIRCLE_SIZE / 2,
+        )
+        print(self.color)
         print(self.color_matrix.controls[-1].content.bgcolor)
+        self.update_selected_color(self.color)
         self.content.update()
 
 
