@@ -22,8 +22,9 @@ def hex2rgb(value):
 class HueSlider(ft.Container):
     def __init__(self, on_change_hue):
         super().__init__()
-        self.height = SQUARE_SIZE
-        self.width = SQUARE_SIZE * WIDTH / 2
+        # self.height = SQUARE_SIZE
+        self.height = CIRCLE_SIZE
+        self.width = SQUARE_SIZE * WIDTH / 2 + CIRCLE_SIZE
         self.border_radius = 5
         self.content = ft.Stack(controls=[ft.Container()])
         self.generate_hues()
@@ -49,16 +50,17 @@ class HueSlider(ft.Container):
                     width=SQUARE_SIZE,
                     bgcolor=color,
                     on_click=pick_hue,
-                    top=0,
-                    left=i * SQUARE_SIZE,
+                    top=0 + (CIRCLE_SIZE - SQUARE_SIZE) / 2,
+                    left=i * SQUARE_SIZE + CIRCLE_SIZE / 2,
                 )
             )
 
         def on_pan_update(e: ft.DragUpdateEvent):
             # if e.control.top + e.delta_y < self.color_matrix.height - CIRCLE_SIZE:
-            e.control.top = max(0, e.control.top + e.delta_y)
-            # if e.control.left + e.delta_x < self.color_matrix.width - CIRCLE_SIZE:
-            e.control.left = max(0, e.control.left + e.delta_x)
+            # e.control.top = max(0, e.control.top + e.delta_y)
+            if e.control.left + e.delta_x < self.width - CIRCLE_SIZE / 2:
+                e.control.left = max(0, e.control.left + e.delta_x)
+            e.control.update()
 
         circle = ft.GestureDetector(
             top=0,
