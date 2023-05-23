@@ -54,6 +54,28 @@ class HueSlider(ft.Container):
                 )
             )
 
+        def on_pan_update(e: ft.DragUpdateEvent):
+            # if e.control.top + e.delta_y < self.color_matrix.height - CIRCLE_SIZE:
+            e.control.top = max(0, e.control.top + e.delta_y)
+            # if e.control.left + e.delta_x < self.color_matrix.width - CIRCLE_SIZE:
+            e.control.left = max(0, e.control.left + e.delta_x)
+
+        circle = ft.GestureDetector(
+            top=0,
+            left=0,
+            on_pan_update=on_pan_update,
+            # on_pan_end=on_pan_end,
+            content=ft.Container(
+                width=CIRCLE_SIZE,
+                height=CIRCLE_SIZE,
+                bgcolor="#0a0a0a",
+                border_radius=SQUARE_SIZE * 5,
+                border=ft.border.all(width=2, color="white"),
+            ),
+        )
+
+        self.content.controls.append(circle)
+
 
 class CustomColorPicker(ft.AlertDialog):
     def __init__(self):
