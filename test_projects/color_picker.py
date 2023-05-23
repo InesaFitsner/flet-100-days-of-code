@@ -62,7 +62,7 @@ class CustomColorPicker(ft.AlertDialog):
         self.content = ft.Column()
         self.hue_slider = HueSlider(on_change_hue=self.update_color_matrix)
         self.generate_color_matrix(hue=0)
-        self.generate_selected_color(color=self.color)
+        self.generate_selected_color_view(color=self.color)
         self.on_dismiss = lambda e: print("Dialog dismissed!")
 
     def find_color(self, x, y):
@@ -78,7 +78,7 @@ class CustomColorPicker(ft.AlertDialog):
                 return color_square.bgcolor
         return "blue"
 
-    def generate_selected_color(self, color):
+    def generate_selected_color_view(self, color):
         self.selected_color = ft.Container(
             padding=CIRCLE_SIZE / 2,
             content=ft.Row(
@@ -92,7 +92,7 @@ class CustomColorPicker(ft.AlertDialog):
         )
         self.content.controls.append(self.selected_color)
 
-    def update_selected_color(self, color):
+    def update_selected_color_view(self, color):
         self.selected_color.content.controls[0].bgcolor = color
         self.selected_color.content.controls[1].value = color
         self.color_matrix.controls[-1].content.bgcolor = color
@@ -108,10 +108,8 @@ class CustomColorPicker(ft.AlertDialog):
         def pick_color(e):
             circle.top = e.control.top + SQUARE_SIZE / 2 - CIRCLE_SIZE / 2
             circle.left = e.control.left + SQUARE_SIZE / 2 - CIRCLE_SIZE / 2
-            circle.content.bgcolor = e.control.bgcolor
-            circle.update()
             self.color = e.control.bgcolor
-            self.update_selected_color(self.color)
+            self.update_selected_color_view(self.color)
 
         for j in range(0, HEIGHT):
             for i in range(0, WIDTH):
@@ -131,12 +129,10 @@ class CustomColorPicker(ft.AlertDialog):
                 )
 
         def on_pan_end(e: ft.DragEndEvent):
-            e.control.content.bgcolor = self.find_color(
+            self.color = self.find_color(
                 x=e.control.top + CIRCLE_SIZE / 2, y=e.control.left + CIRCLE_SIZE / 2
             )
-            e.control.update()
-            self.color = e.control.content.bgcolor
-            self.update_selected_color(self.color)
+            self.update_selected_color_view(self.color)
 
         def on_pan_update(e: ft.DragUpdateEvent):
             if e.control.top + e.delta_y < self.color_matrix.height - CIRCLE_SIZE:
@@ -144,12 +140,11 @@ class CustomColorPicker(ft.AlertDialog):
             if e.control.left + e.delta_x < self.color_matrix.width - CIRCLE_SIZE:
                 e.control.left = max(0, e.control.left + e.delta_x)
 
-            e.control.content.bgcolor = self.find_color(
+            e.control.update()
+            self.color = self.find_color(
                 x=e.control.top + CIRCLE_SIZE / 2, y=e.control.left + CIRCLE_SIZE / 2
             )
-            e.control.update()
-            self.color = e.control.content.bgcolor
-            self.update_selected_color(self.color)
+            self.update_selected_color_view(self.color)
 
         circle = ft.GestureDetector(
             top=HEIGHT * SQUARE_SIZE,
@@ -181,9 +176,7 @@ class CustomColorPicker(ft.AlertDialog):
             x=self.color_matrix.controls[-1].top + CIRCLE_SIZE / 2,
             y=self.color_matrix.controls[-1].left + CIRCLE_SIZE / 2,
         )
-        print(self.color)
-        print(self.color_matrix.controls[-1].content.bgcolor)
-        self.update_selected_color(self.color)
+        self.update_selected_color_view(self.color)
         self.content.update()
 
 
