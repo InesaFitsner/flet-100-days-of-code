@@ -154,9 +154,16 @@ class CustomColorPicker(ft.AlertDialog):
         self.content.controls.append(self.selected_color_view)
 
     def update_selected_color_view(self, color):
-        self.selected_color_view.content.controls[0].controls[0].bgcolor = color
-        self.selected_color_view.content.controls[1].controls[0].value = color
-        self.color_matrix.controls[-1].content.bgcolor = color
+        rgb = hex2rgb(color)
+        print(rgb)
+        self.selected_color_view.content.controls[0].controls[
+            0
+        ].bgcolor = color  # Colored circle
+        self.selected_color_view.content.controls[1].controls[0].value = color  # Hex
+        self.selected_color_view.content.controls[1].controls[1].value = rgb[0]  # R
+        self.selected_color_view.content.controls[1].controls[2].value = rgb[1]  # G
+        self.selected_color_view.content.controls[1].controls[3].value = rgb[2]  # B
+        self.color_matrix.controls[-1].content.bgcolor = color  # Color matrix circle
         self.update()
 
     def generate_color_matrix(self, hue):
