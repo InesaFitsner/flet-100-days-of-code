@@ -1,11 +1,9 @@
 import flet as ft
 import colorsys
-import math
 
 COLOR_MATRIX_WIDTH = 280
 COLOR_MATRIX_HEIGHT = 160
-# NUMBER_OF_COLORS = 900
-COLOR_BLOCK_SIDE = 6
+COLOR_BLOCK_SIDE = 8
 
 SLIDER_WIDTH = 180
 NUMBER_OF_HUES = 100
@@ -96,9 +94,9 @@ class CustomColorPicker(ft.AlertDialog):
         ]:  # excluding the last element of the controls list which is the circle
             if (
                 x >= color_square.top
-                and x <= color_square.top + COLOR_BLOCK_SIDE
+                and x <= color_square.top + self.square_side
                 and y >= color_square.left
-                and y <= color_square.left + COLOR_BLOCK_SIDE
+                and y <= color_square.left + self.square_side
             ):
                 return color_square.bgcolor
         return "blue"
@@ -122,6 +120,7 @@ class CustomColorPicker(ft.AlertDialog):
                         ],
                     ),
                     ft.Row(
+                        alignment=ft.MainAxisAlignment.SPACE_AROUND,
                         controls=[
                             ft.TextField(
                                 label="Hex",
@@ -151,7 +150,7 @@ class CustomColorPicker(ft.AlertDialog):
                                 value=rgb[2],
                                 text_size=12,
                             ),
-                        ]
+                        ],
                     ),
                 ],
             ),
@@ -171,19 +170,14 @@ class CustomColorPicker(ft.AlertDialog):
         self.update()
 
     def generate_color_matrix(self, hue):
-        # self.square_side = math.sqrt(
-        #     (COLOR_MATRIX_WIDTH) * (COLOR_MATRIX_HEIGHT) / NUMBER_OF_COLORS
-        # )
-        # self.colors_x = int((COLOR_MATRIX_WIDTH) / self.square_side)
-        # self.colors_y = int((COLOR_MATRIX_HEIGHT) / self.square_side)
-        self.colors_x = int(COLOR_MATRIX_WIDTH / COLOR_BLOCK_SIDE)
-        self.colors_y = int(COLOR_MATRIX_HEIGHT / COLOR_BLOCK_SIDE)
         self.square_side = COLOR_BLOCK_SIDE
+        self.colors_x = int(COLOR_MATRIX_WIDTH / self.square_side)
+        self.colors_y = int(COLOR_MATRIX_HEIGHT / self.square_side)
         self.color_matrix = ft.Stack(
             # height=COLOR_MATRIX_HEIGHT + CIRCLE_SIZE,
             # width=COLOR_MATRIX_WIDTH + CIRCLE_SIZE,
-            height=self.colors_y * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
-            width=self.colors_x * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
+            height=(self.colors_y + 1) * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
+            width=(self.colors_x + 1) * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
         )
         self.content.controls = []
 
@@ -196,8 +190,8 @@ class CustomColorPicker(ft.AlertDialog):
             self.color = e.control.bgcolor
             self.update_selected_color_view(self.color)
 
-        for j in range(0, self.colors_y):
-            for i in range(0, self.colors_x):
+        for j in range(0, self.colors_y + 1):
+            for i in range(0, self.colors_x + 1):
                 color = rgb2hex(
                     colorsys.hsv_to_rgb(
                         hue,
@@ -239,7 +233,7 @@ class CustomColorPicker(ft.AlertDialog):
             self.update_selected_color_view(self.color)
 
         circle = ft.GestureDetector(
-            top=self.colors_y * self.square_side,
+            top=(self.colors_y + 1) * self.square_side,
             left=0,
             on_pan_update=on_pan_update,
             on_pan_end=on_pan_end,
@@ -257,8 +251,8 @@ class CustomColorPicker(ft.AlertDialog):
 
     def update_color_matrix(self, hue):
         n = 0
-        for j in range(0, self.colors_y):
-            for i in range(0, self.colors_x):
+        for j in range(0, self.colors_y + 1):
+            for i in range(0, self.colors_x + 1):
                 color = rgb2hex(
                     colorsys.hsv_to_rgb(
                         hue,
