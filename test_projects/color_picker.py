@@ -3,10 +3,10 @@ import colorsys
 
 COLOR_MATRIX_WIDTH = 280
 COLOR_MATRIX_HEIGHT = 160
-COLOR_BLOCK_SIDE = 8
+COLOR_BLOCK_SIDE = 20
 
 SLIDER_WIDTH = 180
-NUMBER_OF_HUES = 100
+NUMBER_OF_HUES = 10
 
 CIRCLE_SIZE = 16
 
@@ -56,9 +56,12 @@ class HueSlider(ft.Stack):
                 round(rgb_color[2] / 255, 1),
             )
             self.on_change_hue(hsv_color[0])
+            # circle.top = e.control.top + self.hue_width / 2 - CIRCLE_SIZE / 2
+            circle.left = e.control.left + self.hue_width / 2 - CIRCLE_SIZE / 2
+            circle.content.bgcolor = e.control.bgcolor
+            circle.update()
 
         self.hue_width = (self.width - CIRCLE_SIZE) / (NUMBER_OF_HUES + 1)
-        print(self.hue_width)
         for i in range(0, NUMBER_OF_HUES + 1):
             color = rgb2hex(colorsys.hsv_to_rgb(i / NUMBER_OF_HUES, 1, 1))
             self.controls.append(
