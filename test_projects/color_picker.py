@@ -3,10 +3,10 @@ import colorsys
 
 COLOR_MATRIX_WIDTH = 280
 COLOR_MATRIX_HEIGHT = 160
-COLOR_BLOCK_SIDE = 20
+COLOR_BLOCK_SIDE = 8
 
 SLIDER_WIDTH = 180
-NUMBER_OF_HUES = 10
+NUMBER_OF_HUES = 20
 
 CIRCLE_SIZE = 16
 
@@ -202,16 +202,12 @@ class CustomColorPicker(ft.AlertDialog):
         self.colors_x = int(COLOR_MATRIX_WIDTH / self.square_side)
         self.colors_y = int(COLOR_MATRIX_HEIGHT / self.square_side)
         self.color_matrix = ft.Stack(
-            # height=COLOR_MATRIX_HEIGHT + CIRCLE_SIZE,
-            # width=COLOR_MATRIX_WIDTH + CIRCLE_SIZE,
             height=(self.colors_y + 1) * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
             width=(self.colors_x + 1) * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
         )
         self.content.controls = []
 
         def pick_color(e):
-            # circle.top = e.control.top + self.square_side / 2 - CIRCLE_SIZE / 2
-            # circle.left = e.control.left + self.square_side / 2 - CIRCLE_SIZE / 2
             circle.top = e.control.top + self.square_side / 2 - CIRCLE_SIZE / 2
             circle.left = e.control.left + self.square_side / 2 - CIRCLE_SIZE / 2
             circle.update()
@@ -271,7 +267,7 @@ class CustomColorPicker(ft.AlertDialog):
             top=(self.colors_y + 1) * self.square_side,
             left=0,
             on_pan_update=on_pan_update,
-            on_pan_end=on_pan_end,
+            # on_pan_end=on_pan_end,
             content=ft.Container(
                 width=CIRCLE_SIZE,
                 height=CIRCLE_SIZE,
