@@ -203,10 +203,27 @@ class CustomColorPicker(ft.AlertDialog):
         self.colors_y = int(COLOR_MATRIX_HEIGHT / self.square_side)
 
         def on_pan_start(e: ft.DragStartEvent):
-            circle.top = e.local_y - CIRCLE_SIZE / 2
-            circle.left = e.local_x - CIRCLE_SIZE / 2
+            # circle.top = e.local_y - CIRCLE_SIZE / 2
+            circle.top = max(
+                0,
+                min(
+                    e.local_y - CIRCLE_SIZE / 2,
+                    self.color_matrix.content.height - CIRCLE_SIZE,
+                ),
+            )
+            # circle.left = e.local_x - CIRCLE_SIZE / 2
+            circle.left = max(
+                0,
+                min(
+                    e.local_x - CIRCLE_SIZE / 2,
+                    self.color_matrix.content.width - CIRCLE_SIZE,
+                ),
+            )
             circle.update()
-            self.color = self.find_color(x=e.local_x, y=e.local_y)
+            # self.color = self.find_color(x=e.local_x, y=e.local_y)
+            self.color = self.find_color(
+                x=circle.left + CIRCLE_SIZE / 2, y=circle.top + CIRCLE_SIZE / 2
+            )
             self.update_selected_color_view(self.color)
 
         def on_pan_update(e: ft.DragUpdateEvent):
@@ -248,13 +265,6 @@ class CustomColorPicker(ft.AlertDialog):
         )
         self.content.controls = []
 
-        def pick_color(e):
-            circle.top = e.control.top + self.square_side / 2 - CIRCLE_SIZE / 2
-            circle.left = e.control.left + self.square_side / 2 - CIRCLE_SIZE / 2
-            circle.update()
-            self.color = e.control.bgcolor
-            self.update_selected_color_view(self.color)
-
         for j in range(0, self.colors_y + 1):
             for i in range(0, self.colors_x + 1):
                 color = rgb2hex(
@@ -285,31 +295,6 @@ class CustomColorPicker(ft.AlertDialog):
                         left=i * self.square_side + CIRCLE_SIZE / 2,
                     )
                 )
-
-        def on_pan_update(e: ft.DragUpdateEvent):
-            if e.control.top + e.delta_y < self.color_matrix.height - CIRCLE_SIZE:
-                e.control.top = max(0, e.control.top + e.delta_y)
-            if e.control.left + e.delta_x < self.color_matrix.width - CIRCLE_SIZE:
-                e.control.left = max(0, e.control.left + e.delta_x)
-
-            e.control.update()
-            self.color = self.find_color(
-                x=e.control.top + CIRCLE_SIZE / 2, y=e.control.left + CIRCLE_SIZE / 2
-            )
-            self.update_selected_color_view(self.color)
-
-        # circle = ft.GestureDetector(
-        #     top=(self.colors_y + 1) * self.square_side,
-        #     left=0,
-        #     on_pan_update=on_pan_update,
-        #     content=ft.Container(
-        #         width=CIRCLE_SIZE,
-        #         height=CIRCLE_SIZE,
-        #         bgcolor=self.color,
-        #         border_radius=CIRCLE_SIZE,
-        #         border=ft.border.all(width=2, color="white"),
-        #     ),
-        # )
 
         circle = ft.Container(
             top=(self.colors_y + 1) * self.square_side,
