@@ -207,16 +207,9 @@ class CustomColorPicker(ft.AlertDialog):
             circle.left = e.local_x - CIRCLE_SIZE / 2
             circle.update()
             self.color = self.find_color(x=e.local_x, y=e.local_y)
-            # self.color = e.control.bgcolor
             self.update_selected_color_view(self.color)
 
         def on_pan_update(e: ft.DragUpdateEvent):
-            # circle.top = e.local_y - CIRCLE_SIZE / 2
-            # circle.left = e.local_x - CIRCLE_SIZE / 2
-            # circle.update()
-
-            # if e.local_y >= CIRCLE_SIZE / 2:
-            # and e.local_y < (self.color_matrix.content.height - CIRCLE_SIZE / 2)and e.local_x > CIRCLE_SIZE / 2 and e.local_x < CIRCLE_SIZE / 2, self.color_matrix.content.width - CIRCLE_SIZE / 2:
             circle.top = max(
                 0,
                 min(
@@ -231,11 +224,9 @@ class CustomColorPicker(ft.AlertDialog):
                     self.color_matrix.content.width - CIRCLE_SIZE,
                 ),
             )
-            print(circle.top, circle.left)
             self.color = self.find_color(
                 x=circle.left + CIRCLE_SIZE / 2, y=circle.top + CIRCLE_SIZE / 2
             )
-            # self.color = e.control.bgcolor
             self.update_selected_color_view(self.color)
 
         self.color_matrix = ft.GestureDetector(
