@@ -57,8 +57,9 @@ class HueSlider(ft.Stack):
             )
             self.on_change_hue(hsv_color[0])
 
-        self.hue_width = (self.width - CIRCLE_SIZE) / NUMBER_OF_HUES
-        for i in range(0, NUMBER_OF_HUES):
+        self.hue_width = (self.width - CIRCLE_SIZE) / (NUMBER_OF_HUES + 1)
+        print(self.hue_width)
+        for i in range(0, NUMBER_OF_HUES + 1):
             color = rgb2hex(colorsys.hsv_to_rgb(i / NUMBER_OF_HUES, 1, 1))
             self.controls.append(
                 ft.Container(
@@ -66,7 +67,7 @@ class HueSlider(ft.Stack):
                     width=self.hue_width,
                     bgcolor=color,
                     on_click=pick_hue,
-                    top=(CIRCLE_SIZE) / 4,
+                    top=CIRCLE_SIZE / 4,
                     left=i * self.hue_width + CIRCLE_SIZE / 2,
                 )
             )
@@ -74,7 +75,6 @@ class HueSlider(ft.Stack):
         def on_pan_update(e: ft.DragUpdateEvent):
             if e.control.left + e.delta_x < self.width - CIRCLE_SIZE:
                 e.control.left = max(0, e.control.left + e.delta_x)
-            # e.control.update()
 
             hue = self.find_hue(x=e.control.left + CIRCLE_SIZE / 2)
             e.control.content.bgcolor = rgb2hex(colorsys.hsv_to_rgb(hue, 1, 1))
@@ -89,7 +89,7 @@ class HueSlider(ft.Stack):
             content=ft.Container(
                 width=CIRCLE_SIZE,
                 height=CIRCLE_SIZE,
-                bgcolor="#000000",
+                bgcolor="#ff0000",
                 border_radius=CIRCLE_SIZE,
                 border=ft.border.all(width=2, color="white"),
             ),
