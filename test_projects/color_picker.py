@@ -106,15 +106,122 @@ class HueSlider(ft.Stack):
         self.controls.append(circle)
 
 
+class HueSlider1(ft.GestureDetector):
+    def __init__(self, on_change_hue):
+        super().__init__()
+        self.content = ft.Stack(height=CIRCLE_SIZE, width=SLIDER_WIDTH)
+        self.generate_hues()
+        self.on_change_hue = on_change_hue
+        self.on_pan_start = self.start_drag
+
+    def find_hue(self, x):
+        for hue_block in self.content.controls[
+            :-1
+        ]:  # excluding the last element of the stack controls list which is the circle
+            if x >= hue_block.left and x <= hue_block.left + self.hue_width:
+                color = hue_block.bgcolor
+                rgb_color = hex2rgb(color)
+                hsv_color = colorsys.rgb_to_hsv(
+                    round(rgb_color[0] / 255, 1),
+                    round(rgb_color[1] / 255, 1),
+                    round(rgb_color[2] / 255, 1),
+                )
+                return hsv_color[0]
+        return 0
+
+    def start_drag(self, e: ft.DragStartEvent):
+        hue = self.find_hue(e.local_x)
+        self.circle.left = e.local_x - CIRCLE_SIZE / 2
+        # self.circle.bgcolor = e.control.bgcolor
+        self.circle.update()
+        self.on_change_hue(hue)
+
+    # def on_pan_start(self, e: ft.DragStartEvent):
+    #     print("Start drag!")
+
+    def generate_hues(self):
+        # def pick_hue(e):
+        #     rgb_color = hex2rgb(e.control.bgcolor)
+        #     hsv_color = colorsys.rgb_to_hsv(
+        #         round(rgb_color[0] / 255, 1),
+        #         round(rgb_color[1] / 255, 1),
+        #         round(rgb_color[2] / 255, 1),
+        #     )
+        #     self.on_change_hue(hsv_color[0])
+        #     circle.left = e.control.left + self.hue_width / 2 - CIRCLE_SIZE / 2
+        #     circle.content.bgcolor = e.control.bgcolor
+        #     circle.update()
+
+        self.hue_width = (self.content.width - CIRCLE_SIZE) / (NUMBER_OF_HUES + 1)
+        for i in range(0, NUMBER_OF_HUES + 1):
+            color = rgb2hex(colorsys.hsv_to_rgb(i / NUMBER_OF_HUES, 1, 1))
+            if i == 0:
+                border_radius = ft.border_radius.only(top_left=5, bottom_left=5)
+            elif i == NUMBER_OF_HUES:
+                border_radius = ft.border_radius.only(top_right=5, bottom_right=5)
+            else:
+                border_radius = None
+            self.content.controls.append(
+                ft.Container(
+                    height=CIRCLE_SIZE / 2,
+                    width=self.hue_width,
+                    bgcolor=color,
+                    border_radius=border_radius,
+                    # on_click=pick_hue,
+                    top=CIRCLE_SIZE / 4,
+                    left=i * self.hue_width + CIRCLE_SIZE / 2,
+                )
+            )
+
+        # def on_pan_update(e: ft.DragUpdateEvent):
+        #     if e.control.left + e.delta_x < self.width - CIRCLE_SIZE:
+        #         e.control.left = max(0, e.control.left + e.delta_x)
+
+        #     hue = self.find_hue(x=e.control.left + CIRCLE_SIZE / 2)
+        #     e.control.content.bgcolor = rgb2hex(colorsys.hsv_to_rgb(hue, 1, 1))
+        #     self.on_change_hue(hue)
+        #     e.control.update()
+
+        # circle = ft.GestureDetector(
+        #     top=0,
+        #     left=0,
+        #     on_pan_update=on_pan_update,
+        #     # on_pan_end=on_pan_end,
+        #     content=ft.Container(
+        #         width=CIRCLE_SIZE,
+        #         height=CIRCLE_SIZE,
+        #         bgcolor="#ff0000",
+        #         border_radius=CIRCLE_SIZE,
+        #         border=ft.border.all(width=2, color="white"),
+        #     ),
+        # )
+        self.circle = ft.Container(
+            top=0,
+            left=0,
+            width=CIRCLE_SIZE,
+            height=CIRCLE_SIZE,
+            bgcolor="#ff0000",
+            border_radius=CIRCLE_SIZE,
+            border=ft.border.all(width=2, color="white"),
+        )
+
+        self.content.controls.append(self.circle)
+
+
 class CustomColorPicker(ft.AlertDialog):
     def __init__(self, color="#000000"):
         super().__init__()
         self.color = color
         self.content = ft.Column()
-        self.hue_slider = HueSlider(on_change_hue=self.update_color_matrix)
+        self.hue_slider = HueSlider1(
+            on_change_hue=self.update_color_matrix,
+        )
         self.generate_color_matrix(hue=0)
         self.generate_selected_color_view(color=self.color)
         self.on_dismiss = lambda e: print("Dialog dismissed!")
+
+    def change_hue(self, e: ft.DragStartEvent):
+        print("Start drag on hue slider!")
 
     def find_color(self, x, y):
         for color_square in self.color_matrix.content.controls[
@@ -203,7 +310,6 @@ class CustomColorPicker(ft.AlertDialog):
         self.colors_y = int(COLOR_MATRIX_HEIGHT / self.square_side)
 
         def on_pan_start(e: ft.DragStartEvent):
-            # circle.top = e.local_y - CIRCLE_SIZE / 2
             circle.top = max(
                 0,
                 min(
@@ -211,7 +317,6 @@ class CustomColorPicker(ft.AlertDialog):
                     self.color_matrix.content.height - CIRCLE_SIZE,
                 ),
             )
-            # circle.left = e.local_x - CIRCLE_SIZE / 2
             circle.left = max(
                 0,
                 min(
@@ -220,7 +325,6 @@ class CustomColorPicker(ft.AlertDialog):
                 ),
             )
             circle.update()
-            # self.color = self.find_color(x=e.local_x, y=e.local_y)
             self.color = self.find_color(
                 x=circle.left + CIRCLE_SIZE / 2, y=circle.top + CIRCLE_SIZE / 2
             )
