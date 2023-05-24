@@ -23,20 +23,18 @@ def hex2rgb(value):
     return tuple(int(value[i : i + lv // 3], 16) for i in range(0, lv, lv // 3))
 
 
-# class HueSlider(ft.Container):
 class HueSlider(ft.Stack):
     def __init__(self, on_change_hue):
         super().__init__()
         self.height = CIRCLE_SIZE
         self.width = SLIDER_WIDTH
-        self.hue_line = ft.Container()
         self.generate_hues()
         self.on_change_hue = on_change_hue
 
     def find_hue(self, x):
         for hue_block in self.controls[
             :-1
-        ]:  # excluding the last element of the controls list which is the circle
+        ]:  # excluding the last element of the stack controls list which is the circle
             if x >= hue_block.left and x <= hue_block.left + self.hue_width:
                 color = hue_block.bgcolor
                 rgb_color = hex2rgb(color)
@@ -57,7 +55,6 @@ class HueSlider(ft.Stack):
                 round(rgb_color[2] / 255, 1),
             )
             self.on_change_hue(hsv_color[0])
-            # circle.top = e.control.top + self.hue_width / 2 - CIRCLE_SIZE / 2
             circle.left = e.control.left + self.hue_width / 2 - CIRCLE_SIZE / 2
             circle.content.bgcolor = e.control.bgcolor
             circle.update()
@@ -65,11 +62,18 @@ class HueSlider(ft.Stack):
         self.hue_width = (self.width - CIRCLE_SIZE) / (NUMBER_OF_HUES + 1)
         for i in range(0, NUMBER_OF_HUES + 1):
             color = rgb2hex(colorsys.hsv_to_rgb(i / NUMBER_OF_HUES, 1, 1))
+            if i == 0:
+                border_radius = ft.border_radius.only(top_left=5, bottom_left=5)
+            elif i == NUMBER_OF_HUES:
+                border_radius = ft.border_radius.only(top_right=5, bottom_right=5)
+            else:
+                border_radius = None
             self.controls.append(
                 ft.Container(
                     height=CIRCLE_SIZE / 2,
                     width=self.hue_width,
                     bgcolor=color,
+                    border_radius=border_radius,
                     on_click=pick_hue,
                     top=CIRCLE_SIZE / 4,
                     left=i * self.hue_width + CIRCLE_SIZE / 2,
@@ -223,10 +227,21 @@ class CustomColorPicker(ft.AlertDialog):
                         1 * (self.colors_y - j) / self.colors_y,
                     )
                 )
+                if i == 0 and j == 0:
+                    border_radius = ft.border_radius.only(top_left=5)
+                elif i == 0 and j == self.colors_y:
+                    border_radius = ft.border_radius.only(bottom_left=5)
+                elif i == self.colors_x and j == 0:
+                    border_radius = ft.border_radius.only(top_right=5)
+                elif i == self.colors_x and j == self.colors_y:
+                    border_radius = ft.border_radius.only(bottom_right=5)
+                else:
+                    border_radius = None
                 self.color_matrix.controls.append(
                     ft.Container(
                         height=self.square_side,
                         width=self.square_side,
+                        border_radius=border_radius,
                         bgcolor=color,
                         on_click=pick_color,
                         top=j * self.square_side + CIRCLE_SIZE / 2,
