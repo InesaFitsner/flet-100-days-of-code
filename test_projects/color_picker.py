@@ -29,6 +29,7 @@ class HueSlider(ft.Stack):
         super().__init__()
         self.height = CIRCLE_SIZE
         self.width = SLIDER_WIDTH
+        self.hue_line = ft.Container()
         self.generate_hues()
         self.on_change_hue = on_change_hue
 
