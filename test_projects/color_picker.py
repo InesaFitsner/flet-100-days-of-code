@@ -107,9 +107,9 @@ class HueSlider(ft.Stack):
 
 
 class CustomColorPicker(ft.AlertDialog):
-    def __init__(self):
+    def __init__(self, color="#000000"):
         super().__init__()
-        self.color = "#000000"
+        self.color = color
         self.content = ft.Column()
         self.hue_slider = HueSlider(on_change_hue=self.update_color_matrix)
         self.generate_color_matrix(hue=0)
@@ -245,12 +245,6 @@ class CustomColorPicker(ft.AlertDialog):
                     )
                 )
 
-        def on_pan_end(e: ft.DragEndEvent):
-            self.color = self.find_color(
-                x=e.control.top + CIRCLE_SIZE / 2, y=e.control.left + CIRCLE_SIZE / 2
-            )
-            self.update_selected_color_view(self.color)
-
         def on_pan_update(e: ft.DragUpdateEvent):
             if e.control.top + e.delta_y < self.color_matrix.height - CIRCLE_SIZE:
                 e.control.top = max(0, e.control.top + e.delta_y)
@@ -267,7 +261,6 @@ class CustomColorPicker(ft.AlertDialog):
             top=(self.colors_y + 1) * self.square_side,
             left=0,
             on_pan_update=on_pan_update,
-            # on_pan_end=on_pan_end,
             content=ft.Container(
                 width=CIRCLE_SIZE,
                 height=CIRCLE_SIZE,
