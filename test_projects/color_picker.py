@@ -302,7 +302,7 @@ class CustomColorPicker(ft.Column):
         self.selected_color_view.content.controls[1].controls[2].value = rgb[1]  # G
         self.selected_color_view.content.controls[1].controls[3].value = rgb[2]  # B
         # self.color_matrix.content.controls[-1].bgcolor = color  # Color matrix circle
-        self.circle.bgcolor = color
+        self.circle.content.bgcolor = color
         self.update()
 
     def generate_color_matrix(self, hue):
@@ -337,8 +337,10 @@ class CustomColorPicker(ft.Column):
                 # x=self.circle.left + CIRCLE_SIZE / 2, y=self.circle.top + CIRCLE_SIZE / 2
                 # x=self.circle.left + CIRCLE_SIZE / 2,
                 # y=self.circle.top + CIRCLE_SIZE / 2,
-                x=e.local_x,
-                y=e.local_y,
+                # x=e.local_x,
+                # y=e.local_y,
+                x=self.circle.left,
+                y=self.circle.top,
             )
             self.update_selected_color_view(self.color)
 
@@ -368,8 +370,10 @@ class CustomColorPicker(ft.Column):
                 # x=circle.left + CIRCLE_SIZE / 2, y=circle.top + CIRCLE_SIZE / 2
                 # x=self.circle.left + CIRCLE_SIZE / 2,
                 # y=self.circle.top + CIRCLE_SIZE / 2,
-                x=e.local_x,
-                y=e.local_y,
+                # x=e.local_x,
+                x=self.circle.left,
+                y=self.circle.top
+                # y=e.local_y,
             )
             self.update_selected_color_view(self.color)
 
@@ -432,16 +436,18 @@ class CustomColorPicker(ft.Column):
                     )
                 )
 
-        self.circle = ft.Container(
-            # top=(self.colors_y + 1) * self.square_side,
+        self.circle = ft.TransparentPointer(
             top=0,
             left=0,
-            # on_pan_update=on_pan_update,
-            width=CIRCLE_SIZE,
-            height=CIRCLE_SIZE,
-            bgcolor=self.color,
-            border_radius=CIRCLE_SIZE,
-            border=ft.border.all(width=2, color="white"),
+            content=ft.Container(
+                # top=(self.colors_y + 1) * self.square_side,
+                # on_pan_update=on_pan_update,
+                width=CIRCLE_SIZE,
+                height=CIRCLE_SIZE,
+                bgcolor=self.color,
+                border_radius=CIRCLE_SIZE,
+                border=ft.border.all(width=2, color="white"),
+            ),
         )
 
         # self.color_matrix.content.controls.append(circle)
