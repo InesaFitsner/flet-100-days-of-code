@@ -3,7 +3,7 @@ import colorsys
 
 COLOR_MATRIX_WIDTH = 280
 COLOR_MATRIX_HEIGHT = 160
-COLOR_BLOCK_SIDE = 8
+COLOR_BLOCK_SIDE = 20
 
 SLIDER_WIDTH = 180
 NUMBER_OF_HUES = 20
@@ -225,9 +225,7 @@ class CustomColorPicker(ft.Column):
         print("Start drag on hue slider!")
 
     def find_color(self, x, y):
-        for color_square in self.color_matrix.content.controls[
-            :-1
-        ]:  # excluding the last element of the controls list which is the circle
+        for color_square in self.color_matrix.content.controls:
             if (
                 y >= color_square.top
                 and y <= color_square.top + self.square_side
@@ -235,7 +233,7 @@ class CustomColorPicker(ft.Column):
                 and x <= color_square.left + self.square_side
             ):
                 return color_square.bgcolor
-        return "blue"
+        return "#000000"
 
     def generate_selected_color_view(self, color):
         rgb = hex2rgb(color)
@@ -295,6 +293,7 @@ class CustomColorPicker(ft.Column):
         self.controls.append(self.selected_color_view)
 
     def update_selected_color_view(self, color):
+        print(color)
         rgb = hex2rgb(color)
         self.selected_color_view.content.controls[0].controls[
             0
@@ -303,7 +302,8 @@ class CustomColorPicker(ft.Column):
         self.selected_color_view.content.controls[1].controls[1].value = rgb[0]  # R
         self.selected_color_view.content.controls[1].controls[2].value = rgb[1]  # G
         self.selected_color_view.content.controls[1].controls[3].value = rgb[2]  # B
-        self.color_matrix.content.controls[-1].bgcolor = color  # Color matrix circle
+        # self.color_matrix.content.controls[-1].bgcolor = color  # Color matrix circle
+        self.circle.bgcolor = color
         self.update()
 
     def generate_color_matrix(self, hue):
@@ -312,43 +312,63 @@ class CustomColorPicker(ft.Column):
         self.colors_y = int(COLOR_MATRIX_HEIGHT / self.square_side)
 
         def on_pan_start(e: ft.DragStartEvent):
-            circle.top = max(
+            self.circle.top = max(
                 0,
                 min(
-                    e.local_y - CIRCLE_SIZE / 2,
-                    self.color_matrix.content.height - CIRCLE_SIZE,
+                    # e.local_y - CIRCLE_SIZE / 2,
+                    e.local_y,
+                    # self.color_matrix.content.height - CIRCLE_SIZE,
+                    # self.color_matrix.content.height,
+                    self.color_matrix_wrap.height,
                 ),
             )
-            circle.left = max(
+            self.circle.left = max(
                 0,
                 min(
-                    e.local_x - CIRCLE_SIZE / 2,
-                    self.color_matrix.content.width - CIRCLE_SIZE,
+                    # e.local_x - CIRCLE_SIZE / 2,
+                    e.local_x,
+                    # self.color_matrix.content.width - CIRCLE_SIZE,
+                    # self.color_matrix.content.width,
+                    self.color_matrix_wrap.width,
                 ),
             )
-            circle.update()
+            self.circle.update()
             self.color = self.find_color(
-                x=circle.left + CIRCLE_SIZE / 2, y=circle.top + CIRCLE_SIZE / 2
+                # x=self.circle.left + CIRCLE_SIZE / 2, y=self.circle.top + CIRCLE_SIZE / 2
+                # x=self.circle.left + CIRCLE_SIZE / 2,
+                # y=self.circle.top + CIRCLE_SIZE / 2,
+                x=e.local_x,
+                y=e.local_y,
             )
             self.update_selected_color_view(self.color)
 
         def on_pan_update(e: ft.DragUpdateEvent):
-            circle.top = max(
+            self.circle.top = max(
                 0,
                 min(
-                    e.local_y - CIRCLE_SIZE / 2,
-                    self.color_matrix.content.height - CIRCLE_SIZE,
+                    # e.local_y - CIRCLE_SIZE / 2,
+                    e.local_y,
+                    # self.color_matrix.content.height - CIRCLE_SIZE,
+                    # self.color_matrix.content.height,
+                    self.color_matrix_wrap.height,
                 ),
             )
-            circle.left = max(
+            self.circle.left = max(
                 0,
                 min(
-                    e.local_x - CIRCLE_SIZE / 2,
-                    self.color_matrix.content.width - CIRCLE_SIZE,
+                    # e.local_x - CIRCLE_SIZE / 2,
+                    e.local_x,
+                    # self.color_matrix.content.width - CIRCLE_SIZE,
+                    # self.color_matrix.content.width,
+                    self.color_matrix_wrap.width,
                 ),
             )
             self.color = self.find_color(
-                x=circle.left + CIRCLE_SIZE / 2, y=circle.top + CIRCLE_SIZE / 2
+                # x=circle.left + CIRCLE_SIZE / 2, y=circle.top + CIRCLE_SIZE / 2
+                # x=self.circle.left + CIRCLE_SIZE / 2,
+                # y=self.circle.top + CIRCLE_SIZE / 2,
+                x=e.local_x,
+                y=e.local_y,
             )
             self.update_selected_color_view(self.color)
 
@@ -410,7 +430,7 @@ class CustomColorPicker(ft.Column):
                     )
                 )
 
-        circle = ft.Container(
+        self.circle = ft.Container(
             # top=(self.colors_y + 1) * self.square_side,
             top=0,
             left=0,
@@ -423,7 +443,7 @@ class CustomColorPicker(ft.Column):
         )
 
         # self.color_matrix.content.controls.append(circle)
-        self.color_matrix_wrap.controls.append(circle)
+        self.color_matrix_wrap.controls.append(self.circle)
         # self.content.controls.append(self.color_matrix)
         # self.controls.append(self.color_matrix)
         self.controls.append(self.color_matrix_wrap)
