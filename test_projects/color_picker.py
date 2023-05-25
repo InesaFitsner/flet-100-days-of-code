@@ -293,7 +293,6 @@ class CustomColorPicker(ft.Column):
         self.controls.append(self.selected_color_view)
 
     def update_selected_color_view(self, color):
-        print(color)
         rgb = hex2rgb(color)
         self.selected_color_view.content.controls[0].controls[
             0
@@ -319,7 +318,7 @@ class CustomColorPicker(ft.Column):
                     e.local_y,
                     # self.color_matrix.content.height - CIRCLE_SIZE,
                     # self.color_matrix.content.height,
-                    self.color_matrix_wrap.height,
+                    self.color_matrix_wrap.height - CIRCLE_SIZE,
                 ),
             )
             self.circle.left = max(
@@ -329,9 +328,10 @@ class CustomColorPicker(ft.Column):
                     e.local_x,
                     # self.color_matrix.content.width - CIRCLE_SIZE,
                     # self.color_matrix.content.width,
-                    self.color_matrix_wrap.width,
+                    self.color_matrix_wrap.width - CIRCLE_SIZE,
                 ),
             )
+            print(self.circle.top, self.circle.left)
             self.circle.update()
             self.color = self.find_color(
                 # x=self.circle.left + CIRCLE_SIZE / 2, y=self.circle.top + CIRCLE_SIZE / 2
@@ -350,7 +350,7 @@ class CustomColorPicker(ft.Column):
                     e.local_y,
                     # self.color_matrix.content.height - CIRCLE_SIZE,
                     # self.color_matrix.content.height,
-                    self.color_matrix_wrap.height,
+                    self.color_matrix_wrap.height - CIRCLE_SIZE,
                 ),
             )
             self.circle.left = max(
@@ -360,9 +360,10 @@ class CustomColorPicker(ft.Column):
                     e.local_x,
                     # self.color_matrix.content.width - CIRCLE_SIZE,
                     # self.color_matrix.content.width,
-                    self.color_matrix_wrap.width,
+                    self.color_matrix_wrap.width - CIRCLE_SIZE,
                 ),
             )
+            print(self.circle.top, self.circle.left)
             self.color = self.find_color(
                 # x=circle.left + CIRCLE_SIZE / 2, y=circle.top + CIRCLE_SIZE / 2
                 # x=self.circle.left + CIRCLE_SIZE / 2,
@@ -376,6 +377,7 @@ class CustomColorPicker(ft.Column):
             height=(self.colors_y + 1) * self.square_side + CIRCLE_SIZE,
             width=(self.colors_x + 1) * self.square_side + CIRCLE_SIZE,
         )
+        print(self.color_matrix_wrap.height, self.color_matrix_wrap.width)
         self.color_matrix = ft.GestureDetector(
             top=CIRCLE_SIZE / 2,
             left=CIRCLE_SIZE / 2,
