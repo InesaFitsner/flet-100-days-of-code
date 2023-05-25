@@ -23,6 +23,13 @@ def hex2rgb(value):
     return tuple(int(value[i : i + lv // 3], 16) for i in range(0, lv, lv // 3))
 
 
+def hex2hsv(value):
+    rgb_color = hex2rgb(value)
+    return colorsys.rgb_to_hsv(
+        rgb_color[0] / 255, rgb_color[1] / 255, rgb_color[2] / 255
+    )
+
+
 class HueSlider(ft.GestureDetector):
     def __init__(self, on_change_hue):
         super().__init__()
@@ -104,7 +111,7 @@ class HueSlider(ft.GestureDetector):
 
 
 class CustomColorPicker(ft.Column):
-    def __init__(self, color="#36707f"):
+    def __init__(self, color="#000000"):
         super().__init__()
         self.tight = True
         self.color = color
@@ -115,15 +122,17 @@ class CustomColorPicker(ft.Column):
         self.generate_selected_color_view()
 
     def did_mount(self):
-        hue = self.find_color_place()[0]
-        self.update_color_matrix(hue)
+        # hue = self.find_color_place()[0]
+        self.find_color_place()
+
+        self.update_color_matrix(hue=hex2hsv(self.color)[0])
 
     def find_color_place(self):
-        rgb_color = hex2rgb(self.color)
-        # print(rgb_color)
-        hsv_color = colorsys.rgb_to_hsv(
-            rgb_color[0] / 255, rgb_color[1] / 255, rgb_color[2] / 255
-        )
+        # rgb_color = hex2rgb(self.color)
+        # hsv_color = colorsys.rgb_to_hsv(
+        #     rgb_color[0] / 255, rgb_color[1] / 255, rgb_color[2] / 255
+        # )
+        hsv_color = hex2hsv(self.color)
         self.circle.left = (
             hsv_color[1] * self.colors_x
         ) * self.square_side + self.square_side / 2
@@ -132,7 +141,7 @@ class CustomColorPicker(ft.Column):
         )
         self.circle.update()
 
-        return hsv_color
+        # return hsv_color
 
     def find_color(self, x, y):
         for color_square in self.color_matrix.content.controls[
@@ -204,16 +213,16 @@ class CustomColorPicker(ft.Column):
 
         self.controls.append(self.selected_color_view)
 
-    def update_selected_color_view(self, color):
-        rgb = hex2rgb(color)
+    def update_selected_color_view(self):
+        rgb = hex2rgb(self.color)
         self.selected_color_view.controls[0].controls[
             0
-        ].bgcolor = color  # Colored circle
-        self.selected_color_view.controls[1].controls[0].value = color  # Hex
-        self.selected_color_view.controls[1].controls[1].value = rgb[0]  # R
-        self.selected_color_view.controls[1].controls[2].value = rgb[1]  # G
-        self.selected_color_view.controls[1].controls[3].value = rgb[2]  # B
-        self.circle.bgcolor = color  # Color matrix circle
+        ].bgcolor = self.color  # Colored circle
+        self.hex.value = self.color  # Hex
+        self.r.value = rgb[0]  # R
+        self.g.value = rgb[1]  # G
+        self.b.value = rgb[2]  # B
+        self.circle.bgcolor = self.color  # Color matrix circle
         self.update()
 
     def update_selected_color(self, x, y):
@@ -235,7 +244,7 @@ class CustomColorPicker(ft.Column):
             x=self.circle.left + CIRCLE_SIZE / 2,
             y=self.circle.top + CIRCLE_SIZE / 2,
         )
-        self.update_selected_color_view(self.color)
+        self.update_selected_color_view()
         # self.circle.update()
 
     def generate_color_matrix(self, hue):
@@ -317,12 +326,12 @@ class CustomColorPicker(ft.Column):
         self.color = self.find_color(
             y=self.circle.top + CIRCLE_SIZE / 2, x=self.circle.left + CIRCLE_SIZE / 2
         )
-        self.update_selected_color_view(self.color)
+        self.update_selected_color_view()
         self.update()
 
 
 def main(page: ft.Page):
-    color_picker = CustomColorPicker(color="#986eeb")
+    color_picker = CustomColorPicker(color="#ffff74")
     d = ft.AlertDialog(content=color_picker)
     page.dialog = d
 
