@@ -6,7 +6,7 @@ COLOR_MATRIX_HEIGHT = 160
 COLOR_BLOCK_SIDE = 20
 
 SLIDER_WIDTH = 180
-NUMBER_OF_HUES = 20
+NUMBER_OF_HUES = 10
 
 CIRCLE_SIZE = 16
 
@@ -130,18 +130,24 @@ class HueSlider1(ft.GestureDetector):
                 return hsv_color[0]
         return 0
 
-    def update_circle(self, x):
+    def update_selected_hue(self, x):
         hue = self.find_hue(x)
 
         # color = rgb2hex(colorsys.hsv_to_rgb(hue, 1, 1))
-        self.circle.left = max(0, x - CIRCLE_SIZE / 2)
+        self.circle.left = max(
+            0,
+            min(
+                x - CIRCLE_SIZE / 2,
+                self.hue_width * ((NUMBER_OF_HUES + 1)),
+            ),
+        )
 
         # self.circle.bgcolor = color
         self.circle.update()
         self.on_change_hue(hue)
 
     def start_drag(self, e: ft.DragStartEvent):
-        self.update_circle(x=e.local_x)
+        self.update_selected_hue(x=e.local_x)
         # hue = self.find_hue(e.local_x)
 
         # # color = rgb2hex(colorsys.hsv_to_rgb(hue, 1, 1))
@@ -152,7 +158,7 @@ class HueSlider1(ft.GestureDetector):
         # self.on_change_hue(hue)
 
     def drag(self, e: ft.DragUpdateEvent):
-        self.update_circle(x=e.local_x)
+        self.update_selected_hue(x=e.local_x)
 
     def generate_hues(self):
         # def pick_hue(e):
