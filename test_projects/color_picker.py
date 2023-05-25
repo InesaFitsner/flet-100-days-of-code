@@ -131,8 +131,11 @@ class HueSlider1(ft.GestureDetector):
 
     def start_drag(self, e: ft.DragStartEvent):
         hue = self.find_hue(e.local_x)
+
+        # color = rgb2hex(colorsys.hsv_to_rgb(hue, 1, 1))
         self.circle.left = e.local_x - CIRCLE_SIZE / 2
-        # self.circle.bgcolor = e.control.bgcolor
+
+        # self.circle.bgcolor = color
         self.circle.update()
         self.on_change_hue(hue)
 
