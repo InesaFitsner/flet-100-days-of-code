@@ -3,7 +3,7 @@ import colorsys
 
 COLOR_MATRIX_WIDTH = 280
 COLOR_MATRIX_HEIGHT = 160
-COLOR_BLOCK_SIDE = 20
+COLOR_BLOCK_SIDE = 8
 
 SLIDER_WIDTH = 180
 NUMBER_OF_HUES = 20
@@ -310,14 +310,14 @@ class CustomColorPicker(ft.Column):
                 0,
                 min(
                     e.local_y,
-                    self.color_matrix_wrap.height - CIRCLE_SIZE,
+                    self.color_matrix.content.height,
                 ),
             )
             self.circle.left = max(
                 0,
                 min(
                     e.local_x,
-                    self.color_matrix_wrap.width - CIRCLE_SIZE,
+                    self.color_matrix.content.width,
                 ),
             )
             print(self.circle.top, self.circle.left)
@@ -333,14 +333,14 @@ class CustomColorPicker(ft.Column):
                 0,
                 min(
                     e.local_y,
-                    self.color_matrix_wrap.height - CIRCLE_SIZE,
+                    self.color_matrix.content.height,
                 ),
             )
             self.circle.left = max(
                 0,
                 min(
                     e.local_x,
-                    self.color_matrix_wrap.width - CIRCLE_SIZE,
+                    self.color_matrix.content.width,
                 ),
             )
             print(self.circle.top, self.circle.left)
@@ -356,8 +356,8 @@ class CustomColorPicker(ft.Column):
             top=CIRCLE_SIZE / 2,
             left=CIRCLE_SIZE / 2,
             content=ft.Stack(
-                height=(self.colors_y + 1) * COLOR_BLOCK_SIDE,
-                width=(self.colors_x + 1) * COLOR_BLOCK_SIDE,
+                height=(self.colors_y + 1) * self.square_side,
+                width=(self.colors_x + 1) * self.square_side,
             ),
             on_pan_start=on_pan_start,
             on_pan_update=on_pan_update,
@@ -394,7 +394,7 @@ class CustomColorPicker(ft.Column):
                 )
 
         self.circle = ft.TransparentPointer(
-            top=0,
+            top=self.color_matrix.content.height,
             left=0,
             content=ft.Container(
                 width=CIRCLE_SIZE,
