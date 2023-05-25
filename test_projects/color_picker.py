@@ -215,13 +215,11 @@ class CustomColorPicker(ft.Column):
     def __init__(self, color="#000000"):
         super().__init__()
         self.color = color
-        # self.content = ft.Column()
         self.hue_slider = HueSlider1(
             on_change_hue=self.update_color_matrix,
         )
         self.generate_color_matrix(hue=0)
         self.generate_selected_color_view(color=self.color)
-        # self.on_dismiss = lambda e: print("Dialog dismissed!")
 
     def find_color(self, x, y):
         for color_square in self.color_matrix.content.controls[
