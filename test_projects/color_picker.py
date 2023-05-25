@@ -113,6 +113,16 @@ class CustomColorPicker(ft.Column):
         )
         self.generate_color_matrix(hue=0)
         self.generate_selected_color_view(color=self.color)
+        # self.update_color_matrix(hue=0)
+        # self.generate_selected_color_view(color=self.color)
+
+    def did_mount(self):
+        self.update_color_matrix(hue=0)
+
+    def find_color_place(self):
+        rgb_color = hex2rgb(self.color)
+        hsv_color = colorsys.rgb_to_hsv(rgb_color)
+        return hsv_color[0]
 
     def find_color(self, x, y):
         for color_square in self.color_matrix.content.controls[
