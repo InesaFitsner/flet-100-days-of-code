@@ -3,7 +3,7 @@ import colorsys
 
 COLOR_MATRIX_WIDTH = 280
 COLOR_MATRIX_HEIGHT = 160
-COLOR_BLOCK_SIDE = 8
+COLOR_BLOCK_SIDE = 20
 
 SLIDER_WIDTH = 180
 NUMBER_OF_HUES = 20
@@ -211,20 +211,17 @@ class HueSlider1(ft.GestureDetector):
         self.content.controls.append(self.circle)
 
 
-class CustomColorPicker(ft.AlertDialog):
+class CustomColorPicker(ft.Column):
     def __init__(self, color="#000000"):
         super().__init__()
         self.color = color
-        self.content = ft.Column()
+        # self.content = ft.Column()
         self.hue_slider = HueSlider1(
             on_change_hue=self.update_color_matrix,
         )
         self.generate_color_matrix(hue=0)
         self.generate_selected_color_view(color=self.color)
-        self.on_dismiss = lambda e: print("Dialog dismissed!")
-
-    def change_hue(self, e: ft.DragStartEvent):
-        print("Start drag on hue slider!")
+        # self.on_dismiss = lambda e: print("Dialog dismissed!")
 
     def find_color(self, x, y):
         for color_square in self.color_matrix.content.controls[
@@ -237,7 +234,7 @@ class CustomColorPicker(ft.AlertDialog):
                 and x <= color_square.left + self.square_side
             ):
                 return color_square.bgcolor
-        return "blue"
+        return "#000000"
 
     def generate_selected_color_view(self, color):
         rgb = hex2rgb(color)
@@ -293,7 +290,7 @@ class CustomColorPicker(ft.AlertDialog):
                 ],
             ),
         )
-        self.content.controls.append(self.selected_color_view)
+        self.controls.append(self.selected_color_view)
 
     def update_selected_color_view(self, color):
         rgb = hex2rgb(color)
@@ -370,7 +367,6 @@ class CustomColorPicker(ft.AlertDialog):
             on_pan_start=on_pan_start,
             on_pan_update=on_pan_update,
         )
-        self.content.controls = []
 
         for j in range(0, self.colors_y + 1):
             for i in range(0, self.colors_x + 1):
@@ -415,7 +411,7 @@ class CustomColorPicker(ft.AlertDialog):
         )
 
         self.color_matrix.content.controls.append(circle)
-        self.content.controls.append(self.color_matrix)
+        self.controls.append(self.color_matrix)
 
     def update_color_matrix(self, hue):
         n = 0
@@ -428,22 +424,23 @@ class CustomColorPicker(ft.AlertDialog):
                         1 * (self.colors_y - j) / self.colors_y,
                     )
                 )
-                self.content.controls[0].content.controls[n].bgcolor = color
+                self.controls[0].content.controls[n].bgcolor = color
                 n += 1
         self.color = self.find_color(
             x=self.color_matrix.content.controls[-1].top + CIRCLE_SIZE / 2,
             y=self.color_matrix.content.controls[-1].left + CIRCLE_SIZE / 2,
         )
         self.update_selected_color_view(self.color)
-        self.content.update()
+        self.update()
 
 
 def main(page: ft.Page):
     color_picker = CustomColorPicker()
-    page.dialog = color_picker
+    d = ft.AlertDialog(content=color_picker)
+    page.dialog = d
 
     def open_color_picker(e):
-        color_picker.open = True
+        d.open = True
         page.update()
 
     page.add(ft.IconButton(icon=ft.icons.BRUSH, on_click=open_color_picker))
