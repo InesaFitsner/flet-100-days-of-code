@@ -104,7 +104,7 @@ class HueSlider(ft.GestureDetector):
 
 
 class CustomColorPicker(ft.Column):
-    def __init__(self, color="#000000"):
+    def __init__(self, color="#36707f"):
         super().__init__()
         self.tight = True
         self.color = color
@@ -117,12 +117,17 @@ class CustomColorPicker(ft.Column):
         # self.generate_selected_color_view(color=self.color)
 
     def did_mount(self):
-        self.update_color_matrix(hue=0)
+        hue = self.find_color_place()[0]
+        self.update_color_matrix(hue)
 
     def find_color_place(self):
         rgb_color = hex2rgb(self.color)
-        hsv_color = colorsys.rgb_to_hsv(rgb_color)
-        return hsv_color[0]
+        # print(rgb_color)
+        hsv_color = colorsys.rgb_to_hsv(
+            rgb_color[0] / 255, rgb_color[1] / 255, rgb_color[2] / 255
+        )
+        # print(hsv_color)
+        return hsv_color
 
     def find_color(self, x, y):
         for color_square in self.color_matrix.content.controls[
