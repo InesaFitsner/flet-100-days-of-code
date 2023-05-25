@@ -133,7 +133,7 @@ class HueSlider1(ft.GestureDetector):
     def update_selected_hue(self, x):
         hue = self.find_hue(x)
 
-        # color = rgb2hex(colorsys.hsv_to_rgb(hue, 1, 1))
+        color = rgb2hex(colorsys.hsv_to_rgb(hue, 1, 1))
         self.circle.left = max(
             0,
             min(
@@ -142,7 +142,7 @@ class HueSlider1(ft.GestureDetector):
             ),
         )
 
-        # self.circle.bgcolor = color
+        self.circle.bgcolor = color
         self.circle.update()
         self.on_change_hue(hue)
 
