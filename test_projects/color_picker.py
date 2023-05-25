@@ -23,87 +23,87 @@ def hex2rgb(value):
     return tuple(int(value[i : i + lv // 3], 16) for i in range(0, lv, lv // 3))
 
 
-class HueSlider(ft.Stack):
-    def __init__(self, on_change_hue):
-        super().__init__()
-        self.height = CIRCLE_SIZE
-        self.width = SLIDER_WIDTH
-        self.generate_hues()
-        self.on_change_hue = on_change_hue
+# class HueSlider(ft.Stack):
+#     def __init__(self, on_change_hue):
+#         super().__init__()
+#         self.height = CIRCLE_SIZE
+#         self.width = SLIDER_WIDTH
+#         self.generate_hues()
+#         self.on_change_hue = on_change_hue
 
-    def find_hue(self, x):
-        for hue_block in self.controls[
-            :-1
-        ]:  # excluding the last element of the stack controls list which is the circle
-            if x >= hue_block.left and x <= hue_block.left + self.hue_width:
-                color = hue_block.bgcolor
-                rgb_color = hex2rgb(color)
-                hsv_color = colorsys.rgb_to_hsv(
-                    round(rgb_color[0] / 255, 1),
-                    round(rgb_color[1] / 255, 1),
-                    round(rgb_color[2] / 255, 1),
-                )
-                return hsv_color[0]
-        return 0
+#     def find_hue(self, x):
+#         for hue_block in self.controls[
+#             :-1
+#         ]:  # excluding the last element of the stack controls list which is the circle
+#             if x >= hue_block.left and x <= hue_block.left + self.hue_width:
+#                 color = hue_block.bgcolor
+#                 rgb_color = hex2rgb(color)
+#                 hsv_color = colorsys.rgb_to_hsv(
+#                     round(rgb_color[0] / 255, 1),
+#                     round(rgb_color[1] / 255, 1),
+#                     round(rgb_color[2] / 255, 1),
+#                 )
+#                 return hsv_color[0]
+#         return 0
 
-    def generate_hues(self):
-        def pick_hue(e):
-            rgb_color = hex2rgb(e.control.bgcolor)
-            hsv_color = colorsys.rgb_to_hsv(
-                round(rgb_color[0] / 255, 1),
-                round(rgb_color[1] / 255, 1),
-                round(rgb_color[2] / 255, 1),
-            )
-            self.on_change_hue(hsv_color[0])
-            circle.left = e.control.left + self.hue_width / 2 - CIRCLE_SIZE / 2
-            circle.content.bgcolor = e.control.bgcolor
-            circle.update()
+#     def generate_hues(self):
+#         def pick_hue(e):
+#             rgb_color = hex2rgb(e.control.bgcolor)
+#             hsv_color = colorsys.rgb_to_hsv(
+#                 round(rgb_color[0] / 255, 1),
+#                 round(rgb_color[1] / 255, 1),
+#                 round(rgb_color[2] / 255, 1),
+#             )
+#             self.on_change_hue(hsv_color[0])
+#             circle.left = e.control.left + self.hue_width / 2 - CIRCLE_SIZE / 2
+#             circle.content.bgcolor = e.control.bgcolor
+#             circle.update()
 
-        self.hue_width = (self.width - CIRCLE_SIZE) / (NUMBER_OF_HUES + 1)
-        for i in range(0, NUMBER_OF_HUES + 1):
-            color = rgb2hex(colorsys.hsv_to_rgb(i / NUMBER_OF_HUES, 1, 1))
-            if i == 0:
-                border_radius = ft.border_radius.only(top_left=5, bottom_left=5)
-            elif i == NUMBER_OF_HUES:
-                border_radius = ft.border_radius.only(top_right=5, bottom_right=5)
-            else:
-                border_radius = None
-            self.controls.append(
-                ft.Container(
-                    height=CIRCLE_SIZE / 2,
-                    width=self.hue_width,
-                    bgcolor=color,
-                    border_radius=border_radius,
-                    on_click=pick_hue,
-                    top=CIRCLE_SIZE / 4,
-                    left=i * self.hue_width + CIRCLE_SIZE / 2,
-                )
-            )
+#         self.hue_width = (self.width - CIRCLE_SIZE) / (NUMBER_OF_HUES + 1)
+#         for i in range(0, NUMBER_OF_HUES + 1):
+#             color = rgb2hex(colorsys.hsv_to_rgb(i / NUMBER_OF_HUES, 1, 1))
+#             if i == 0:
+#                 border_radius = ft.border_radius.only(top_left=5, bottom_left=5)
+#             elif i == NUMBER_OF_HUES:
+#                 border_radius = ft.border_radius.only(top_right=5, bottom_right=5)
+#             else:
+#                 border_radius = None
+#             self.controls.append(
+#                 ft.Container(
+#                     height=CIRCLE_SIZE / 2,
+#                     width=self.hue_width,
+#                     bgcolor=color,
+#                     border_radius=border_radius,
+#                     on_click=pick_hue,
+#                     top=CIRCLE_SIZE / 4,
+#                     left=i * self.hue_width + CIRCLE_SIZE / 2,
+#                 )
+#             )
 
-        def on_pan_update(e: ft.DragUpdateEvent):
-            if e.control.left + e.delta_x < self.width - CIRCLE_SIZE:
-                e.control.left = max(0, e.control.left + e.delta_x)
+#         def on_pan_update(e: ft.DragUpdateEvent):
+#             if e.control.left + e.delta_x < self.width - CIRCLE_SIZE:
+#                 e.control.left = max(0, e.control.left + e.delta_x)
 
-            hue = self.find_hue(x=e.control.left + CIRCLE_SIZE / 2)
-            e.control.content.bgcolor = rgb2hex(colorsys.hsv_to_rgb(hue, 1, 1))
-            self.on_change_hue(hue)
-            e.control.update()
+#             hue = self.find_hue(x=e.control.left + CIRCLE_SIZE / 2)
+#             e.control.content.bgcolor = rgb2hex(colorsys.hsv_to_rgb(hue, 1, 1))
+#             self.on_change_hue(hue)
+#             e.control.update()
 
-        circle = ft.GestureDetector(
-            top=0,
-            left=0,
-            on_pan_update=on_pan_update,
-            # on_pan_end=on_pan_end,
-            content=ft.Container(
-                width=CIRCLE_SIZE,
-                height=CIRCLE_SIZE,
-                bgcolor="#ff0000",
-                border_radius=CIRCLE_SIZE,
-                border=ft.border.all(width=2, color="white"),
-            ),
-        )
+#         circle = ft.GestureDetector(
+#             top=0,
+#             left=0,
+#             on_pan_update=on_pan_update,
+#             # on_pan_end=on_pan_end,
+#             content=ft.Container(
+#                 width=CIRCLE_SIZE,
+#                 height=CIRCLE_SIZE,
+#                 bgcolor="#ff0000",
+#                 border_radius=CIRCLE_SIZE,
+#                 border=ft.border.all(width=2, color="white"),
+#             ),
+#         )
 
-        self.controls.append(circle)
+#         self.controls.append(circle)
 
 
 class HueSlider1(ft.GestureDetector):
@@ -113,6 +113,7 @@ class HueSlider1(ft.GestureDetector):
         self.generate_hues()
         self.on_change_hue = on_change_hue
         self.on_pan_start = self.start_drag
+        self.on_pan_update = self.drag
 
     def find_hue(self, x):
         for hue_block in self.content.controls[
@@ -129,18 +130,29 @@ class HueSlider1(ft.GestureDetector):
                 return hsv_color[0]
         return 0
 
-    def start_drag(self, e: ft.DragStartEvent):
-        hue = self.find_hue(e.local_x)
+    def update_circle(self, x):
+        hue = self.find_hue(x)
 
         # color = rgb2hex(colorsys.hsv_to_rgb(hue, 1, 1))
-        self.circle.left = e.local_x - CIRCLE_SIZE / 2
+        self.circle.left = max(0, x - CIRCLE_SIZE / 2)
 
         # self.circle.bgcolor = color
         self.circle.update()
         self.on_change_hue(hue)
 
-    # def on_pan_start(self, e: ft.DragStartEvent):
-    #     print("Start drag!")
+    def start_drag(self, e: ft.DragStartEvent):
+        self.update_circle(x=e.local_x)
+        # hue = self.find_hue(e.local_x)
+
+        # # color = rgb2hex(colorsys.hsv_to_rgb(hue, 1, 1))
+        # self.circle.left = max(0, e.local_x - CIRCLE_SIZE / 2)
+
+        # # self.circle.bgcolor = color
+        # self.circle.update()
+        # self.on_change_hue(hue)
+
+    def drag(self, e: ft.DragUpdateEvent):
+        self.update_circle(x=e.local_x)
 
     def generate_hues(self):
         # def pick_hue(e):
@@ -395,12 +407,10 @@ class CustomColorPicker(ft.Column):
                         1 * (self.colors_y - j) / self.colors_y,
                     )
                 )
-                # self.controls[0].content.controls[n].bgcolor = color
                 self.color_matrix.content.controls[n].bgcolor = color
                 n += 1
         self.color = self.find_color(
-            x=self.color_matrix.content.controls[-1].top + CIRCLE_SIZE / 2,
-            y=self.color_matrix.content.controls[-1].left + CIRCLE_SIZE / 2,
+            y=self.circle.top + CIRCLE_SIZE / 2, x=self.circle.left + CIRCLE_SIZE / 2
         )
         self.update_selected_color_view(self.color)
         self.update()
