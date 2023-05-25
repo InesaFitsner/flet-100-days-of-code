@@ -3,7 +3,7 @@ import colorsys
 
 COLOR_MATRIX_WIDTH = 280
 COLOR_MATRIX_HEIGHT = 160
-COLOR_BLOCK_SIDE = 30
+COLOR_BLOCK_SIDE = 8
 
 SLIDER_WIDTH = 180
 NUMBER_OF_HUES = 30
@@ -112,7 +112,7 @@ class CustomColorPicker(ft.Column):
             on_change_hue=self.update_color_matrix,
         )
         self.generate_color_matrix(hue=0)
-        self.generate_selected_color_view(color=self.color)
+        self.generate_selected_color_view()
 
     def did_mount(self):
         hue = self.find_color_place()[0]
@@ -124,14 +124,12 @@ class CustomColorPicker(ft.Column):
         hsv_color = colorsys.rgb_to_hsv(
             rgb_color[0] / 255, rgb_color[1] / 255, rgb_color[2] / 255
         )
-        print(hsv_color[1])
         self.circle.left = (
             hsv_color[1] * self.colors_x
         ) * self.square_side + self.square_side / 2
         self.circle.top = (
             self.colors_y * (1 - hsv_color[2]) * self.square_side + self.square_side / 2
         )
-        print(self.circle.left, self.circle.top)
         self.circle.update()
 
         return hsv_color
@@ -149,8 +147,36 @@ class CustomColorPicker(ft.Column):
                 return color_square.bgcolor
         return "#000000"
 
-    def generate_selected_color_view(self, color):
-        rgb = hex2rgb(color)
+    def generate_selected_color_view(self):
+        rgb = hex2rgb(self.color)
+        self.hex = ft.TextField(
+            label="Hex",
+            text_size=12,
+            value=self.color,
+            height=40,
+            width=90,
+        )
+        self.r = ft.TextField(
+            label="R",
+            height=40,
+            width=55,
+            value=rgb[0],
+            text_size=12,
+        )
+        self.g = ft.TextField(
+            label="G",
+            height=40,
+            width=55,
+            value=rgb[1],
+            text_size=12,
+        )
+        self.b = ft.TextField(
+            label="B",
+            height=40,
+            width=55,
+            value=rgb[2],
+            text_size=12,
+        )
         self.selected_color_view = ft.Column(
             spacing=20,
             controls=[
@@ -158,7 +184,7 @@ class CustomColorPicker(ft.Column):
                     alignment=ft.MainAxisAlignment.SPACE_AROUND,
                     controls=[
                         ft.Container(
-                            width=30, height=30, border_radius=30, bgcolor=color
+                            width=30, height=30, border_radius=30, bgcolor=self.color
                         ),
                         # ft.Text(color),
                         self.hue_slider,
@@ -167,34 +193,10 @@ class CustomColorPicker(ft.Column):
                 ft.Row(
                     alignment=ft.MainAxisAlignment.SPACE_AROUND,
                     controls=[
-                        ft.TextField(
-                            label="Hex",
-                            text_size=12,
-                            value=color,
-                            height=40,
-                            width=90,
-                        ),
-                        ft.TextField(
-                            label="R",
-                            height=40,
-                            width=55,
-                            value=rgb[0],
-                            text_size=12,
-                        ),
-                        ft.TextField(
-                            label="G",
-                            height=40,
-                            width=55,
-                            value=rgb[1],
-                            text_size=12,
-                        ),
-                        ft.TextField(
-                            label="B",
-                            height=40,
-                            width=55,
-                            value=rgb[2],
-                            text_size=12,
-                        ),
+                        self.hex,
+                        self.r,
+                        self.g,
+                        self.b,
                     ],
                 ),
             ],
@@ -320,7 +322,7 @@ class CustomColorPicker(ft.Column):
 
 
 def main(page: ft.Page):
-    color_picker = CustomColorPicker(color="#ffffff")
+    color_picker = CustomColorPicker(color="#986eeb")
     d = ft.AlertDialog(content=color_picker)
     page.dialog = d
 
