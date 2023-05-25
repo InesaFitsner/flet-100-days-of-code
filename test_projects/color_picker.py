@@ -3,7 +3,7 @@ import colorsys
 
 COLOR_MATRIX_WIDTH = 280
 COLOR_MATRIX_HEIGHT = 160
-COLOR_BLOCK_SIDE = 10
+COLOR_BLOCK_SIDE = 30
 
 SLIDER_WIDTH = 180
 NUMBER_OF_HUES = 30
@@ -124,7 +124,16 @@ class CustomColorPicker(ft.Column):
         hsv_color = colorsys.rgb_to_hsv(
             rgb_color[0] / 255, rgb_color[1] / 255, rgb_color[2] / 255
         )
-        # print(hsv_color)
+        print(hsv_color[1])
+        self.circle.left = (
+            hsv_color[1] * self.colors_x
+        ) * self.square_side + self.square_side / 2
+        self.circle.top = (
+            self.colors_y * (1 - hsv_color[2]) * self.square_side + self.square_side / 2
+        )
+        print(self.circle.left, self.circle.top)
+        self.circle.update()
+
         return hsv_color
 
     def find_color(self, x, y):
@@ -311,7 +320,7 @@ class CustomColorPicker(ft.Column):
 
 
 def main(page: ft.Page):
-    color_picker = CustomColorPicker(color="#af2593")
+    color_picker = CustomColorPicker(color="#ffffff")
     d = ft.AlertDialog(content=color_picker)
     page.dialog = d
 
