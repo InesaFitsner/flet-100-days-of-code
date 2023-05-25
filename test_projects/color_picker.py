@@ -236,70 +236,67 @@ class CustomColorPicker(ft.Column):
 
     def generate_selected_color_view(self, color):
         rgb = hex2rgb(color)
-
-        self.selected_color_view = ft.Container(
-            # padding=CIRCLE_SIZE / 2,
-            content=ft.Column(
-                spacing=20,
-                controls=[
-                    ft.Row(
-                        alignment=ft.MainAxisAlignment.SPACE_AROUND,
-                        controls=[
-                            ft.Container(
-                                width=30, height=30, border_radius=30, bgcolor=color
-                            ),
-                            # ft.Text(color),
-                            self.hue_slider,
-                        ],
-                    ),
-                    ft.Row(
-                        alignment=ft.MainAxisAlignment.SPACE_AROUND,
-                        controls=[
-                            ft.TextField(
-                                label="Hex",
-                                text_size=12,
-                                value=color,
-                                height=40,
-                                width=90,
-                            ),
-                            ft.TextField(
-                                label="R",
-                                height=40,
-                                width=55,
-                                value=rgb[0],
-                                text_size=12,
-                            ),
-                            ft.TextField(
-                                label="G",
-                                height=40,
-                                width=55,
-                                value=rgb[1],
-                                text_size=12,
-                            ),
-                            ft.TextField(
-                                label="B",
-                                height=40,
-                                width=55,
-                                value=rgb[2],
-                                text_size=12,
-                            ),
-                        ],
-                    ),
-                ],
-            ),
+        self.selected_color_view = ft.Column(
+            spacing=20,
+            controls=[
+                ft.Row(
+                    alignment=ft.MainAxisAlignment.SPACE_AROUND,
+                    controls=[
+                        ft.Container(
+                            width=30, height=30, border_radius=30, bgcolor=color
+                        ),
+                        # ft.Text(color),
+                        self.hue_slider,
+                    ],
+                ),
+                ft.Row(
+                    alignment=ft.MainAxisAlignment.SPACE_AROUND,
+                    controls=[
+                        ft.TextField(
+                            label="Hex",
+                            text_size=12,
+                            value=color,
+                            height=40,
+                            width=90,
+                        ),
+                        ft.TextField(
+                            label="R",
+                            height=40,
+                            width=55,
+                            value=rgb[0],
+                            text_size=12,
+                        ),
+                        ft.TextField(
+                            label="G",
+                            height=40,
+                            width=55,
+                            value=rgb[1],
+                            text_size=12,
+                        ),
+                        ft.TextField(
+                            label="B",
+                            height=40,
+                            width=55,
+                            value=rgb[2],
+                            text_size=12,
+                        ),
+                    ],
+                ),
+            ],
         )
+
         self.controls.append(self.selected_color_view)
 
     def update_selected_color_view(self, color):
         rgb = hex2rgb(color)
-        self.selected_color_view.content.controls[0].controls[
+        self.selected_color_view.controls[0].controls[
             0
         ].bgcolor = color  # Colored circle
-        self.selected_color_view.content.controls[1].controls[0].value = color  # Hex
-        self.selected_color_view.content.controls[1].controls[1].value = rgb[0]  # R
-        self.selected_color_view.content.controls[1].controls[2].value = rgb[1]  # G
-        self.selected_color_view.content.controls[1].controls[3].value = rgb[2]  # B
-        self.color_matrix.content.controls[-1].bgcolor = color  # Color matrix circle
+        self.selected_color_view.controls[1].controls[0].value = color  # Hex
+        self.selected_color_view.controls[1].controls[1].value = rgb[0]  # R
+        self.selected_color_view.controls[1].controls[2].value = rgb[1]  # G
+        self.selected_color_view.controls[1].controls[3].value = rgb[2]  # B
+        self.circle.bgcolor = color  # Color matrix circle
         self.update()
 
     def generate_color_matrix(self, hue):
