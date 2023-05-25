@@ -334,17 +334,8 @@ class CustomColorPicker(ft.Column):
 
         self.color_matrix = ft.GestureDetector(
             content=ft.Stack(
-                height=(self.colors_y + 1) * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
-                width=(self.colors_x + 1) * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
-            ),
-            on_pan_start=on_pan_start,
-            on_pan_update=on_pan_update,
-        )
-
-        self.color_matrix = ft.GestureDetector(
-            content=ft.Stack(
-                height=(self.colors_y + 1) * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
-                width=(self.colors_x + 1) * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
+                height=(self.colors_y + 1) * self.square_side + CIRCLE_SIZE,
+                width=(self.colors_x + 1) * self.square_side + CIRCLE_SIZE,
             ),
             on_pan_start=on_pan_start,
             on_pan_update=on_pan_update,
@@ -375,7 +366,6 @@ class CustomColorPicker(ft.Column):
                         width=self.square_side,
                         border_radius=border_radius,
                         bgcolor=color,
-                        # on_click=pick_color,
                         top=j * self.square_side + CIRCLE_SIZE / 2,
                         left=i * self.square_side + CIRCLE_SIZE / 2,
                     )
@@ -384,7 +374,6 @@ class CustomColorPicker(ft.Column):
         self.circle = ft.Container(
             top=(self.colors_y + 1) * self.square_side,
             left=0,
-            # on_pan_update=on_pan_update,
             width=CIRCLE_SIZE,
             height=CIRCLE_SIZE,
             bgcolor=self.color,
@@ -406,7 +395,8 @@ class CustomColorPicker(ft.Column):
                         1 * (self.colors_y - j) / self.colors_y,
                     )
                 )
-                self.controls[0].content.controls[n].bgcolor = color
+                # self.controls[0].content.controls[n].bgcolor = color
+                self.color_matrix.content.controls[n].bgcolor = color
                 n += 1
         self.color = self.find_color(
             x=self.color_matrix.content.controls[-1].top + CIRCLE_SIZE / 2,
