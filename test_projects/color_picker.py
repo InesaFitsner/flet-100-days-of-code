@@ -113,8 +113,6 @@ class CustomColorPicker(ft.Column):
         )
         self.generate_color_matrix(hue=0)
         self.generate_selected_color_view(color=self.color)
-        # self.update_color_matrix(hue=0)
-        # self.generate_selected_color_view(color=self.color)
 
     def did_mount(self):
         hue = self.find_color_place()[0]
@@ -273,7 +271,7 @@ class CustomColorPicker(ft.Column):
                         height=self.square_side,
                         width=self.square_side,
                         border_radius=border_radius,
-                        bgcolor=color,
+                        # bgcolor=color,
                         top=j * self.square_side + CIRCLE_SIZE / 2,
                         left=i * self.square_side + CIRCLE_SIZE / 2,
                     )
@@ -313,7 +311,7 @@ class CustomColorPicker(ft.Column):
 
 
 def main(page: ft.Page):
-    color_picker = CustomColorPicker()
+    color_picker = CustomColorPicker(color="#af2593")
     d = ft.AlertDialog(content=color_picker)
     page.dialog = d
 
