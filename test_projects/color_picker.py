@@ -215,13 +215,11 @@ class CustomColorPicker(ft.Column):
     def __init__(self, color="#000000"):
         super().__init__()
         self.color = color
-        # self.content = ft.Column()
         self.hue_slider = HueSlider1(
             on_change_hue=self.update_color_matrix,
         )
         self.generate_color_matrix(hue=0)
         self.generate_selected_color_view(color=self.color)
-        # self.on_dismiss = lambda e: print("Dialog dismissed!")
 
     def change_hue(self, e: ft.DragStartEvent):
         print("Start drag on hue slider!")
@@ -354,23 +352,29 @@ class CustomColorPicker(ft.Column):
             )
             self.update_selected_color_view(self.color)
 
+        self.color_matrix_wrap = ft.Stack(
+            height=(self.colors_y + 1) * self.square_side + CIRCLE_SIZE,
+            width=(self.colors_x + 1) * self.square_side + CIRCLE_SIZE,
+        )
         self.color_matrix = ft.GestureDetector(
+            top=CIRCLE_SIZE / 2,
+            left=CIRCLE_SIZE / 2,
             content=ft.Stack(
-                height=(self.colors_y + 1) * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
-                width=(self.colors_x + 1) * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
+                height=(self.colors_y + 1) * COLOR_BLOCK_SIDE,
+                width=(self.colors_x + 1) * COLOR_BLOCK_SIDE,
             ),
             on_pan_start=on_pan_start,
             on_pan_update=on_pan_update,
         )
-
-        self.color_matrix = ft.GestureDetector(
-            content=ft.Stack(
-                height=(self.colors_y + 1) * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
-                width=(self.colors_x + 1) * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
-            ),
-            on_pan_start=on_pan_start,
-            on_pan_update=on_pan_update,
-        )
+        self.color_matrix_wrap.controls.append(self.color_matrix)
+        # self.color_matrix = ft.GestureDetector(
+        #     content=ft.Stack(
+        #         height=(self.colors_y + 1) * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
+        #         width=(self.colors_x + 1) * COLOR_BLOCK_SIDE + CIRCLE_SIZE,
+        #     ),
+        #     on_pan_start=on_pan_start,
+        #     on_pan_update=on_pan_update,
+        # )
         # self.content.controls = []
 
         for j in range(0, self.colors_y + 1):
@@ -399,13 +403,16 @@ class CustomColorPicker(ft.Column):
                         border_radius=border_radius,
                         bgcolor=color,
                         # on_click=pick_color,
-                        top=j * self.square_side + CIRCLE_SIZE / 2,
-                        left=i * self.square_side + CIRCLE_SIZE / 2,
+                        # top=j * self.square_side + CIRCLE_SIZE / 2,
+                        # left=i * self.square_side + CIRCLE_SIZE / 2,
+                        top=j * self.square_side,
+                        left=i * self.square_side,
                     )
                 )
 
         circle = ft.Container(
-            top=(self.colors_y + 1) * self.square_side,
+            # top=(self.colors_y + 1) * self.square_side,
+            top=0,
             left=0,
             # on_pan_update=on_pan_update,
             width=CIRCLE_SIZE,
@@ -415,9 +422,11 @@ class CustomColorPicker(ft.Column):
             border=ft.border.all(width=2, color="white"),
         )
 
-        self.color_matrix.content.controls.append(circle)
+        # self.color_matrix.content.controls.append(circle)
+        self.color_matrix_wrap.controls.append(circle)
         # self.content.controls.append(self.color_matrix)
-        self.controls.append(self.color_matrix)
+        # self.controls.append(self.color_matrix)
+        self.controls.append(self.color_matrix_wrap)
 
     def update_color_matrix(self, hue):
         n = 0
@@ -445,7 +454,9 @@ class CustomColorPicker(ft.Column):
 def main(page: ft.Page):
     color_picker = CustomColorPicker()
     # page.dialog = color_picker
-    d = ft.AlertDialog(content=color_picker)
+    d = ft.AlertDialog(
+        content=color_picker, on_dismiss=lambda e: print("Dialog dismissed!")
+    )
     page.dialog = d
 
     def open_color_picker(e):
