@@ -48,9 +48,6 @@ class HueSlider(ft.GestureDetector):
         x = self.hue * (NUMBER_OF_HUES) * self.hue_width + CIRCLE_SIZE
         self.update_selected_hue(x)
 
-    def find_hue_x(self):
-        return self.hue * (NUMBER_OF_HUES) * self.hue_width + CIRCLE_SIZE
-
     def find_hue(self, x):
         for hue_block in self.content.controls[
             :-1
@@ -108,12 +105,8 @@ class HueSlider(ft.GestureDetector):
             )
 
         self.circle = ft.Container(
-            # top=0,
-            # left=0,
             width=CIRCLE_SIZE,
             height=CIRCLE_SIZE,
-            # bgcolor="#ff0000",
-            # bgcolor=rgb2hex(colorsys.hsv_to_rgb(self.hue, 1, 1)),
             border_radius=CIRCLE_SIZE,
             border=ft.border.all(width=2, color="white"),
         )
@@ -188,9 +181,6 @@ class CustomColorPicker(ft.Column):
             self.update_circle()
             self.update_color_matrix(hue=hex2hsv(self.color)[0])
             self.hue_slider.update_hue_slider(hue=hex2hsv(self.color)[0])
-            # self.hue_slider.hue = hex2hsv(self.color)[0]
-            # x = self.hue_slider.find_hue_x()
-            # self.hue_slider.update_selected_hue(x)
 
         self.hex = ft.TextField(
             label="Hex",
