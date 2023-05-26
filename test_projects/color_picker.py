@@ -45,7 +45,7 @@ class HueSlider(ft.GestureDetector):
         self.update_selected_hue(x)
 
     def find_hue_x(self):
-        return self.hue * (NUMBER_OF_HUES) * self.hue_width + CIRCLE_SIZE / 2
+        return self.hue * (NUMBER_OF_HUES) * self.hue_width + CIRCLE_SIZE
 
     def find_hue(self, x):
         for hue_block in self.content.controls[
@@ -132,6 +132,7 @@ class CustomColorPicker(ft.Column):
         # hue = self.find_color_place()[0]
         x = self.find_color_x_y()[0]
         y = self.find_color_x_y()[1]
+        # self.find_color_place()
 
         self.update_color_matrix(hue=hex2hsv(self.color)[0])
         self.update_selected_color(x, y)
@@ -362,7 +363,7 @@ class CustomColorPicker(ft.Column):
 
 
 def main(page: ft.Page):
-    color_picker = CustomColorPicker(color="#3c3f5d")
+    color_picker = CustomColorPicker(color="#382dc9")
     d = ft.AlertDialog(content=color_picker)
     page.dialog = d
 
