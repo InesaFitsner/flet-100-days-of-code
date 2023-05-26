@@ -136,7 +136,7 @@ class CustomColorPicker(ft.Column):
         # self.update_selected_color_view()
         self.update_selected_color(x, y)
 
-    def update_circle(self):
+    def update_circle_position(self):
         hsv_color = hex2hsv(self.color)
         self.circle.left = (
             hsv_color[1] * self.colors_x
@@ -170,15 +170,16 @@ class CustomColorPicker(ft.Column):
                 and x >= color_square.left
                 and x <= color_square.left + self.square_side
             ):
-                return color_square.bgcolor
-        return "#000000"
+                # return color_square.bgcolor
+                self.color = color_square.bgcolor
+        # return "#000000"
 
     def generate_selected_color_view(self):
         rgb = hex2rgb(self.color)
 
         def on_hex_submit(e):
             self.color = e.control.value
-            self.update_circle()
+            self.update_circle_position()
             self.update_color_matrix(hue=hex2hsv(self.color)[0])
             self.hue_slider.update_hue_slider(hue=hex2hsv(self.color)[0])
 
@@ -265,7 +266,7 @@ class CustomColorPicker(ft.Column):
                 self.color_matrix.content.width - CIRCLE_SIZE,
             ),
         )
-        self.color = self.find_color(
+        self.find_color(
             x=self.circle.left + CIRCLE_SIZE / 2,
             y=self.circle.top + CIRCLE_SIZE / 2,
         )
@@ -348,7 +349,7 @@ class CustomColorPicker(ft.Column):
                 )
                 self.color_matrix.content.controls[n].bgcolor = color
                 n += 1
-        self.color = self.find_color(
+        self.find_color(
             y=self.circle.top + CIRCLE_SIZE / 2, x=self.circle.left + CIRCLE_SIZE / 2
         )
         self.update_selected_color_view()
