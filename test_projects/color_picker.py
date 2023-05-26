@@ -3,7 +3,7 @@ import colorsys
 
 COLOR_MATRIX_WIDTH = 280
 COLOR_MATRIX_HEIGHT = 160
-COLOR_BLOCK_SIDE = 6
+COLOR_BLOCK_SIZE = 6
 
 SLIDER_WIDTH = 180
 NUMBER_OF_HUES = 20
@@ -31,9 +31,10 @@ def hex2hsv(value):
 
 
 class HueSlider(ft.GestureDetector):
-    def __init__(self, on_change_hue, hue=1):
+    def __init__(self, on_change_hue, hue=1, number_of_hues=20):
         super().__init__()
         self.hue = hue
+        self.number_of_hues = number_of_hues
         self.content = ft.Stack(height=CIRCLE_SIZE, width=SLIDER_WIDTH)
         self.generate_hues()
         self.on_change_hue = on_change_hue
@@ -42,7 +43,7 @@ class HueSlider(ft.GestureDetector):
 
     def update_hue_slider(self, hue):
         self.hue = hue
-        x = self.hue * (NUMBER_OF_HUES) * self.hue_width + CIRCLE_SIZE
+        x = self.hue * self.number_of_hues * self.hue_width + CIRCLE_SIZE
         self.update_selected_hue(x)
 
     def find_hue(self, x):
@@ -66,7 +67,7 @@ class HueSlider(ft.GestureDetector):
             0,
             min(
                 x - CIRCLE_SIZE / 2,
-                self.hue_width * ((NUMBER_OF_HUES + 1)),
+                self.hue_width * ((self.number_of_hues + 1)),
             ),
         )
 
@@ -81,12 +82,12 @@ class HueSlider(ft.GestureDetector):
         self.update_selected_hue(x=e.local_x)
 
     def generate_hues(self):
-        self.hue_width = (self.content.width - CIRCLE_SIZE) / (NUMBER_OF_HUES + 1)
-        for i in range(0, NUMBER_OF_HUES + 1):
-            color = rgb2hex(colorsys.hsv_to_rgb(i / NUMBER_OF_HUES, 1, 1))
+        self.hue_width = (self.content.width - CIRCLE_SIZE) / (self.number_of_hues + 1)
+        for i in range(0, self.number_of_hues + 1):
+            color = rgb2hex(colorsys.hsv_to_rgb(i / self.number_of_hues, 1, 1))
             if i == 0:
                 border_radius = ft.border_radius.only(top_left=5, bottom_left=5)
-            elif i == NUMBER_OF_HUES:
+            elif i == self.number_of_hues:
                 border_radius = ft.border_radius.only(top_right=5, bottom_right=5)
             else:
                 border_radius = None
@@ -112,10 +113,11 @@ class HueSlider(ft.GestureDetector):
 
 
 class CustomColorPicker(ft.Column):
-    def __init__(self, color="#000000"):
+    def __init__(self, color="#000000", color_block_size=6):
         super().__init__()
         self.tight = True
         self.color = color
+        self.color_block_size = color_block_size
         self.hue_slider = HueSlider(
             on_change_hue=self.update_color_matrix, hue=hex2hsv(self.color)[0]
         )
@@ -135,9 +137,10 @@ class CustomColorPicker(ft.Column):
         hsv_color = hex2hsv(self.color)
         self.circle.left = (
             hsv_color[1] * self.colors_x
-        ) * self.square_side + self.square_side / 2
+        ) * self.color_block_size + self.color_block_size / 2
         self.circle.top = (
-            self.colors_y * (1 - hsv_color[2]) * self.square_side + self.square_side / 2
+            self.colors_y * (1 - hsv_color[2]) * self.color_block_size
+            + self.color_block_size / 2
         )
         self.circle.update()
 
@@ -147,9 +150,9 @@ class CustomColorPicker(ft.Column):
         ]:  # excluding the last element of the controls list which is the circle
             if (
                 y >= color_square.top
-                and y <= color_square.top + self.square_side
+                and y <= color_square.top + self.color_block_size
                 and x >= color_square.left
-                and x <= color_square.left + self.square_side
+                and x <= color_square.left + self.color_block_size
             ):
                 self.color = color_square.bgcolor
 
@@ -243,9 +246,9 @@ class CustomColorPicker(ft.Column):
         self.update()
 
     def generate_color_matrix(self, hue):
-        self.square_side = COLOR_BLOCK_SIDE
-        self.colors_x = int(COLOR_MATRIX_WIDTH / self.square_side)
-        self.colors_y = int(COLOR_MATRIX_HEIGHT / self.square_side)
+        # self.color_block_size = COLOR_BLOCK_SIDE
+        self.colors_x = int(COLOR_MATRIX_WIDTH / self.color_block_size)
+        self.colors_y = int(COLOR_MATRIX_HEIGHT / self.color_block_size)
 
         def move_circle(x, y):
             self.circle.top = max(
@@ -277,8 +280,8 @@ class CustomColorPicker(ft.Column):
 
         self.color_matrix = ft.GestureDetector(
             content=ft.Stack(
-                height=(self.colors_y + 1) * self.square_side + CIRCLE_SIZE,
-                width=(self.colors_x + 1) * self.square_side + CIRCLE_SIZE,
+                height=(self.colors_y + 1) * self.color_block_size + CIRCLE_SIZE,
+                width=(self.colors_x + 1) * self.color_block_size + CIRCLE_SIZE,
             ),
             on_pan_start=on_pan_start,
             on_pan_update=on_pan_update,
@@ -305,12 +308,12 @@ class CustomColorPicker(ft.Column):
                     border_radius = None
                 self.color_matrix.content.controls.append(
                     ft.Container(
-                        height=self.square_side,
-                        width=self.square_side,
+                        height=self.color_block_size,
+                        width=self.color_block_size,
                         border_radius=border_radius,
                         # bgcolor=color,
-                        top=j * self.square_side + CIRCLE_SIZE / 2,
-                        left=i * self.square_side + CIRCLE_SIZE / 2,
+                        top=j * self.color_block_size + CIRCLE_SIZE / 2,
+                        left=i * self.color_block_size + CIRCLE_SIZE / 2,
                     )
                 )
 
