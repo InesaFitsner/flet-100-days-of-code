@@ -116,7 +116,7 @@ class CustomColorPicker(ft.Column):
         self.tight = True
         self.color = color
         self.hue_slider = HueSlider(
-            on_change_hue=self.update_color_matrix,
+            on_change_hue=self.update_color_matrix, hue=hex2hsv(self.color)[0]
         )
         self.generate_color_matrix(hue=0)
         self.generate_selected_color_view()
