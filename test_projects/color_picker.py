@@ -6,7 +6,7 @@ COLOR_MATRIX_HEIGHT = 160
 COLOR_BLOCK_SIDE = 8
 
 SLIDER_WIDTH = 180
-NUMBER_OF_HUES = 10
+NUMBER_OF_HUES = 20
 
 CIRCLE_SIZE = 16
 
@@ -363,7 +363,7 @@ class CustomColorPicker(ft.Column):
 
 
 def main(page: ft.Page):
-    color_picker = CustomColorPicker(color="#382dc9")
+    color_picker = CustomColorPicker(color="#895b44")
     d = ft.AlertDialog(content=color_picker)
     page.dialog = d
 
