@@ -40,6 +40,25 @@ class HueSlider(ft.GestureDetector):
         self.on_pan_start = self.start_drag
         self.on_pan_update = self.drag
 
+    def did_mount(self):
+        # hue = self.find_color_place()[0]
+        self.find_hue_place()
+
+        # self.update_color_matrix(hue=hex2hsv(self.color)[0])
+
+    def find_hue_place(self):
+        print(self.hue)
+        # hsv_color = hex2hsv(self.color)
+        # self.circle.left = (
+        #     hsv_color[1] * self.colors_x
+        # ) * self.square_side + self.square_side / 2
+        # self.circle.top = (
+        #     self.colors_y * (1 - hsv_color[2]) * self.square_side + self.square_side / 2
+        # )
+        self.circle.left = self.hue * NUMBER_OF_HUES * self.hue_width
+        self.circle.bgcolor = rgb2hex(colorsys.hsv_to_rgb(self.hue, 1, 1))
+        self.circle.update()
+
     def find_hue(self, x):
         for hue_block in self.content.controls[
             :-1
