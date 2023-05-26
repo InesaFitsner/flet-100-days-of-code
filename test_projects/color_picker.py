@@ -3,11 +3,7 @@ import colorsys
 
 COLOR_MATRIX_WIDTH = 280
 COLOR_MATRIX_HEIGHT = 160
-COLOR_BLOCK_SIZE = 6
-
 SLIDER_WIDTH = 180
-NUMBER_OF_HUES = 20
-
 CIRCLE_SIZE = 16
 
 
@@ -31,7 +27,7 @@ def hex2hsv(value):
 
 
 class HueSlider(ft.GestureDetector):
-    def __init__(self, on_change_hue, hue=1, number_of_hues=20):
+    def __init__(self, on_change_hue, hue=1, number_of_hues=10):
         super().__init__()
         self.hue = hue
         self.number_of_hues = number_of_hues
@@ -113,7 +109,7 @@ class HueSlider(ft.GestureDetector):
 
 
 class CustomColorPicker(ft.Column):
-    def __init__(self, color="#000000", color_block_size=6):
+    def __init__(self, color="#000000", color_block_size=20):
         super().__init__()
         self.tight = True
         self.color = color
