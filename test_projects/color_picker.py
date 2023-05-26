@@ -130,9 +130,11 @@ class CustomColorPicker(ft.Column):
 
     def did_mount(self):
         # hue = self.find_color_place()[0]
-        self.find_color_place()
+        x = self.find_color_x_y()[0]
+        y = self.find_color_x_y()[1]
 
         self.update_color_matrix(hue=hex2hsv(self.color)[0])
+        self.update_selected_color(x, y)
 
     def find_color_place(self):
         hsv_color = hex2hsv(self.color)
@@ -143,6 +145,27 @@ class CustomColorPicker(ft.Column):
             self.colors_y * (1 - hsv_color[2]) * self.square_side + self.square_side / 2
         )
         self.circle.update()
+
+    def find_color_x_y(self):
+        hsv_color = hex2hsv(self.color)
+        # self.circle.left = (
+        #     hsv_color[1] * self.colors_x
+        # ) * self.square_side + self.square_side / 2
+        # self.circle.top = (
+        #     self.colors_y * (1 - hsv_color[2]) * self.square_side + self.square_side / 2
+        # )
+        # self.circle.update()
+        x = (
+            hsv_color[1] * self.colors_x * self.square_side
+            + self.square_side / 2
+            + CIRCLE_SIZE / 2
+        )
+        y = (
+            self.colors_y * (1 - hsv_color[2]) * self.square_side
+            + self.square_side / 2
+            + CIRCLE_SIZE / 2
+        )
+        return (x, y)
 
     def find_color(self, x, y):
         for color_square in self.color_matrix.content.controls[
@@ -339,7 +362,7 @@ class CustomColorPicker(ft.Column):
 
 
 def main(page: ft.Page):
-    color_picker = CustomColorPicker(color="#33d01f")
+    color_picker = CustomColorPicker(color="#3c3f5d")
     d = ft.AlertDialog(content=color_picker)
     page.dialog = d
 
