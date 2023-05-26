@@ -123,9 +123,13 @@ class CustomColorPicker(ft.Column):
         self.generate_selected_color_view()
 
     def did_mount(self):
+        self.update_color_picker()
+
+    def update_color_picker(self):
+        hue = hex2hsv(self.color)[0]
         self.update_circle_position()
-        self.update_color_matrix(hue=hex2hsv(self.color)[0])
-        self.hue_slider.update_hue_slider(hue=hex2hsv(self.color)[0])
+        self.update_color_matrix(hue)
+        self.hue_slider.update_hue_slider(hue)
 
     def update_circle_position(self):
         hsv_color = hex2hsv(self.color)
@@ -137,20 +141,6 @@ class CustomColorPicker(ft.Column):
         )
         self.circle.update()
 
-    def find_color_x_y(self):
-        hsv_color = hex2hsv(self.color)
-        x = (
-            hsv_color[1] * self.colors_x * self.square_side
-            + self.square_side / 2
-            + CIRCLE_SIZE / 2
-        )
-        y = (
-            self.colors_y * (1 - hsv_color[2]) * self.square_side
-            + self.square_side / 2
-            + CIRCLE_SIZE / 2
-        )
-        return (x, y)
-
     def find_color(self, x, y):
         for color_square in self.color_matrix.content.controls[
             :-1
@@ -161,18 +151,25 @@ class CustomColorPicker(ft.Column):
                 and x >= color_square.left
                 and x <= color_square.left + self.square_side
             ):
-                # return color_square.bgcolor
                 self.color = color_square.bgcolor
-        # return "#000000"
 
     def generate_selected_color_view(self):
         rgb = hex2rgb(self.color)
 
         def on_hex_submit(e):
             self.color = e.control.value
-            self.update_circle_position()
-            self.update_color_matrix(hue=hex2hsv(self.color)[0])
-            self.hue_slider.update_hue_slider(hue=hex2hsv(self.color)[0])
+            self.update_color_picker()
+
+        def on_rgb_submit(e):
+            rgb = (
+                int(self.r.value) / 255,
+                int(self.g.value) / 255,
+                int(self.b.value) / 255,
+            )
+            print(rgb)
+            self.color = rgb2hex(rgb)
+            print(self.color)
+            self.update_color_picker()
 
         self.hex = ft.TextField(
             label="Hex",
@@ -188,6 +185,7 @@ class CustomColorPicker(ft.Column):
             width=55,
             value=rgb[0],
             text_size=12,
+            on_submit=on_rgb_submit,
         )
         self.g = ft.TextField(
             label="G",
@@ -195,6 +193,7 @@ class CustomColorPicker(ft.Column):
             width=55,
             value=rgb[1],
             text_size=12,
+            on_submit=on_rgb_submit,
         )
         self.b = ft.TextField(
             label="B",
@@ -202,6 +201,7 @@ class CustomColorPicker(ft.Column):
             width=55,
             value=rgb[2],
             text_size=12,
+            on_submit=on_rgb_submit,
         )
         self.selected_color_view = ft.Column(
             spacing=20,
@@ -315,11 +315,8 @@ class CustomColorPicker(ft.Column):
                 )
 
         self.circle = ft.Container(
-            # top=(self.colors_y + 1) * self.square_side,
-            # left=0,
             width=CIRCLE_SIZE,
             height=CIRCLE_SIZE,
-            # bgcolor=self.color,
             border_radius=CIRCLE_SIZE,
             border=ft.border.all(width=2, color="white"),
         )
@@ -343,7 +340,6 @@ class CustomColorPicker(ft.Column):
         self.find_color(
             y=self.circle.top + CIRCLE_SIZE / 2, x=self.circle.left + CIRCLE_SIZE / 2
         )
-        # self.update_circle_position()
         self.update_selected_color_view()
         self.update()
 
