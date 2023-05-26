@@ -184,7 +184,7 @@ class CustomColorPicker(ft.Column):
     def generate_selected_color_view(self):
         rgb = hex2rgb(self.color)
 
-        def on_hex_change(e):
+        def on_hex_submit(e):
             self.color = e.control.value
             self.find_color_place()
             self.update_color_matrix(hue=hex2hsv(self.color)[0])
@@ -198,7 +198,7 @@ class CustomColorPicker(ft.Column):
             value=self.color,
             height=40,
             width=90,
-            on_change=on_hex_change,
+            on_submit=on_hex_submit,
         )
         self.r = ft.TextField(
             label="R",
