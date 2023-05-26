@@ -3,10 +3,10 @@ import colorsys
 
 COLOR_MATRIX_WIDTH = 280
 COLOR_MATRIX_HEIGHT = 160
-COLOR_BLOCK_SIDE = 8
+COLOR_BLOCK_SIDE = 20
 
 SLIDER_WIDTH = 180
-NUMBER_OF_HUES = 20
+NUMBER_OF_HUES = 10
 
 CIRCLE_SIZE = 16
 
@@ -39,9 +39,6 @@ class HueSlider(ft.GestureDetector):
         self.on_change_hue = on_change_hue
         self.on_pan_start = self.start_drag
         self.on_pan_update = self.drag
-
-    def did_mount(self):
-        self.update_hue_slider(self.hue)
 
     def update_hue_slider(self, hue):
         self.hue = hue
@@ -126,15 +123,9 @@ class CustomColorPicker(ft.Column):
         self.generate_selected_color_view()
 
     def did_mount(self):
-        # hue = self.find_color_place()[0]
-        x = self.find_color_x_y()[0]
-        y = self.find_color_x_y()[1]
-        # self.find_color_place()
-
+        self.update_circle_position()
         self.update_color_matrix(hue=hex2hsv(self.color)[0])
-        # self.update_circle()
-        # self.update_selected_color_view()
-        self.update_selected_color(x, y)
+        self.hue_slider.update_hue_slider(hue=hex2hsv(self.color)[0])
 
     def update_circle_position(self):
         hsv_color = hex2hsv(self.color)
@@ -173,6 +164,28 @@ class CustomColorPicker(ft.Column):
                 # return color_square.bgcolor
                 self.color = color_square.bgcolor
         # return "#000000"
+
+    def update_selected_color(self, x, y):
+        self.circle.top = max(
+            0,
+            min(
+                y - CIRCLE_SIZE / 2,
+                self.color_matrix.content.height - CIRCLE_SIZE,
+            ),
+        )
+        self.circle.left = max(
+            0,
+            min(
+                x - CIRCLE_SIZE / 2,
+                self.color_matrix.content.width - CIRCLE_SIZE,
+            ),
+        )
+        self.find_color(
+            x=self.circle.left + CIRCLE_SIZE / 2,
+            y=self.circle.top + CIRCLE_SIZE / 2,
+        )
+        self.update_selected_color_view()
+        # self.circle.update()
 
     def generate_selected_color_view(self):
         rgb = hex2rgb(self.color)
@@ -357,7 +370,7 @@ class CustomColorPicker(ft.Column):
 
 
 def main(page: ft.Page):
-    color_picker = CustomColorPicker(color="#895b44")
+    color_picker = CustomColorPicker(color="#6d48ff")
     d = ft.AlertDialog(content=color_picker)
     page.dialog = d
 
