@@ -188,6 +188,9 @@ class CustomColorPicker(ft.Column):
             self.color = e.control.value
             self.find_color_place()
             self.update_color_matrix(hue=hex2hsv(self.color)[0])
+            self.hue_slider.hue = hex2hsv(self.color)[0]
+            x = self.hue_slider.find_hue_x()
+            self.hue_slider.update_selected_hue(x)
 
         self.hex = ft.TextField(
             label="Hex",
