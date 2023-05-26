@@ -165,7 +165,7 @@ class CustomColorPicker(ft.Column):
                 self.color = color_square.bgcolor
         # return "#000000"
 
-    def update_selected_color(self, x, y):
+    def move_circle(self, x, y):
         self.circle.top = max(
             0,
             min(
@@ -264,7 +264,7 @@ class CustomColorPicker(ft.Column):
         self.circle.bgcolor = self.color  # Color matrix circle
         self.update()
 
-    def update_selected_color(self, x, y):
+    def move_circle(self, x, y):
         self.circle.top = max(
             0,
             min(
@@ -292,10 +292,10 @@ class CustomColorPicker(ft.Column):
         self.colors_y = int(COLOR_MATRIX_HEIGHT / self.square_side)
 
         def on_pan_start(e: ft.DragStartEvent):
-            self.update_selected_color(x=e.local_x, y=e.local_y)
+            self.move_circle(x=e.local_x, y=e.local_y)
 
         def on_pan_update(e: ft.DragUpdateEvent):
-            self.update_selected_color(x=e.local_x, y=e.local_y)
+            self.move_circle(x=e.local_x, y=e.local_y)
 
         self.color_matrix = ft.GestureDetector(
             content=ft.Stack(
@@ -365,6 +365,7 @@ class CustomColorPicker(ft.Column):
         self.find_color(
             y=self.circle.top + CIRCLE_SIZE / 2, x=self.circle.left + CIRCLE_SIZE / 2
         )
+        self.update_circle_position()
         self.update_selected_color_view()
         self.update()
 
