@@ -41,7 +41,11 @@ class HueSlider(ft.GestureDetector):
         self.on_pan_update = self.drag
 
     def did_mount(self):
-        x = self.find_hue_x()
+        self.update_hue_slider(self.hue)
+
+    def update_hue_slider(self, hue):
+        self.hue = hue
+        x = self.hue * (NUMBER_OF_HUES) * self.hue_width + CIRCLE_SIZE
         self.update_selected_hue(x)
 
     def find_hue_x(self):
@@ -135,9 +139,11 @@ class CustomColorPicker(ft.Column):
         # self.find_color_place()
 
         self.update_color_matrix(hue=hex2hsv(self.color)[0])
+        # self.update_circle()
+        # self.update_selected_color_view()
         self.update_selected_color(x, y)
 
-    def find_color_place(self):
+    def update_circle(self):
         hsv_color = hex2hsv(self.color)
         self.circle.left = (
             hsv_color[1] * self.colors_x
@@ -149,13 +155,6 @@ class CustomColorPicker(ft.Column):
 
     def find_color_x_y(self):
         hsv_color = hex2hsv(self.color)
-        # self.circle.left = (
-        #     hsv_color[1] * self.colors_x
-        # ) * self.square_side + self.square_side / 2
-        # self.circle.top = (
-        #     self.colors_y * (1 - hsv_color[2]) * self.square_side + self.square_side / 2
-        # )
-        # self.circle.update()
         x = (
             hsv_color[1] * self.colors_x * self.square_side
             + self.square_side / 2
@@ -186,11 +185,12 @@ class CustomColorPicker(ft.Column):
 
         def on_hex_submit(e):
             self.color = e.control.value
-            self.find_color_place()
+            self.update_circle()
             self.update_color_matrix(hue=hex2hsv(self.color)[0])
-            self.hue_slider.hue = hex2hsv(self.color)[0]
-            x = self.hue_slider.find_hue_x()
-            self.hue_slider.update_selected_hue(x)
+            self.hue_slider.update_hue_slider(hue=hex2hsv(self.color)[0])
+            # self.hue_slider.hue = hex2hsv(self.color)[0]
+            # x = self.hue_slider.find_hue_x()
+            # self.hue_slider.update_selected_hue(x)
 
         self.hex = ft.TextField(
             label="Hex",
