@@ -31,8 +31,9 @@ def hex2hsv(value):
 
 
 class HueSlider(ft.GestureDetector):
-    def __init__(self, on_change_hue):
+    def __init__(self, on_change_hue, hue=1):
         super().__init__()
+        self.hue = hue
         self.content = ft.Stack(height=CIRCLE_SIZE, width=SLIDER_WIDTH)
         self.generate_hues()
         self.on_change_hue = on_change_hue
@@ -40,7 +41,7 @@ class HueSlider(ft.GestureDetector):
         self.on_pan_update = self.drag
 
     def find_hue(self, x):
-        self.hue = 0
+        # self.hue = 0
         for hue_block in self.content.controls[
             :-1
         ]:  # excluding the last element of the stack controls list which is the circle
