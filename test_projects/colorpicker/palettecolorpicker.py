@@ -23,7 +23,7 @@ class Color:
                 self.display_name = f"{swatch.display_name}_ACCENT_{shade}"
 
 
-SHADES = ["50", "100", "200", "300", "400", "600", "700", "800", "900"]
+SHADES = ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"]
 ACCENT_SHADES = ["100", "200", "400", "700"]
 WHITE_SHADES = ["10", "12", "24", "30", "38", "54", "70"]
 BLACK_SHADES = ["12", "26", "38", "45", "54", "87"]
@@ -85,6 +85,10 @@ class PaletteColorPicker(ft.Row):
                     colors.append(color)
             return colors
 
+        def color_clicked(e):
+            self.color = e.control.bgcolor
+            print(self.color)
+
         for swatch in swatches:
             swatch_colors = ft.Column(spacing=1, controls=[])
             for color in generate_color_names(swatch):
@@ -94,24 +98,33 @@ class PaletteColorPicker(ft.Row):
                         width=20,
                         border_radius=20,
                         bgcolor=color.name,
+                        on_click=color_clicked,
                     )
                 )
             self.controls.append(swatch_colors)
-            print(f"Added {swatch.display_name}")
 
 
 def main(page: ft.Page):
     color_picker = PaletteColorPicker()
 
+    def dialog_closed(e):
+        text_icon.icon_color = e.control.content.color
+        text_icon.update()
+
     # color_picker = PaletteColorPicker()
-    d = ft.AlertDialog(content=color_picker)
+    d = ft.AlertDialog(content=color_picker, on_dismiss=dialog_closed)
+
     page.dialog = d
 
     def open_color_picker(e):
         d.open = True
         page.update()
 
-    page.add(ft.IconButton(icon=ft.icons.BRUSH, on_click=open_color_picker))
+    text_icon = ft.IconButton(
+        icon=ft.icons.FORMAT_COLOR_TEXT, on_click=open_color_picker
+    )
+
+    page.add(text_icon)
 
 
 ft.app(target=main)

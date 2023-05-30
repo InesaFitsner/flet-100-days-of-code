@@ -6,7 +6,6 @@ from palettecolorpicker import PaletteColorPicker
 def main(page: ft.Page):
     color_picker = CustomColorPicker(color="#c8df6f")
 
-    # color_picker = PaletteColorPicker()
     d = ft.AlertDialog(content=color_picker)
     page.dialog = d
 
