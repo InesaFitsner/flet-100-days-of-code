@@ -1,3 +1,4 @@
+from customcolorpicker import CustomColorPicker
 import flet as ft
 
 
@@ -22,17 +23,18 @@ class Color:
                 self.display_name = f"{swatch.display_name}_ACCENT_{shade}"
 
 
-SHADES = ["50", "100", "200", "300", "400", "500", "600", "700", "800", "900"]
+SHADES = ["50", "100", "200", "300", "400", "600", "700", "800", "900"]
 ACCENT_SHADES = ["100", "200", "400", "700"]
 WHITE_SHADES = ["10", "12", "24", "30", "38", "54", "70"]
 BLACK_SHADES = ["12", "26", "38", "45", "54", "87"]
 
 
-class PaletteColorPicker(ft.Column):
+class PaletteColorPicker(ft.Row):
     def __init__(self, color="black"):
         super().__init__()
         self.tight = True
         self.color = color
+        self.spacing = 1
         self.generate_color_matrix()
 
     def generate_color_matrix(self):
@@ -59,3 +61,57 @@ class PaletteColorPicker(ft.Column):
             ColorSwatch(name="white", display_name="WHITE"),
             ColorSwatch(name="black", display_name="BLACK"),
         ]
+
+        def generate_color_names(swatch):
+            colors = []
+            base_color = Color(swatch=swatch)
+            colors.append(base_color)
+            if swatch.name == "white":
+                for shade in WHITE_SHADES:
+                    color = Color(swatch=swatch, shade=shade)
+                    colors.append(color)
+                return colors
+            if swatch.name == "black":
+                for shade in BLACK_SHADES:
+                    color = Color(swatch=swatch, shade=shade)
+                    colors.append(color)
+                return colors
+            for shade in SHADES:
+                color = Color(swatch=swatch, shade=shade)
+                colors.append(color)
+            if swatch.accent:
+                for shade in ACCENT_SHADES:
+                    color = Color(swatch=swatch, shade=shade, accent=True)
+                    colors.append(color)
+            return colors
+
+        for swatch in swatches:
+            swatch_colors = ft.Column(spacing=1, controls=[])
+            for color in generate_color_names(swatch):
+                swatch_colors.controls.append(
+                    ft.Container(
+                        height=20,
+                        width=20,
+                        border_radius=20,
+                        bgcolor=color.name,
+                    )
+                )
+            self.controls.append(swatch_colors)
+            print(f"Added {swatch.display_name}")
+
+
+def main(page: ft.Page):
+    color_picker = PaletteColorPicker()
+
+    # color_picker = PaletteColorPicker()
+    d = ft.AlertDialog(content=color_picker)
+    page.dialog = d
+
+    def open_color_picker(e):
+        d.open = True
+        page.update()
+
+    page.add(ft.IconButton(icon=ft.icons.BRUSH, on_click=open_color_picker))
+
+
+ft.app(target=main)
