@@ -117,7 +117,7 @@ class CustomColorPicker(ft.Column):
         self.hue_slider = HueSlider(
             on_change_hue=self.update_color_matrix, hue=hex2hsv(self.color)[0]
         )
-        self.generate_color_matrix(hue=0)
+        self.generate_color_matrix()
         self.generate_selected_color_view()
 
     def did_mount(self):
@@ -241,7 +241,7 @@ class CustomColorPicker(ft.Column):
         self.circle.bgcolor = self.color  # Color matrix circle
         self.update()
 
-    def generate_color_matrix(self, hue):
+    def generate_color_matrix(self, hue=0):
         # self.color_block_size = COLOR_BLOCK_SIDE
         self.colors_x = int(COLOR_MATRIX_WIDTH / self.color_block_size)
         self.colors_y = int(COLOR_MATRIX_HEIGHT / self.color_block_size)
