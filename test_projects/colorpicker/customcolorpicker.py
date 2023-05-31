@@ -177,6 +177,7 @@ class CustomColorPicker(ft.Column):
             height=40,
             width=90,
             on_submit=on_hex_submit,
+            on_blur=on_hex_submit,
         )
         self.r = ft.TextField(
             label="R",
@@ -185,6 +186,7 @@ class CustomColorPicker(ft.Column):
             value=rgb[0],
             text_size=12,
             on_submit=on_rgb_submit,
+            on_blur=on_rgb_submit,
         )
         self.g = ft.TextField(
             label="G",
@@ -193,6 +195,7 @@ class CustomColorPicker(ft.Column):
             value=rgb[1],
             text_size=12,
             on_submit=on_rgb_submit,
+            on_blur=on_rgb_submit,
         )
         self.b = ft.TextField(
             label="B",
@@ -201,6 +204,7 @@ class CustomColorPicker(ft.Column):
             value=rgb[2],
             text_size=12,
             on_submit=on_rgb_submit,
+            on_blur=on_rgb_submit,
         )
         self.selected_color_view = ft.Column(
             spacing=20,
